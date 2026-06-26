@@ -2,7 +2,7 @@ import React from 'react'
 
 const Dashboard = () => {
   const stats = [
-    { label: 'Total Items', value: '1,247', icon: '�', color: '#3b82f6' },
+    { label: 'Total Items', value: '1,247', icon: '📊', color: '#3b82f6' },
     { label: 'Low Stock', value: '23', icon: '⚠️', color: '#f59e0b' },
     { label: 'Pending Requisitions', value: '8', icon: '📝', color: '#ef4444' },
     { label: 'Issued Today', value: '45', icon: '✅', color: '#10b981' },
@@ -10,10 +10,167 @@ const Dashboard = () => {
 
   const recentActivity = [
     { id: 1, item: 'Syringes 5ml', office: 'Hemodialysis', action: 'Issued', time: '2 hours ago' },
-    { id: 2, item: 'Gauze Pads', office: 'Clinical Laboratory', action: 'Requisitioned', time: '3 hours ago' },
-    { id: 3, item: 'Alcohol Swabs', office: 'Radiology', action: 'Restocked', time: '5 hours ago' },
-    { id: 4, item: 'Bandages', office: 'Admin Office', action: 'Issued', time: '6 hours ago' },
+    { id: 2, item: 'Alcohol Swabs', office: 'Admin Office', action: 'Expired', time: '3 hours ago', type: 'expired' },
+    { id: 3, item: 'Gauze Pads (4x4)', office: 'Radiology', action: 'About to Expire', time: '4 hours ago', type: 'warning' },
+    { id: 4, item: 'Bandages (Assorted)', office: 'Hemodialysis', action: 'Allocated', time: '5 hours ago' },
+    { id: 5, item: 'Needles 21G', office: 'Clinical Laboratory', action: 'Added', time: '6 hours ago', type: 'added' },
   ]
+
+  // Inventory data for the donut chart
+  const inventoryItems = [
+    {
+      id: 1,
+      sku: 'MED-001',
+      name: 'Syringes 5ml',
+      brand: 'BD Medical',
+      location: 'Shelf A-12',
+      minStock: 100,
+      unit: 'pcs',
+      batches: [
+        { batchId: 'B-001', expiryDate: null, office: 'Hemodialysis', stock: 450 },
+        { batchId: 'B-002', expiryDate: null, office: 'Clinical Laboratory', stock: 320 },
+        { batchId: 'B-003', expiryDate: null, office: 'Hemodialysis', stock: 200 },
+      ],
+    },
+    {
+      id: 2,
+      sku: 'MED-002',
+      name: 'Gauze Pads (4x4)',
+      brand: 'Johnson & Johnson',
+      location: 'Shelf B-05',
+      minStock: 50,
+      unit: 'packs',
+      batches: [
+        { batchId: 'B-004', expiryDate: '2026-07-15', office: 'Radiology', stock: 80 },
+        { batchId: 'B-005', expiryDate: '2027-03-20', office: 'Radiology', stock: 40 },
+      ],
+    },
+    {
+      id: 3,
+      sku: 'MED-003',
+      name: 'Alcohol Swabs',
+      brand: 'Kendall',
+      location: 'Shelf C-08',
+      minStock: 100,
+      unit: 'boxes',
+      batches: [
+        { batchId: 'B-006', expiryDate: '2026-06-30', office: 'Admin Office', stock: 35 },
+        { batchId: 'B-007', expiryDate: '2026-08-10', office: 'Hemodialysis', stock: 40 },
+      ],
+    },
+    {
+      id: 4,
+      sku: 'MED-004',
+      name: 'Bandages (Assorted)',
+      brand: '3M',
+      location: 'Shelf B-10',
+      minStock: 150,
+      unit: 'boxes',
+      batches: [
+        { batchId: 'B-008', expiryDate: null, office: 'Hemodialysis', stock: 150 },
+        { batchId: 'B-009', expiryDate: null, office: 'Unallocated', stock: 50 },
+      ],
+    },
+    {
+      id: 5,
+      sku: 'MED-005',
+      name: 'Needles 21G',
+      brand: 'BD Medical',
+      location: 'Shelf A-15',
+      minStock: 200,
+      unit: 'pcs',
+      batches: [
+        { batchId: 'B-010', expiryDate: '2028-12-01', office: 'Clinical Laboratory', stock: 500 },
+      ],
+    },
+  ]
+
+  // Calculate office totals
+  const calculateOfficeTotals = () => {
+    const totals = {
+      'Hemodialysis': 0,
+      'Clinical Laboratory': 0,
+      'Radiology': 0,
+      'Admin Office': 0,
+      'Unallocated': 0,
+    }
+
+    inventoryItems.forEach(item => {
+      item.batches.forEach(batch => {
+        if (totals.hasOwnProperty(batch.office)) {
+          totals[batch.office] += batch.stock
+        }
+      })
+    })
+
+    return totals
+  }
+
+  const officeTotals = calculateOfficeTotals()
+  const totalAllocated = Object.values(officeTotals).reduce((sum, val) => sum + val, 0) - officeTotals.Unallocated
+  const totalUnallocated = officeTotals.Unallocated
+  const totalOverall = Object.values(officeTotals).reduce((sum, val) => sum + val, 0)
+
+  // Chart data
+  const chartData = [
+    { name: 'Hemodialysis', value: officeTotals.Hemodialysis, color: '#3b82f6' },
+    { name: 'Clinical Laboratory', value: officeTotals['Clinical Laboratory'], color: '#10b981' },
+    { name: 'Radiology', value: officeTotals.Radiology, color: '#f59e0b' },
+    { name: 'Admin Office', value: officeTotals['Admin Office'], color: '#8b5cf6' },
+    { name: 'Unallocated', value: officeTotals.Unallocated, color: '#9ca3af' },
+  ]
+
+  // Calculate donut chart segments
+  const calculateDonutSegments = () => {
+    const segments = []
+    let cumulativePercent = 0
+
+    chartData.forEach((item, index) => {
+      const percent = item.value / totalOverall
+      segments.push({
+        ...item,
+        startPercent: cumulativePercent,
+        endPercent: cumulativePercent + percent,
+      })
+      cumulativePercent += percent
+    })
+
+    return segments
+  }
+
+  const segments = calculateDonutSegments()
+
+  // Convert percentage to degrees
+  const polarToCartesian = (centerX, centerY, radius, angleInDegrees) => {
+    const angleInRadians = ((angleInDegrees - 90) * Math.PI) / 180
+    return {
+      x: centerX + radius * Math.cos(angleInRadians),
+      y: centerY + radius * Math.sin(angleInRadians),
+    }
+  }
+
+  // Create SVG arc path
+  const describeArc = (x, y, radius, startAngle, endAngle) => {
+    const start = polarToCartesian(x, y, radius, endAngle)
+    const end = polarToCartesian(x, y, radius, startAngle)
+    const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1'
+
+    const d = [
+      'M',
+      start.x,
+      start.y,
+      'A',
+      radius,
+      radius,
+      0,
+      largeArcFlag,
+      0,
+      end.x,
+      end.y,
+    ].join(' ')
+
+    return d
+  }
 
   return (
     <div className="dashboard">
@@ -60,11 +217,15 @@ const Dashboard = () => {
           </div>
           <div className="activity-list">
             {recentActivity.map((activity) => (
-              <div key={activity.id} className="activity-item">
+              <div key={activity.id} className={`activity-item ${activity.type ? activity.type : ''}`}>
                 <div className="activity-icon">
                   {activity.action === 'Issued' && '📤'}
                   {activity.action === 'Requisitioned' && '📥'}
                   {activity.action === 'Restocked' && '📦'}
+                  {activity.action === 'Allocated' && '📍'}
+                  {activity.action === 'Added' && '✨'}
+                  {activity.action === 'About to Expire' && '⚠️'}
+                  {activity.action === 'Expired' && '⛔'}
                 </div>
                 <div className="activity-details">
                   <div className="activity-item-name">{activity.item}</div>
@@ -73,7 +234,7 @@ const Dashboard = () => {
                     <span className="activity-time">{activity.time}</span>
                   </div>
                 </div>
-                <span className={`activity-status ${activity.action.toLowerCase()}`}>
+                <span className={`activity-status ${activity.action.toLowerCase().replace(/ /g, '-')}`}>
                   {activity.action}
                 </span>
               </div>
@@ -85,26 +246,42 @@ const Dashboard = () => {
           <div className="card-header">
             <h2 className="card-title">Inventory Overview</h2>
           </div>
-          <div className="chart-placeholder">
-            <div className="chart-bar">
-              <div className="chart-label">Hemodialysis</div>
-              <div className="chart-bar-fill" style={{ width: '85%', background: '#3b82f6' }}></div>
-              <div className="chart-value">85%</div>
+          <div className="donut-chart-container">
+            <div className="donut-chart-wrapper">
+              <svg width="240" height="240" viewBox="0 0 240 240">
+                <g transform="translate(120, 120)">
+                  {segments.map((segment, index) => {
+                    if (segment.value === 0) return null
+
+                    const startAngle = segment.startPercent * 360
+                    const endAngle = segment.endPercent * 360
+                    const path = describeArc(0, 0, 100, startAngle, endAngle)
+
+                    return (
+                      <path
+                        key={index}
+                        d={path}
+                        stroke={segment.color}
+                        strokeWidth="40"
+                        fill="none"
+                      />
+                    )
+                  })}
+                </g>
+              </svg>
+              <div className="donut-center">
+                <div className="donut-center-value">{totalAllocated}</div>
+                <div className="donut-center-label">Allocated</div>
+              </div>
             </div>
-            <div className="chart-bar">
-              <div className="chart-label">Clinical Laboratory</div>
-              <div className="chart-bar-fill" style={{ width: '70%', background: '#10b981' }}></div>
-              <div className="chart-value">70%</div>
-            </div>
-            <div className="chart-bar">
-              <div className="chart-label">Radiology</div>
-              <div className="chart-bar-fill" style={{ width: '60%', background: '#f59e0b' }}></div>
-              <div className="chart-value">60%</div>
-            </div>
-            <div className="chart-bar">
-              <div className="chart-label">Admin Office</div>
-              <div className="chart-bar-fill" style={{ width: '50%', background: '#8b5cf6' }}></div>
-              <div className="chart-value">50%</div>
+            <div className="donut-legend">
+              {chartData.map((item, index) => (
+                <div key={index} className="legend-item">
+                  <span className="legend-color" style={{ background: item.color }}></span>
+                  <span className="legend-name">{item.name}</span>
+                  <span className="legend-value">{item.value}</span>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -294,66 +471,101 @@ const Dashboard = () => {
           color: #1e40af;
         }
 
-        .chart-placeholder {
+        .activity-status.allocated {
+          background: #ede9fe;
+          color: #6d28d9;
+        }
+
+        .activity-status.added {
+          background: #dcfce7;
+          color: #166534;
+        }
+
+        .activity-status.about-to-expire {
+          background: #fef3c7;
+          color: #92400e;
+        }
+
+        .activity-status.expired {
+          background: #fee2e2;
+          color: #991b1b;
+        }
+
+        .activity-item.expired {
+          background: #fef2f2;
+        }
+
+        .activity-item.warning {
+          background: #fffbeb;
+        }
+
+        .activity-item.added {
+          background: #f0fdf4;
+        }
+
+        /* Donut Chart Styles */
+        .donut-chart-container {
           display: flex;
           flex-direction: column;
-          gap: 16px;
-        }
-
-        .chart-bar {
-          display: flex;
           align-items: center;
-          gap: 12px;
+          gap: 24px;
         }
 
-        .chart-label {
-          width: 140px;
-          font-size: 14px;
-          color: #4b5563;
-          flex-shrink: 0;
+        .donut-chart-wrapper {
+          position: relative;
+          width: 240px;
+          height: 240px;
         }
 
-        .chart-bar-container {
-          flex: 1;
-          height: 32px;
-          background: #f3f4f6;
-          border-radius: 4px;
-          overflow: hidden;
+        .donut-center {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          text-align: center;
         }
 
-        .chart-bar-fill {
-          height: 100%;
-          border-radius: 4px;
-        }
-
-        .chart-value {
-          width: 50px;
-          text-align: right;
-          font-weight: 600;
+        .donut-center-value {
+          font-size: 36px;
+          font-weight: 700;
           color: #1f2937;
-          flex-shrink: 0;
         }
 
-        .chart-legend {
+        .donut-center-label {
+          font-size: 14px;
+          color: #6b7280;
+        }
+
+        .donut-legend {
           display: flex;
-          gap: 20px;
-          margin-top: 16px;
-          padding-top: 16px;
-          border-top: 1px solid #f3f4f6;
+          flex-direction: column;
+          gap: 12px;
+          width: 100%;
         }
 
         .legend-item {
           display: flex;
           align-items: center;
+          justify-content: space-between;
           gap: 8px;
-          font-size: 13px;
+          font-size: 14px;
           color: #4b5563;
         }
 
         .legend-color {
-          width: 16px;
-          height: 16px;
-          border-radius: 4px;
+          width: 12px;
+          height: 12px;
+          border-radius: 6px;
+          flex-shrink: 0;
+        }
+
+        .legend-name {
+          flex: 1;
+        }
+
+        .legend-value {
+          font-weight: 600;
+          color: #1f2937;
         }
 
         /* Tablet Responsive */
@@ -404,11 +616,6 @@ const Dashboard = () => {
             font-size: 24px;
           }
 
-          .chart-label {
-            width: 100px;
-            font-size: 12px;
-          }
-
           .activity-item {
             flex-wrap: wrap;
           }
@@ -416,6 +623,16 @@ const Dashboard = () => {
           .activity-status {
             width: 100%;
             text-align: center;
+          }
+
+          .donut-legend {
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: space-between;
+          }
+
+          .legend-item {
+            width: 48%;
           }
         }
       `}</style>

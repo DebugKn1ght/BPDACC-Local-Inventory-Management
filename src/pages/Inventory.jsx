@@ -6,6 +6,7 @@ const Inventory = () => {
   const [showMoreInfo, setShowMoreInfo] = useState(null)
   const [showEditModal, setShowEditModal] = useState(null)
   const [showAddModal, setShowAddModal] = useState(false)
+  const [expandedItems, setExpandedItems] = useState(new Set())
 
   // Helper to check if date is near expiry (within 30 days)
   const isNearExpiry = (expiryDate) => {
@@ -25,7 +26,7 @@ const Inventory = () => {
     return expiry < today
   }
 
-  // Updated inventory data with expiration dates
+  // Updated inventory data model with batches (lots)
   const inventoryItems = [
     {
       id: 1,
@@ -33,16 +34,13 @@ const Inventory = () => {
       name: 'Syringes 5ml',
       brand: 'BD Medical',
       location: 'Shelf A-12',
-      totalStock: 770,
       minStock: 100,
       unit: 'pcs',
-      hasExpiry: false,
-      expiryDate: null,
-      allocations: [
-        { office: 'Hemodialysis', stock: 450 },
-        { office: 'Clinical Laboratory', stock: 320 }
-      ],
-      unallocated: 0
+      batches: [
+        { batchId: 'B-001', expiryDate: null, office: 'Hemodialysis', stock: 250 },
+        { batchId: 'B-002', expiryDate: null, office: 'Clinical Laboratory', stock: 320 },
+        { batchId: 'B-003', expiryDate: null, office: 'Hemodialysis', stock: 200 }
+      ]
     },
     {
       id: 2,
@@ -50,15 +48,12 @@ const Inventory = () => {
       name: 'Gauze Pads (4x4)',
       brand: 'Johnson & Johnson',
       location: 'Shelf B-05',
-      totalStock: 120,
       minStock: 50,
       unit: 'packs',
-      hasExpiry: true,
-      expiryDate: '2026-07-15',
-      allocations: [
-        { office: 'Radiology', stock: 120 }
-      ],
-      unallocated: 0
+      batches: [
+        { batchId: 'B-004', expiryDate: '2026-07-15', office: 'Radiology', stock: 80 },
+        { batchId: 'B-005', expiryDate: '2027-03-20', office: 'Radiology', stock: 40 }
+      ]
     },
     {
       id: 3,
@@ -66,16 +61,12 @@ const Inventory = () => {
       name: 'Alcohol Swabs',
       brand: 'Kendall',
       location: 'Shelf C-08',
-      totalStock: 75,
       minStock: 100,
       unit: 'boxes',
-      hasExpiry: true,
-      expiryDate: '2026-06-30',
-      allocations: [
-        { office: 'Admin Office', stock: 35 },
-        { office: 'Hemodialysis', stock: 40 }
-      ],
-      unallocated: 0
+      batches: [
+        { batchId: 'B-006', expiryDate: '2026-06-30', office: 'Admin Office', stock: 35 },
+        { batchId: 'B-007', expiryDate: '2026-08-10', office: 'Hemodialysis', stock: 40 }
+      ]
     },
     {
       id: 4,
@@ -83,15 +74,12 @@ const Inventory = () => {
       name: 'Bandages (Assorted)',
       brand: '3M',
       location: 'Shelf B-10',
-      totalStock: 200,
       minStock: 150,
       unit: 'boxes',
-      hasExpiry: false,
-      expiryDate: null,
-      allocations: [
-        { office: 'Hemodialysis', stock: 150 }
-      ],
-      unallocated: 50
+      batches: [
+        { batchId: 'B-008', expiryDate: null, office: 'Hemodialysis', stock: 150 },
+        { batchId: 'B-009', expiryDate: null, office: 'Unallocated', stock: 50 }
+      ]
     },
     {
       id: 5,
@@ -99,17 +87,42 @@ const Inventory = () => {
       name: 'Needles 21G',
       brand: 'BD Medical',
       location: 'Shelf A-15',
-      totalStock: 500,
       minStock: 200,
       unit: 'pcs',
-      hasExpiry: true,
-      expiryDate: '2028-12-01',
-      allocations: [
-        { office: 'Clinical Laboratory', stock: 500 }
-      ],
-      unallocated: 0
+      batches: [
+        { batchId: 'B-010', expiryDate: '2028-12-01', office: 'Clinical Laboratory', stock: 500 }
+      ]
     }
   ]
+
+  // Calculate total stock for an item across batches
+  const getTotalStock = (item) => {
+    return item.batches.reduce((sum, batch) => sum + batch.stock, 0)
+  }
+
+  // Determine the most urgent status for an item based on batches
+  const getItemStatus = (item) => {
+    const totalStock = getTotalStock(item)
+    const hasExpired = item.batches.some(batch => isExpired(batch.expiryDate))
+    const hasNearExpiry = item.batches.some(batch => isNearExpiry(batch.expiryDate))
+    const isLowStock = totalStock < item.minStock
+
+    if (hasExpired) return { label: 'Expired', type: 'expired' }
+    if (hasNearExpiry) return { label: 'Near Expiry', type: 'near-expiry' }
+    if (isLowStock) return { label: 'Low Stock', type: 'low' }
+    return { label: 'In Stock', type: 'ok' }
+  }
+
+  // Toggle expansion for item batches
+  const toggleItemExpansion = (itemId) => {
+    const newExpanded = new Set(expandedItems)
+    if (newExpanded.has(itemId)) {
+      newExpanded.delete(itemId)
+    } else {
+      newExpanded.add(itemId)
+    }
+    setExpandedItems(newExpanded)
+  }
 
   // Filter items based on search and office
   const filteredItems = inventoryItems.filter(item => {
@@ -119,7 +132,7 @@ const Inventory = () => {
       item.brand.toLowerCase().includes(searchQuery.toLowerCase())
 
     const matchesOffice = selectedOffice === 'all' || 
-      item.allocations.some(a => a.office === selectedOffice)
+      item.batches.some(batch => batch.office === selectedOffice)
 
     return matchesSearch && matchesOffice
   })
@@ -140,7 +153,7 @@ const Inventory = () => {
       <div className="page-header">
         <div>
           <h1 className="page-title">Inventory Management</h1>
-          <p className="page-subtitle">Manage and track your medical supplies</p>
+          <p className="page-subtitle">Manage and track your medical supplies by batches</p>
         </div>
         <button className="btn-primary" onClick={() => setShowAddModal(true)}>+ Add Item</button>
       </div>
@@ -173,11 +186,11 @@ const Inventory = () => {
           <table className="inventory-table">
             <thead>
               <tr>
+                <th style={{width: '40px'}}></th>
                 <th>SKU</th>
                 <th>Item Name</th>
                 <th>Brand</th>
                 <th>Total Stock</th>
-                <th>Expiry Date</th>
                 <th>Location</th>
                 <th>Status</th>
                 <th>Actions</th>
@@ -185,66 +198,104 @@ const Inventory = () => {
             </thead>
             <tbody>
               {filteredItems.map((item) => {
-                const isLowStock = item.totalStock < item.minStock
-                const nearExpiry = isNearExpiry(item.expiryDate)
-                const expired = isExpired(item.expiryDate)
+                const totalStock = getTotalStock(item)
+                const status = getItemStatus(item)
+                const isLowStock = totalStock < item.minStock
+                const isExpanded = expandedItems.has(item.id)
                 
-                let status = 'In Stock'
-                let statusType = 'ok'
-                
-                if (expired) {
-                  status = 'Expired'
-                  statusType = 'expired'
-                } else if (nearExpiry) {
-                  status = 'Near Expiry'
-                  statusType = 'near-expiry'
-                } else if (isLowStock) {
-                  status = 'Low Stock'
-                  statusType = 'low'
-                }
-
                 return (
-                  <tr key={item.id}>
-                    <td className="sku">{item.sku}</td>
-                    <td>
-                      <div className="item-name">{item.name}</div>
-                    </td>
-                    <td>
-                      <span className="brand-tag">{item.brand}</span>
-                    </td>
-                    <td>
-                      <div className={`stock-cell ${isLowStock ? 'low' : ''}`}>
-                        {item.totalStock} {item.unit}
-                      </div>
-                    </td>
-                    <td>
-                      <div className={`expiry-cell ${nearExpiry ? 'near' : expired ? 'expired' : ''}`}>
-                        {formatExpiryDate(item.expiryDate)}
-                      </div>
-                    </td>
-                    <td>{item.location}</td>
-                    <td>
-                      <span className={`status-badge ${statusType}`}>{status}</span>
-                    </td>
-                    <td>
-                      <div className="actions">
-                        <button 
-                          className="btn-icon" 
-                          title="Edit item"
-                          onClick={() => setShowEditModal(item)}
-                        >
-                          ✏️
-                        </button>
-                        <button 
-                          className="btn-icon" 
-                          title="More info"
-                          onClick={() => setShowMoreInfo(item)}
-                        >
-                          📋
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
+                  <React.Fragment key={item.id}>
+                    <tr className="item-row" onClick={() => toggleItemExpansion(item.id)}>
+                      <td>
+                        <span className="expand-icon">
+                          {isExpanded ? '▼' : '▶'}
+                        </span>
+                      </td>
+                      <td className="sku">{item.sku}</td>
+                      <td>
+                        <div className="item-name">{item.name}</div>
+                      </td>
+                      <td>
+                        <span className="brand-tag">{item.brand}</span>
+                      </td>
+                      <td>
+                        <div className={`stock-cell ${isLowStock ? 'low' : ''}`}>
+                          {totalStock} {item.unit}
+                        </div>
+                      </td>
+                      <td>{item.location}</td>
+                      <td>
+                        <span className={`status-badge ${status.type}`}>{status.label}</span>
+                      </td>
+                      <td onClick={(e) => e.stopPropagation()}>
+                        <div className="actions">
+                          <button 
+                            className="btn-icon" 
+                            title="Edit item"
+                            onClick={() => setShowEditModal(item)}
+                          >
+                            ✏️
+                          </button>
+                          <button 
+                            className="btn-icon" 
+                            title="More info"
+                            onClick={() => setShowMoreInfo(item)}
+                          >
+                            📋
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+
+                    {isExpanded && (
+                      <tr className="batches-row">
+                        <td colSpan={8}>
+                          <div className="batches-container">
+                            <table className="batches-table">
+                              <thead>
+                                <tr>
+                                  <th>Batch ID</th>
+                                  <th>Office</th>
+                                  <th>Stock</th>
+                                  <th>Expiry Date</th>
+                                  <th>Status</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {item.batches.map((batch, idx) => {
+                                  const batchExpired = isExpired(batch.expiryDate)
+                                  const batchNearExpiry = isNearExpiry(batch.expiryDate)
+                                  let batchStatus = { label: 'OK', type: 'ok' }
+                                  
+                                  if (batchExpired) {
+                                    batchStatus = { label: 'Expired', type: 'expired' }
+                                  } else if (batchNearExpiry) {
+                                    batchStatus = { label: 'Near Expiry', type: 'near-expiry' }
+                                  }
+
+                                  return (
+                                    <tr key={idx}>
+                                      <td className="batch-id">{batch.batchId}</td>
+                                      <td><span className="office-tag">{batch.office}</span></td>
+                                      <td>{batch.stock} {item.unit}</td>
+                                      <td className={`expiry-cell ${batchNearExpiry ? 'near' : batchExpired ? 'expired' : ''}`}>
+                                        {formatExpiryDate(batch.expiryDate)}
+                                      </td>
+                                      <td>
+                                        <span className={`status-badge ${batchStatus.type}`}>
+                                          {batchStatus.label}
+                                        </span>
+                                      </td>
+                                    </tr>
+                                  )
+                                })}
+                              </tbody>
+                            </table>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
                 )
               })}
             </tbody>
@@ -255,14 +306,13 @@ const Inventory = () => {
       {/* More Info Modal */}
       {showMoreInfo && (
         <div className="modal-overlay" onClick={() => setShowMoreInfo(null)}>
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
+          <div className="modal modal-large" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h2 className="modal-title">Item Details</h2>
+              <h2 className="modal-title">Item Details: {showMoreInfo.name}</h2>
               <button className="close-btn" onClick={() => setShowMoreInfo(null)}>×</button>
             </div>
             <div className="modal-body">
               <div className="detail-section">
-                <h3 className="detail-title">{showMoreInfo.name}</h3>
                 <div className="detail-grid">
                   <div className="detail-item">
                     <span className="detail-label">SKU:</span>
@@ -278,42 +328,55 @@ const Inventory = () => {
                   </div>
                   <div className="detail-item">
                     <span className="detail-label">Total Stock:</span>
-                    <span className="detail-value">{showMoreInfo.totalStock} {showMoreInfo.unit}</span>
-                  </div>
-                  <div className="detail-item">
-                    <span className="detail-label">Expiry Date:</span>
-                    <span className="detail-value">{formatExpiryDate(showMoreInfo.expiryDate)}</span>
+                    <span className="detail-value">{getTotalStock(showMoreInfo)} {showMoreInfo.unit}</span>
                   </div>
                 </div>
               </div>
 
               <div className="detail-section">
-                <h4 className="detail-subtitle">Office Allocations</h4>
+                <h4 className="detail-subtitle">Batches / Lots</h4>
                 <table className="allocations-table">
                   <thead>
                     <tr>
+                      <th>Batch ID</th>
                       <th>Office</th>
-                      <th>Allocated</th>
+                      <th>Stock</th>
+                      <th>Expiry Date</th>
+                      <th>Status</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {showMoreInfo.allocations.map((alloc, index) => (
-                      <tr key={index}>
-                        <td>{alloc.office}</td>
-                        <td>{alloc.stock} {showMoreInfo.unit}</td>
-                      </tr>
-                    ))}
-                    {showMoreInfo.unallocated > 0 && (
-                      <tr className="unallocated-row">
-                        <td>Unallocated</td>
-                        <td>{showMoreInfo.unallocated} {showMoreInfo.unit}</td>
-                      </tr>
-                    )}
+                    {showMoreInfo.batches.map((batch, idx) => {
+                      const batchExpired = isExpired(batch.expiryDate)
+                      const batchNearExpiry = isNearExpiry(batch.expiryDate)
+                      let batchStatus = { label: 'OK', type: 'ok' }
+                      
+                      if (batchExpired) {
+                        batchStatus = { label: 'Expired', type: 'expired' }
+                      } else if (batchNearExpiry) {
+                        batchStatus = { label: 'Near Expiry', type: 'near-expiry' }
+                      }
+                      
+                      return (
+                        <tr key={idx}>
+                          <td>{batch.batchId}</td>
+                          <td>{batch.office}</td>
+                          <td>{batch.stock} {showMoreInfo.unit}</td>
+                          <td>{formatExpiryDate(batch.expiryDate)}</td>
+                          <td>
+                            <span className={`status-badge ${batchStatus.type}`}>
+                              {batchStatus.label}
+                            </span>
+                          </td>
+                        </tr>
+                      )
+                    })}
                   </tbody>
                   <tfoot>
                     <tr>
-                      <td>Total</td>
-                      <td>{showMoreInfo.totalStock} {showMoreInfo.unit}</td>
+                      <td colSpan={2}>Total</td>
+                      <td>{getTotalStock(showMoreInfo)} {showMoreInfo.unit}</td>
+                      <td colSpan={2}></td>
                     </tr>
                   </tfoot>
                 </table>
@@ -329,7 +392,7 @@ const Inventory = () => {
       {/* Edit Modal */}
       {showEditModal && (
         <div className="modal-overlay" onClick={() => setShowEditModal(null)}>
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
+          <div className="modal modal-large" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h2 className="modal-title">Edit Item</h2>
               <button className="close-btn" onClick={() => setShowEditModal(null)}>×</button>
@@ -356,23 +419,53 @@ const Inventory = () => {
                   <label className="form-label">Minimum Stock Level</label>
                   <input type="number" className="form-input" defaultValue={showEditModal.minStock} />
                 </div>
+                
                 <div className="form-group">
-                  <label className="toggle-label">
-                    <input type="checkbox" defaultChecked={showEditModal.hasExpiry} />
-                    Has Expiration Date
-                  </label>
-                </div>
-                {showEditModal.hasExpiry && (
-                  <div className="form-group">
-                    <label className="form-label">Expiration Date</label>
-                    <input type="date" className="form-input" defaultValue={showEditModal.expiryDate || ''} />
+                  <label className="form-label">Batches</label>
+                  <div className="batches-edit-container">
+                    {showEditModal.batches.map((batch, idx) => (
+                      <div key={idx} className="batch-edit-row">
+                        <div className="form-group mini">
+                          <label className="form-label">Batch ID</label>
+                          <input type="text" className="form-input" defaultValue={batch.batchId} />
+                        </div>
+                        <div className="form-group mini">
+                          <label className="form-label">Office</label>
+                          <select className="form-input" defaultValue={batch.office}>
+                            <option value="Hemodialysis">Hemodialysis</option>
+                            <option value="Clinical Laboratory">Clinical Laboratory</option>
+                            <option value="Radiology">Radiology</option>
+                            <option value="Admin Office">Admin Office</option>
+                            <option value="Unallocated">Unallocated</option>
+                          </select>
+                        </div>
+                        <div className="form-group mini">
+                          <label className="form-label">Stock</label>
+                          <input type="number" className="form-input" defaultValue={batch.stock} />
+                        </div>
+                        <div className="form-group mini">
+                          <label className="toggle-label">
+                            <input type="checkbox" defaultChecked={!!batch.expiryDate} />
+                            Has Expiry
+                          </label>
+                        </div>
+                        <div className="form-group mini">
+                          <label className="form-label">Expiry Date</label>
+                          <input type="date" className="form-input" defaultValue={batch.expiryDate || ''} disabled={!batch.expiryDate} />
+                        </div>
+                        <button className="btn-icon remove-btn" title="Remove Batch">🗑️</button>
+                      </div>
+                    ))}
                   </div>
-                )}
+                </div>
               </div>
             </div>
             <div className="modal-footer">
-              <button className="btn-secondary" onClick={() => setShowEditModal(null)}>Cancel</button>
-              <button className="btn-primary" onClick={() => setShowEditModal(null)}>Save Changes</button>
+              <button className="btn-secondary">Add Batch</button>
+              <div className="button-group">
+                <button className="btn-secondary" onClick={() => setShowEditModal(null)}>Cancel</button>
+                <button className="btn-primary" onClick={() => setShowEditModal(null)}>Save Changes</button>
+              </div>
             </div>
           </div>
         </div>
@@ -381,7 +474,7 @@ const Inventory = () => {
       {/* Add Item Modal */}
       {showAddModal && (
         <div className="modal-overlay" onClick={() => setShowAddModal(false)}>
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
+          <div className="modal modal-large" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h2 className="modal-title">Add New Item</h2>
               <button className="close-btn" onClick={() => setShowAddModal(false)}>×</button>
@@ -405,10 +498,6 @@ const Inventory = () => {
                   <input type="text" className="form-input" placeholder="e.g., Shelf A-12" />
                 </div>
                 <div className="form-group">
-                  <label className="form-label">Total Stock</label>
-                  <input type="number" className="form-input" placeholder="e.g., 100" />
-                </div>
-                <div className="form-group">
                   <label className="form-label">Unit</label>
                   <select className="form-input">
                     <option value="pcs">pcs</option>
@@ -420,21 +509,14 @@ const Inventory = () => {
                   <label className="form-label">Minimum Stock Level</label>
                   <input type="number" className="form-input" placeholder="e.g., 50" />
                 </div>
-                <div className="form-group">
-                  <label className="toggle-label">
-                    <input type="checkbox" />
-                    Has Expiration Date
-                  </label>
-                </div>
-                <div className="form-group">
-                  <label className="form-label">Expiration Date</label>
-                  <input type="date" className="form-input" />
-                </div>
               </div>
             </div>
             <div className="modal-footer">
-              <button className="btn-secondary" onClick={() => setShowAddModal(false)}>Cancel</button>
-              <button className="btn-primary" onClick={() => setShowAddModal(false)}>Add Item</button>
+              <button className="btn-secondary">Add Initial Batch</button>
+              <div className="button-group">
+                <button className="btn-secondary" onClick={() => setShowAddModal(false)}>Cancel</button>
+                <button className="btn-primary" onClick={() => setShowAddModal(false)}>Add Item</button>
+              </div>
             </div>
           </div>
         </div>
@@ -545,7 +627,6 @@ const Inventory = () => {
         .inventory-table {
           width: 100%;
           border-collapse: collapse;
-          min-width: 800px;
         }
 
         .inventory-table th,
@@ -567,11 +648,12 @@ const Inventory = () => {
           white-space: nowrap;
         }
 
-        .inventory-table tbody tr {
+        .inventory-table .item-row {
           border-bottom: 1px solid #f3f4f6;
+          cursor: pointer;
         }
 
-        .inventory-table tbody tr:hover {
+        .inventory-table .item-row:hover {
           background: #f9fafb;
         }
 
@@ -594,6 +676,16 @@ const Inventory = () => {
           font-size: 12px;
           font-weight: 500;
           white-space: nowrap;
+        }
+
+        .office-tag {
+          display: inline-block;
+          padding: 4px 10px;
+          background: #f3f4f6;
+          color: #4b5563;
+          border-radius: 8px;
+          font-size: 12px;
+          font-weight: 500;
         }
 
         .stock-cell {
@@ -668,6 +760,47 @@ const Inventory = () => {
           background: #f3f4f6;
         }
 
+        .expand-icon {
+          font-size: 10px;
+          color: #6b7280;
+        }
+
+        .batches-row {
+          background: #f9fafb;
+        }
+
+        .batches-container {
+          padding: 12px 24px 24px;
+        }
+
+        .batches-table {
+          width: 100%;
+          border-collapse: collapse;
+        }
+
+        .batches-table th {
+          background: transparent;
+          font-size: 11px;
+          font-weight: 600;
+          color: #6b7280;
+          padding: 8px 12px;
+          text-align: left;
+        }
+
+        .batches-table td {
+          padding: 10px 12px;
+          font-size: 13px;
+        }
+
+        .batches-table tr {
+          border-bottom: 1px solid #e5e7eb;
+        }
+
+        .batch-id {
+          font-family: monospace;
+          color: #374151;
+        }
+
         /* Toggle Label */
         .toggle-label {
           display: flex;
@@ -709,6 +842,10 @@ const Inventory = () => {
           box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
         }
 
+        .modal-large {
+          max-width: 900px;
+        }
+
         .modal-header {
           display: flex;
           justify-content: space-between;
@@ -745,10 +882,16 @@ const Inventory = () => {
 
         .modal-footer {
           display: flex;
-          justify-content: flex-end;
+          justify-content: space-between;
+          align-items: center;
           gap: 12px;
           padding: 20px 24px;
           border-top: 1px solid #f3f4f6;
+        }
+
+        .button-group {
+          display: flex;
+          gap: 12px;
         }
 
         .detail-section {
@@ -817,11 +960,6 @@ const Inventory = () => {
           color: #1f2937;
         }
 
-        .unallocated-row td {
-          color: #6b7280;
-          font-style: italic;
-        }
-
         .allocations-table tfoot td {
           font-weight: 700;
           border-top: 2px solid #f3f4f6;
@@ -837,6 +975,11 @@ const Inventory = () => {
           display: flex;
           flex-direction: column;
           gap: 6px;
+        }
+
+        .form-group.mini {
+          flex: 1;
+          min-width: 0;
         }
 
         .form-label {
@@ -857,6 +1000,30 @@ const Inventory = () => {
           border-color: #1e40af;
         }
 
+        .form-input:disabled {
+          background: #f3f4f6;
+          cursor: not-allowed;
+        }
+
+        .batches-edit-container {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .batch-edit-row {
+          display: flex;
+          gap: 12px;
+          padding: 12px;
+          background: #f9fafb;
+          border-radius: 8px;
+          align-items: flex-end;
+        }
+
+        .remove-btn {
+          color: #dc2626;
+        }
+
         /* Responsive Styles */
         @media (max-width: 1024px) {
           .filters-bar {
@@ -870,6 +1037,15 @@ const Inventory = () => {
 
           .select-input {
             flex: 1;
+          }
+
+          .batch-edit-row {
+            flex-direction: column;
+            align-items: stretch;
+          }
+
+          .form-group.mini {
+            width: 100%;
           }
         }
 
@@ -902,6 +1078,19 @@ const Inventory = () => {
 
           .detail-grid {
             grid-template-columns: 1fr;
+          }
+
+          .modal-footer {
+            flex-direction: column;
+          }
+
+          .button-group {
+            width: 100%;
+            flex-direction: column;
+          }
+
+          .button-group button {
+            width: 100%;
           }
         }
       `}</style>
