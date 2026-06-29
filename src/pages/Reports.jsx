@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 
 const Reports = () => {
-  const [selectedMonth, setSelectedMonth] = useState(new Date().toISOString().slice(0, 7))
+  const [timePeriod, setTimePeriod] = useState('monthly')
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().slice(0, 7))
   const [selectedOffice, setSelectedOffice] = useState('all')
 
   const reportData = [
@@ -16,25 +17,42 @@ const Reports = () => {
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
   ]
-  const [year, month] = selectedMonth.split('-')
+  const [year, month] = selectedDate.split('-')
   const monthName = monthNames[parseInt(month) - 1]
 
   const handlePrint = () => {
     window.print()
   }
 
-  const totalBeginning = reportData.reduce((sum, item) => sum + item.beginning, 0)
-  const totalReceived = reportData.reduce((sum, item) => sum + item.received, 0)
-  const totalIssued = reportData.reduce((sum, item) => sum + item.issued, 0)
-  const totalEnding = reportData.reduce((sum, item) => sum + item.ending, 0)
+  const totalSupplies = reportData.reduce((sum, item) => sum + item.ending, 0)
+  const totalSupplyTypes = reportData.length
+  const lowStockItems = 3
+  const outOfStockItems = 1
+  const expiringIn30Days = 5
+
+  const getPeriodLabel = () => {
+    if (timePeriod === 'weekly') return 'Week of June 24 - June 30, 2026'
+    if (timePeriod === 'monthly') return `${monthName} ${year}`
+    return `${year}`
+  }
+
+  const getReportTitle = () => {
+    return `${timePeriod.charAt(0).toUpperCase() + timePeriod.slice(1)} Inventory Report`
+  }
+
+  const getPurpose = () => {
+    if (timePeriod === 'weekly') return 'Monitor day-to-day operations.'
+    if (timePeriod === 'monthly') return 'Track monthly inventory trends.'
+    return 'Analyze annual inventory performance.'
+  }
 
   return (
     <div className="reports">
       <div className="screen-view no-print">
         <div className="page-header">
           <div>
-            <h1 className="page-title">Monthly Inventory Reports</h1>
-            <p className="page-subtitle">Generate and print monthly issuance reports</p>
+            <h1 className="page-title">{getReportTitle()}</h1>
+            <p className="page-subtitle">Purpose: {getPurpose()}</p>
           </div>
           <div className="header-actions">
             <button className="btn-primary" onClick={handlePrint}>🖨️ Print Report</button>
@@ -43,11 +61,23 @@ const Reports = () => {
 
         <div className="filters-bar">
           <div className="filter-group">
-            <label>Month</label>
+            <label>Time Period</label>
+            <select
+              value={timePeriod}
+              onChange={(e) => setTimePeriod(e.target.value)}
+              className="form-input"
+            >
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+              <option value="yearly">Yearly</option>
+            </select>
+          </div>
+          <div className="filter-group">
+            <label>{timePeriod === 'monthly' ? 'Month' : timePeriod === 'yearly' ? 'Year' : 'Week'}</label>
             <input
-              type="month"
-              value={selectedMonth}
-              onChange={(e) => setSelectedMonth(e.target.value)}
+              type={timePeriod === 'monthly' ? 'month' : timePeriod === 'yearly' ? 'number' : 'date'}
+              value={timePeriod === 'yearly' ? year : selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
               className="form-input"
             />
           </div>
@@ -71,90 +101,43 @@ const Reports = () => {
           <div className="stat-card">
             <div className="stat-icon" style={{ background: '#dbeafe', color: '#1e40af' }}>📦</div>
             <div>
-              <div className="stat-value">{totalBeginning.toLocaleString()}</div>
-              <div className="stat-label">Beginning Stock</div>
+              <div className="stat-value">{totalSupplies.toLocaleString()} items</div>
+              <div className="stat-label">Total Supplies in Inventory</div>
             </div>
           </div>
           <div className="stat-card">
-            <div className="stat-icon" style={{ background: '#dcfce7', color: '#166534' }}>⬆️</div>
+            <div className="stat-icon" style={{ background: '#e0e7ff', color: '#3730a3' }}>📋</div>
             <div>
-              <div className="stat-value">{totalReceived.toLocaleString()}</div>
-              <div className="stat-label">Received</div>
+              <div className="stat-value">{totalSupplyTypes}</div>
+              <div className="stat-label">Total Different Supply Types</div>
             </div>
           </div>
           <div className="stat-card">
-            <div className="stat-icon" style={{ background: '#fee2e2', color: '#991b1b' }}>⬇️</div>
+            <div className="stat-icon" style={{ background: '#fef3c7', color: '#92400e' }}>⚠️</div>
             <div>
-              <div className="stat-value">{totalIssued.toLocaleString()}</div>
-              <div className="stat-label">Issued</div>
+              <div className="stat-value">{lowStockItems}</div>
+              <div className="stat-label">Low Stock Items</div>
             </div>
           </div>
           <div className="stat-card">
-            <div className="stat-icon" style={{ background: '#e0e7ff', color: '#3730a3' }}>📊</div>
+            <div className="stat-icon" style={{ background: '#fee2e2', color: '#991b1b' }}>⛔</div>
             <div>
-              <div className="stat-value">{totalEnding.toLocaleString()}</div>
-              <div className="stat-label">Ending Stock</div>
+              <div className="stat-value">{outOfStockItems}</div>
+              <div className="stat-label">Out of Stock Items</div>
             </div>
           </div>
-        </div>
-
-        <div className="dashboard-grid">
-          <div className="card">
-            <div className="card-header">
-              <h2 className="card-title">Stock Movement Overview</h2>
-            </div>
-            <div className="chart-placeholder">
-              {reportData.map((item, index) => (
-                <div key={index} className="chart-bar">
-                  <div className="chart-label" style={{ width: '150px' }}>{item.item}</div>
-                  <div className="chart-bar-container">
-                    <div className="chart-bar-fill" style={{ width: `${(item.beginning / 600) * 100}%`, background: '#3b82f6' }}></div>
-                  </div>
-                  <div className="chart-value">{item.beginning}</div>
-                  <div className="chart-bar-container">
-                    <div className="chart-bar-fill" style={{ width: `${(item.received / 300) * 100}%`, background: '#10b981' }}></div>
-                  </div>
-                  <div className="chart-value">{item.received}</div>
-                  <div className="chart-bar-container">
-                    <div className="chart-bar-fill" style={{ width: `${(item.issued / 400) * 100}%`, background: '#f59e0b' }}></div>
-                  </div>
-                  <div className="chart-value">{item.issued}</div>
-                  <div className="chart-bar-container">
-                    <div className="chart-bar-fill" style={{ width: `${(item.ending / 500) * 100}%`, background: '#8b5cf6' }}></div>
-                  </div>
-                  <div className="chart-value">{item.ending}</div>
-                </div>
-              ))}
-              <div className="chart-legend">
-                <div className="legend-item"><span className="legend-color" style={{ background: '#3b82f6' }}></span> Beginning</div>
-                <div className="legend-item"><span className="legend-color" style={{ background: '#10b981' }}></span> Received</div>
-                <div className="legend-item"><span className="legend-color" style={{ background: '#f59e0b' }}></span> Issued</div>
-                <div className="legend-item"><span className="legend-color" style={{ background: '#8b5cf6' }}></span> Ending</div>
-              </div>
-            </div>
-          </div>
-
-          <div className="card">
-            <div className="card-header">
-              <h2 className="card-title">Issuance Distribution</h2>
-            </div>
-            <div className="pie-chart-placeholder">
-              <div className="pie-legend">
-                {reportData.map((item, index) => (
-                  <div key={index} className="legend-item">
-                    <span className="legend-color" style={{ background: `hsl(${index * 60}, 70%, 50%)` }}></span>
-                    {item.item}
-                    <span className="legend-percentage">{Math.round((item.issued / totalIssued) * 100)}%</span>
-                  </div>
-                ))}
-              </div>
+          <div className="stat-card">
+            <div className="stat-icon" style={{ background: '#fce7f3', color: '#be185d' }}>⏰</div>
+            <div>
+              <div className="stat-value">{expiringIn30Days}</div>
+              <div className="stat-label">Expiring Within 30 Days</div>
             </div>
           </div>
         </div>
 
         <div className="card">
           <div className="card-header">
-            <h2 className="card-title">Detailed Report Data</h2>
+            <h2 className="card-title">Inventory Summary Table</h2>
           </div>
           <div className="table-container">
             <table className="data-table">
@@ -180,15 +163,6 @@ const Reports = () => {
                   </tr>
                 ))}
               </tbody>
-              <tfoot>
-                <tr>
-                  <td colSpan="2" className="total-label">TOTAL</td>
-                  <td className="number-cell total-value">{totalBeginning.toLocaleString()}</td>
-                  <td className="number-cell total-value">{totalReceived.toLocaleString()}</td>
-                  <td className="number-cell total-value">{totalIssued.toLocaleString()}</td>
-                  <td className="number-cell total-value">{totalEnding.toLocaleString()}</td>
-                </tr>
-              </tfoot>
             </table>
           </div>
         </div>
@@ -202,12 +176,45 @@ const Reports = () => {
                 <div className="clinic-logo">🏥</div>
                 <div className="clinic-info">
                   <h2>BPDACC Inventory Management</h2>
-                  <p>MONTHLY INVENTORY ISSUANCE REPORT</p>
+                  <p>{getReportTitle().toUpperCase()}</p>
                 </div>
               </div>
               <div className="report-period">
-                For the Month of <span className="period-highlight">{monthName} {year}</span>
+                For the {timePeriod.charAt(0).toUpperCase() + timePeriod.slice(1)} of <span className="period-highlight">{getPeriodLabel()}</span>
               </div>
+            </div>
+
+            <div className="print-summary-section">
+              <table className="summary-table">
+                <thead>
+                  <tr>
+                    <th>Statistic</th>
+                    <th>Value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Total Supplies in Inventory</td>
+                    <td>{totalSupplies.toLocaleString()} items</td>
+                  </tr>
+                  <tr>
+                    <td>Total Different Supply Types</td>
+                    <td>{totalSupplyTypes}</td>
+                  </tr>
+                  <tr>
+                    <td>Low Stock Items</td>
+                    <td>{lowStockItems}</td>
+                  </tr>
+                  <tr>
+                    <td>Out of Stock Items</td>
+                    <td>{outOfStockItems}</td>
+                  </tr>
+                  <tr>
+                    <td>Expiring Within 30 Days</td>
+                    <td>{expiringIn30Days}</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
 
             <table className="report-table">
@@ -236,15 +243,6 @@ const Reports = () => {
                   </tr>
                 ))}
               </tbody>
-              <tfoot>
-                <tr>
-                  <td colSpan="2" className="total-label">TOTAL</td>
-                  <td className="number-cell total-value">{totalBeginning.toLocaleString()}</td>
-                  <td className="number-cell total-value">{totalReceived.toLocaleString()}</td>
-                  <td className="number-cell total-value">{totalIssued.toLocaleString()}</td>
-                  <td className="number-cell total-value">{totalEnding.toLocaleString()}</td>
-                </tr>
-              </tfoot>
             </table>
 
             <div className="report-signatures">
@@ -279,21 +277,22 @@ const Reports = () => {
         .page-header {
           display: flex;
           justify-content: space-between;
-          align-items: center;
+          align-items: flex-start;
           margin-bottom: 24px;
           gap: 16px;
         }
 
         .page-title {
-          font-size: 28px;
-          font-weight: 700;
+          font-size: 32px;
+          font-weight: 800;
           color: #1f2937;
-          margin-bottom: 4px;
+          margin-bottom: 8px;
         }
 
         .page-subtitle {
           color: #6b7280;
-          font-size: 14px;
+          font-size: 16px;
+          font-style: italic;
         }
 
         .header-actions {
@@ -348,7 +347,7 @@ const Reports = () => {
 
         .stats-grid {
           display: grid;
-          grid-template-columns: repeat(4, 1fr);
+          grid-template-columns: repeat(3, 1fr);
           gap: 20px;
           margin-bottom: 24px;
         }
@@ -361,6 +360,7 @@ const Reports = () => {
           align-items: center;
           gap: 16px;
           box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+          min-height: 100px;
         }
 
         .stat-icon {
@@ -371,6 +371,7 @@ const Reports = () => {
           align-items: center;
           justify-content: center;
           font-size: 24px;
+          flex-shrink: 0;
         }
 
         .stat-value {
@@ -382,13 +383,6 @@ const Reports = () => {
         .stat-label {
           font-size: 14px;
           color: #6b7280;
-        }
-
-        .dashboard-grid {
-          display: grid;
-          grid-template-columns: 2fr 1fr;
-          gap: 20px;
-          margin-bottom: 24px;
         }
 
         .card {
@@ -409,85 +403,6 @@ const Reports = () => {
           font-size: 18px;
           font-weight: 600;
           color: #1f2937;
-        }
-
-        .chart-placeholder {
-          display: flex;
-          flex-direction: column;
-          gap: 16px;
-        }
-
-        .chart-bar {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          flex-wrap: wrap;
-        }
-
-        .chart-label {
-          font-size: 14px;
-          color: #4b5563;
-          flex-shrink: 0;
-        }
-
-        .chart-bar-container {
-          flex: 1;
-          min-width: 60px;
-          height: 32px;
-          background: #f3f4f6;
-          border-radius: 4px;
-          overflow: hidden;
-        }
-
-        .chart-bar-fill {
-          height: 100%;
-          border-radius: 4px;
-        }
-
-        .chart-value {
-          width: 50px;
-          text-align: right;
-          font-weight: 600;
-          color: #1f2937;
-          flex-shrink: 0;
-        }
-
-        .chart-legend {
-          display: flex;
-          gap: 20px;
-          margin-top: 16px;
-          padding-top: 16px;
-          border-top: 1px solid #f3f4f6;
-          flex-wrap: wrap;
-        }
-
-        .legend-item {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          font-size: 13px;
-          color: #4b5563;
-        }
-
-        .legend-color {
-          width: 16px;
-          height: 16px;
-          border-radius: 4px;
-        }
-
-        .legend-percentage {
-          font-weight: 600;
-          margin-left: auto;
-        }
-
-        .pie-chart-placeholder {
-          min-height: 200px;
-        }
-
-        .pie-legend {
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
         }
 
         .table-container {
@@ -514,21 +429,8 @@ const Reports = () => {
           color: #4b5563;
         }
 
-        .data-table tfoot td {
-          background: #f3f4f6;
-          font-weight: 600;
-        }
-
         .number-cell {
           text-align: right;
-        }
-
-        .total-label {
-          text-align: right;
-        }
-
-        .total-value {
-          font-size: 15px;
         }
 
         .print-view {
@@ -586,6 +488,28 @@ const Reports = () => {
           font-size: 18px;
         }
 
+        .print-summary-section {
+          margin-bottom: 32px;
+        }
+
+        .summary-table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-bottom: 24px;
+        }
+
+        .summary-table th,
+        .summary-table td {
+          border: 1px solid #000;
+          padding: 12px;
+          text-align: left;
+        }
+
+        .summary-table th {
+          background: #f3f4f6;
+          font-weight: 700;
+        }
+
         .report-table {
           width: 100%;
           border-collapse: collapse;
@@ -603,12 +527,7 @@ const Reports = () => {
           background: #f9fafb;
           font-weight: 600;
           font-size: 13px;
-          color: #4b5563;
-        }
-
-        .report-table tfoot td {
-          background: #f9fafb;
-          font-weight: 600;
+          color: #1f2937;
         }
 
         .report-signatures {
@@ -643,19 +562,6 @@ const Reports = () => {
         @media (max-width: 1024px) {
           .stats-grid {
             grid-template-columns: repeat(2, 1fr);
-          }
-
-          .dashboard-grid {
-            grid-template-columns: 1fr;
-          }
-
-          .chart-bar {
-            flex-wrap: wrap;
-          }
-
-          .chart-label {
-            width: 100%;
-            margin-bottom: 8px;
           }
 
           .report-signatures {
@@ -702,22 +608,6 @@ const Reports = () => {
 
           .stat-value {
             font-size: 24px;
-          }
-
-          .chart-bar {
-            gap: 8px;
-          }
-
-          .chart-bar-container {
-            min-width: 40px;
-          }
-
-          .chart-value {
-            width: 40px;
-          }
-
-          .chart-legend {
-            flex-direction: column;
           }
 
           .report-signatures {
