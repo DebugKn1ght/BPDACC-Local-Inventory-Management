@@ -1,18 +1,32 @@
 import React, { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { useUserRole } from '../context/UserRoleContext'
 
 const Sidebar = () => {
   const location = useLocation()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const { userRole, setUserRole, isAdmin } = useUserRole()
 
+  // Menu items based on user role
   const menuItems = [
-    { path: '/', icon: '📊', label: 'Dashboard' },
-    { path: '/inventory', icon: '📦', label: 'Inventory' },
-    { path: '/requisition', icon: '📝', label: 'Requisition (RIS)' },
-    { path: '/reports', icon: '📈', label: 'Reports' },
-    { path: '/users', icon: '👥', label: 'Users' },
-    { path: '/settings', icon: '⚙️', label: 'Settings' },
-  ]
+    { path: '/', icon: '📊', label: 'Dashboard', visible: true },
+    { path: '/inventory', icon: '📦', label: 'Inventory', visible: true },
+    { 
+      path: '/requisition', 
+      icon: '📝', 
+      label: 'Requisition (RIS)', 
+      visible: !isAdmin 
+    },
+    { 
+      path: '/requisition-requests', 
+      icon: '📋', 
+      label: 'Requisition Requests', 
+      visible: isAdmin 
+    },
+    { path: '/reports', icon: '📈', label: 'Reports', visible: true },
+    { path: '/users', icon: '👥', label: 'Users', visible: isAdmin },
+    { path: '/settings', icon: '⚙️', label: 'Settings', visible: true },
+  ].filter(item => item.visible)
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen)
@@ -61,8 +75,30 @@ const Sidebar = () => {
             <div className="user-avatar">JD</div>
             <div>
               <div className="user-name">John Doe</div>
-              <div className="user-role">Admin</div>
+              <div className="user-role">{userRole}</div>
             </div>
+          </div>
+          <div style={{ marginTop: '12px' }}>
+            <label style={{ fontSize: '12px', color: '#6b7280', display: 'block', marginBottom: '4px' }}>
+              Switch Role (Testing):
+            </label>
+            <select 
+              value={userRole}
+              onChange={(e) => setUserRole(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '6px 8px',
+                border: '1px solid #e5e7eb',
+                borderRadius: '6px',
+                fontSize: '12px',
+                cursor: 'pointer'
+              }}
+            >
+              <option value="Admin">Admin</option>
+              <option value="Nurse">Nurse</option>
+              <option value="Pharmacist">Pharmacist</option>
+              <option value="Lab Tech">Lab Tech</option>
+            </select>
           </div>
         </div>
         <style jsx>{`
