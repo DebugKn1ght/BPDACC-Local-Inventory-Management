@@ -15,8 +15,8 @@ import activityAddedIcon from '../assets/icons/dashboard/dashboard-activityadded
 const Dashboard = () => {
   const stats = [
     { label: 'Total Items', value: '1,247', icon: totalItemsIcon, bgColor: '#e8f0fe' },
-    { label: 'Low Stock', value: '23', icon: lowStockIcon, bgColor: '#fcf172ff' },
-    { label: 'Pending Requisitions', value: '8', icon: pendingIcon, bgColor: '#ffde72ff' },
+    { label: 'Low Stock', value: '23', icon: lowStockIcon, bgColor: '#fff799ff' },
+    { label: 'Pending Requisitions', value: '8', icon: pendingIcon, bgColor: '#f9e49eff' },
     { label: 'Issued Today', value: '45', icon: issuedIcon, bgColor: '#e6f9e6' },
   ]
 

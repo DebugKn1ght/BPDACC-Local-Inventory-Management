@@ -1,4 +1,11 @@
 import React from 'react'
+import Icon from '../components/Icon'
+
+// Import user icons
+import addUserIcon from '../assets/icons/users/adduser-icon.svg'
+import deleteUserIcon from '../assets/icons/users/deleteuser-icon.svg'
+import changePasswordIcon from '../assets/icons/users/changepassword-icon.svg'
+import editUsersIcon from '../assets/icons/users/editusers-icon.svg'
 
 const Users = () => {
   const users = [
@@ -15,7 +22,10 @@ const Users = () => {
           <h1 className="page-title">User Management</h1>
           <p className="page-subtitle">Manage system users and permissions</p>
         </div>
-        <button className="btn-primary">+ Add User</button>
+        <button className="btn-primary">
+          <Icon src={addUserIcon} alt="Add User" size={20} />
+          Add User
+        </button>
       </div>
 
       <div className="card">
@@ -55,9 +65,15 @@ const Users = () => {
                   </td>
                   <td>
                     <div className="actions">
-                      <button className="btn-icon">✏️</button>
-                      <button className="btn-icon">🔑</button>
-                      <button className="btn-icon">🗑️</button>
+                      <button className="btn-icon" title="Edit User">
+                        <Icon src={editUsersIcon} alt="Edit" size={20} />
+                      </button>
+                      <button className="btn-icon" title="Change Password">
+                        <Icon src={changePasswordIcon} alt="Change Password" size={20} />
+                      </button>
+                      <button className="btn-icon" title="Delete User">
+                        <Icon src={deleteUserIcon} alt="Delete" size={20} />
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -102,6 +118,10 @@ const Users = () => {
           cursor: pointer;
           font-size: 14px;
           white-space: nowrap;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
         }
 
         .card {
