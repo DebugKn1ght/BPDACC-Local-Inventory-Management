@@ -26,83 +26,83 @@ const DEFAULT_USERS = [
 const DEFAULT_ITEMS = [
   {
     id: 1,
-    sku: 'MED-001',
+    sku: 'ABC123DEF4',
     name: 'Syringes 5ml',
     location: 'Shelf A-12',
     minStock: 100,
-    unit: 'pieces',
+    unit: 'Pieces',
     batches: [
-      { batchId: 'B-001', brand: 'BD Medical', supplier: 'Medical Supply Co', stockNumber: 'SN-001', expiryDate: null, office: 'Hemodialysis', stock: 250, transactionCount: 3, ptr: '1.50', remarks: 'Standard syringe supply' },
-      { batchId: 'B-002', brand: 'BD Medical', supplier: 'Medical Supply Co', stockNumber: 'SN-002', expiryDate: null, office: 'Clinical Laboratory', stock: 320, transactionCount: 1, ptr: '1.50', remarks: 'For clinical laboratory use' },
-      { batchId: 'B-003', brand: 'BD Medical', supplier: 'Medical Supply Co', stockNumber: 'SN-003', expiryDate: null, office: 'Hemodialysis', stock: 200, transactionCount: 0, ptr: '1.60', remarks: 'Emergency backup batch' }
+      { batchId: 'ABC123DEF4-001', brand: 'BD Medical', supplier: 'Medical Supply Co', stockNumber: 'SN-001', expiryDate: null, office: 'Hemodialysis', stock: 250, transactionCount: 3, ptr: '1.50', remarks: 'Standard syringe supply' },
+      { batchId: 'ABC123DEF4-002', brand: 'BD Medical', supplier: 'Medical Supply Co', stockNumber: 'SN-002', expiryDate: null, office: 'Clinical Laboratory', stock: 320, transactionCount: 1, ptr: '1.50', remarks: 'For clinical laboratory use' },
+      { batchId: 'ABC123DEF4-003', brand: 'BD Medical', supplier: 'Medical Supply Co', stockNumber: 'SN-003', expiryDate: null, office: 'Hemodialysis', stock: 200, transactionCount: 0, ptr: '1.60', remarks: 'Emergency backup batch' }
     ],
     transactions: [
-      { date: '2026-06-01', reference: 'Initial Stock', selectedBatch: null, receiptQty: 770, issuanceQty: 0, office: 'All', balance: 770, ptr: '1.50', remarks: 'Opening inventory' },
-      { date: '2026-06-05', reference: 'MED-001B-001-1', selectedBatch: 'B-001', receiptQty: 0, issuanceQty: 50, office: 'Hemodialysis', balance: 720, ptr: '1.50', remarks: '' },
-      { date: '2026-06-06', reference: 'MED-001B-001-2', selectedBatch: 'B-001', receiptQty: 0, issuanceQty: 40, office: 'Hemodialysis', balance: 680, ptr: '1.50', remarks: '' },
-      { date: '2026-06-07', reference: 'MED-001B-001-3', selectedBatch: 'B-001', receiptQty: 0, issuanceQty: 30, office: 'Hemodialysis', balance: 650, ptr: '1.50', remarks: '' },
-      { date: '2026-06-10', reference: 'MED-001B-003-1', selectedBatch: 'B-003', receiptQty: 200, issuanceQty: 0, office: 'Hemodialysis', balance: 850, ptr: '1.60', remarks: 'Added restock' },
-      { date: '2026-06-15', reference: 'MED-001B-002-1', selectedBatch: 'B-002', receiptQty: 0, issuanceQty: 80, office: 'Clinical Laboratory', balance: 770, ptr: '1.50', remarks: '' }
+      { date: '2026-06-01', reference: 'ABC123DEF4-001-001', selectedBatch: 'ABC123DEF4-001', receiptQty: 770, issuanceQty: 0, office: 'All', balance: 770, ptr: '1.50', remarks: 'Opening inventory' },
+      { date: '2026-06-05', reference: 'ABC123DEF4-001-002', selectedBatch: 'ABC123DEF4-001', receiptQty: 0, issuanceQty: 50, office: 'Hemodialysis', balance: 720, ptr: '1.50', remarks: '' },
+      { date: '2026-06-06', reference: 'ABC123DEF4-001-003', selectedBatch: 'ABC123DEF4-001', receiptQty: 0, issuanceQty: 40, office: 'Hemodialysis', balance: 680, ptr: '1.50', remarks: '' },
+      { date: '2026-06-07', reference: 'ABC123DEF4-001-004', selectedBatch: 'ABC123DEF4-001', receiptQty: 0, issuanceQty: 30, office: 'Hemodialysis', balance: 650, ptr: '1.50', remarks: '' },
+      { date: '2026-06-10', reference: 'ABC123DEF4-003-001', selectedBatch: 'ABC123DEF4-003', receiptQty: 200, issuanceQty: 0, office: 'Hemodialysis', balance: 850, ptr: '1.60', remarks: 'Added restock' },
+      { date: '2026-06-15', reference: 'ABC123DEF4-002-001', selectedBatch: 'ABC123DEF4-002', receiptQty: 0, issuanceQty: 80, office: 'Clinical Laboratory', balance: 770, ptr: '1.50', remarks: '' }
     ]
   },
   {
     id: 2,
-    sku: 'MED-002',
+    sku: 'GHI456JKL7',
     name: 'Gauze Pads (4x4)',
     location: 'Shelf B-05',
     minStock: 50,
-    unit: 'packs',
+    unit: 'Packs',
     batches: [
-      { batchId: 'B-004', brand: 'Johnson & Johnson', supplier: 'Healthcare Plus', stockNumber: 'SN-004', expiryDate: '2026-07-15', office: 'Radiology', stock: 80, transactionCount: 1, ptr: '3.20', remarks: 'Keep in dry place' },
-      { batchId: 'B-005', brand: 'Johnson & Johnson', supplier: 'Healthcare Plus', stockNumber: 'SN-005', expiryDate: '2027-03-20', office: 'Radiology', stock: 40, transactionCount: 0, ptr: '3.20', remarks: 'Backup packs' }
+      { batchId: 'GHI456JKL7-001', brand: 'Johnson & Johnson', supplier: 'Healthcare Plus', stockNumber: 'SN-004', expiryDate: '2026-07-15', office: 'Radiology', stock: 80, transactionCount: 1, ptr: '3.20', remarks: 'Keep in dry place' },
+      { batchId: 'GHI456JKL7-002', brand: 'Johnson & Johnson', supplier: 'Healthcare Plus', stockNumber: 'SN-005', expiryDate: '2027-03-20', office: 'Radiology', stock: 40, transactionCount: 0, ptr: '3.20', remarks: 'Backup packs' }
     ],
     transactions: [
-      { date: '2026-06-02', reference: 'Initial Stock', selectedBatch: null, receiptQty: 120, issuanceQty: 0, office: 'All', balance: 120, ptr: '3.20', remarks: 'Opening inventory' },
-      { date: '2026-06-08', reference: 'MED-002B-004-1', selectedBatch: 'B-004', receiptQty: 0, issuanceQty: 40, office: 'Radiology', balance: 80, ptr: '3.20', remarks: '' }
+      { date: '2026-06-02', reference: 'GHI456JKL7-001-001', selectedBatch: 'GHI456JKL7-001', receiptQty: 120, issuanceQty: 0, office: 'All', balance: 120, ptr: '3.20', remarks: 'Opening inventory' },
+      { date: '2026-06-08', reference: 'GHI456JKL7-001-002', selectedBatch: 'GHI456JKL7-001', receiptQty: 0, issuanceQty: 40, office: 'Radiology', balance: 80, ptr: '3.20', remarks: '' }
     ]
   },
   {
     id: 3,
-    sku: 'MED-003',
+    sku: 'MNO789PQR0',
     name: 'Alcohol Swabs',
     location: 'Shelf C-08',
     minStock: 100,
-    unit: 'boxes',
+    unit: 'Boxes',
     batches: [
-      { batchId: 'B-006', brand: 'Kendall', supplier: 'Pharmacy Supply Co', stockNumber: 'SN-006', expiryDate: '2026-06-30', office: 'Admin Office', stock: 35, transactionCount: 1, ptr: '4.50', remarks: 'Standard brand' },
-      { batchId: 'B-007', brand: 'Kendall', supplier: 'Pharmacy Supply Co', stockNumber: 'SN-007', expiryDate: '2026-08-10', office: 'Hemodialysis', stock: 40, transactionCount: 0, ptr: '4.50', remarks: 'Near expiry warnings' }
+      { batchId: 'MNO789PQR0-001', brand: 'Kendall', supplier: 'Pharmacy Supply Co', stockNumber: 'SN-006', expiryDate: '2026-06-30', office: 'Admin Office', stock: 35, transactionCount: 1, ptr: '4.50', remarks: 'Standard brand' },
+      { batchId: 'MNO789PQR0-002', brand: 'Kendall', supplier: 'Pharmacy Supply Co', stockNumber: 'SN-007', expiryDate: '2026-08-10', office: 'Hemodialysis', stock: 40, transactionCount: 0, ptr: '4.50', remarks: 'Near expiry warnings' }
     ],
     transactions: [
-      { date: '2026-06-03', reference: 'Initial Stock', selectedBatch: null, receiptQty: 75, issuanceQty: 0, office: 'All', balance: 75, ptr: '4.50', remarks: 'Initial setup' }
+      { date: '2026-06-03', reference: 'MNO789PQR0-001-001', selectedBatch: 'MNO789PQR0-001', receiptQty: 75, issuanceQty: 0, office: 'All', balance: 75, ptr: '4.50', remarks: 'Initial setup' }
     ]
   },
   {
     id: 4,
-    sku: 'MED-004',
+    sku: 'STU012VWX3',
     name: 'Bandages (Assorted)',
     location: 'Shelf B-10',
     minStock: 150,
-    unit: 'boxes',
+    unit: 'Boxes',
     batches: [
-      { batchId: 'B-008', brand: '3M', supplier: 'Healthcare Plus', stockNumber: 'SN-008', expiryDate: null, office: 'Hemodialysis', stock: 150, transactionCount: 0, ptr: '5.00', remarks: '' },
-      { batchId: 'B-009', brand: '3M', supplier: 'Healthcare Plus', stockNumber: 'SN-009', expiryDate: null, office: 'Unallocated', stock: 50, transactionCount: 0, ptr: '5.00', remarks: '' }
+      { batchId: 'STU012VWX3-001', brand: '3M', supplier: 'Healthcare Plus', stockNumber: 'SN-008', expiryDate: null, office: 'Hemodialysis', stock: 150, transactionCount: 0, ptr: '5.00', remarks: '' },
+      { batchId: 'STU012VWX3-002', brand: '3M', supplier: 'Healthcare Plus', stockNumber: 'SN-009', expiryDate: null, office: 'Unallocated', stock: 50, transactionCount: 0, ptr: '5.00', remarks: '' }
     ],
     transactions: [
-      { date: '2026-06-03', reference: 'Initial Stock', selectedBatch: null, receiptQty: 200, issuanceQty: 0, office: 'All', balance: 200, ptr: '5.00', remarks: 'Initial setup' }
+      { date: '2026-06-03', reference: 'STU012VWX3-001-001', selectedBatch: 'STU012VWX3-001', receiptQty: 200, issuanceQty: 0, office: 'All', balance: 200, ptr: '5.00', remarks: 'Initial setup' }
     ]
   },
   {
     id: 5,
-    sku: 'MED-005',
+    sku: 'YZA456BCD7',
     name: 'Needles 21G',
     location: 'Shelf A-15',
     minStock: 100,
-    unit: 'pieces',
+    unit: 'Pieces',
     batches: [
-      { batchId: 'B-010', brand: 'BD Medical', supplier: 'Medical Supply Co', stockNumber: 'SN-010', expiryDate: '2026-08-01', office: 'Clinical Laboratory', stock: 45, transactionCount: 0, ptr: '0.80', remarks: '' }
+      { batchId: 'YZA456BCD7-001', brand: 'BD Medical', supplier: 'Medical Supply Co', stockNumber: 'SN-010', expiryDate: '2026-08-01', office: 'Clinical Laboratory', stock: 45, transactionCount: 0, ptr: '0.80', remarks: '' }
     ],
     transactions: [
-      { date: '2026-06-04', reference: 'Initial Stock', selectedBatch: null, receiptQty: 45, issuanceQty: 0, office: 'All', balance: 45, ptr: '0.80', remarks: 'Initial setup' }
+      { date: '2026-06-04', reference: 'YZA456BCD7-001-001', selectedBatch: 'YZA456BCD7-001', receiptQty: 45, issuanceQty: 0, office: 'All', balance: 45, ptr: '0.80', remarks: 'Initial setup' }
     ]
   }
 ];
@@ -166,7 +166,13 @@ const getFromStorage = (key, defaultValue) => {
     return defaultValue;
   }
   try {
-    return JSON.parse(value);
+    const data = JSON.parse(value);
+    // Reset items if using old 'MED-' SKU format
+    if (key === DB_KEYS.ITEMS && data.length > 0 && data[0].sku.startsWith('MED-')) {
+      localStorage.setItem(key, JSON.stringify(defaultValue));
+      return defaultValue;
+    }
+    return data;
   } catch (e) {
     console.error(`Error parsing key: ${key}`, e);
     return defaultValue;

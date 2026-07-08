@@ -102,13 +102,50 @@ const Inventory = () => {
   }
 
   /**
-   * Generate a new unique SKU (Stock Keeping Unit)
-   * Format: MED-XXX where XXX is zero-padded number
-   * @returns {string} New SKU
+   * Generate a random 10-digit alphanumeric string
+   * @returns {string} Random alphanumeric string
+   */
+  const generateRandomAlphanumeric = () => {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+    let result = ''
+    for (let i = 0; i < 10; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length))
+    }
+    return result
+  }
+
+  /**
+   * Generate a new unique 10-digit alphanumeric SKU
+   * Checks existing SKUs and regenerates if needed
+   * @returns {string} New unique SKU
    */
   const generateSKU = () => {
-    const maxId = inventoryItems.reduce((max, item) => Math.max(max, item.id), 0)
-    return `MED-${String(maxId + 1).padStart(3, '0')}`
+    const existingSkus = new Set(inventoryItems.map(item => item.sku))
+    let sku
+    let attempts = 0
+    const maxAttempts = 1000
+
+    do {
+      sku = generateRandomAlphanumeric()
+      attempts++
+    } while (existingSkus.has(sku) && attempts < maxAttempts)
+
+    if (attempts >= maxAttempts) {
+      // If random attempts fail, fall back to sequential alphanumeric
+      let counter = 0
+      const baseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+      do {
+        let num = counter
+        sku = ''
+        for (let i = 0; i < 10; i++) {
+          sku = baseChars[num % 36] + sku
+          num = Math.floor(num / 36)
+        }
+        counter++
+      } while (existingSkus.has(sku))
+    }
+
+    return sku
   }
 
   /**
@@ -197,7 +234,7 @@ const Inventory = () => {
       unit: 'Pieces',
       minStock: '',
       initialBatch: {
-        batchId: `${nextSku}-1`,
+        batchId: `${nextSku}-001`,
         sku: nextSku,
         quantity: '',
         assignedFor: 'Hemodialysis',
@@ -252,14 +289,14 @@ const Inventory = () => {
       transactions: [
         {
           date: new Date().toISOString().split('T')[0],
-          reference: 'Initial Stock',
+          reference: addFormData.initialBatch.batchId || `${nextSku}-1`,
           selectedBatch: addFormData.initialBatch.batchId || `${nextSku}-1`,
           receiptQty: qtyVal,
           issuanceQty: 0,
           office: addFormData.initialBatch.assignedFor,
           balance: qtyVal,
           ptr: addFormData.initialBatch.ptr,
-          remarks: addFormData.initialBatch.remarks || 'Opening stock'
+          remarks: addFormData.initialBatch.remarks || `${addFormData.initialBatch.assignedFor} - Opening Stock`
         }
       ]
     }
@@ -309,7 +346,7 @@ const Inventory = () => {
   const handleAddBatchInEdit = () => {
     const nextBatchNum = editFormData.batches.length + 1
     const newBatch = {
-      batchId: `${editFormData.sku}-${nextBatchNum}`,
+      batchId: `${editFormData.sku}-${String(nextBatchNum).padStart(3, '0')}`,
       brand: '',
       supplier: '',
       stockNumber: `SN-${Date.now().toString().slice(-4)}`,
@@ -419,7 +456,7 @@ const Inventory = () => {
 
           // Only auto-generate if reference wasn't manually provided
           if (!reference) {
-            reference = `${showMoreInfo.sku}${transactionForm.selectedBatch}-${newTransactionCount}`
+            reference = `${transactionForm.selectedBatch}-${String(newTransactionCount).padStart(3, '0')}`
           }
         }
       }
@@ -586,21 +623,7 @@ const Inventory = () => {
                         <div className="actions">
                           <button 
                             className="btn-icon" 
-                            title="Restock item"
-                            onClick={() => handleRestock(item)}
-                          >
-                            <Icon src={addTransactionIcon} alt="Restock" size={20} />
-                          </button>
-                          <button 
-                            className="btn-icon" 
-                            title="Edit item"
-                            onClick={() => handleOpenEditModal(item)}
-                          >
-                            <Icon src={editIcon} alt="Edit" size={20} />
-                          </button>
-                          <button 
-                            className="btn-icon" 
-                            title="More info"
+                            title="View Stock Card"
                             onClick={() => setShowMoreInfo(item)}
                           >
                             <Icon src={stockCardIcon} alt="Stock Card" size={20} />
@@ -687,75 +710,72 @@ const Inventory = () => {
               </button>
             </div>
             <div className="modal-body">
-              {/* Stock Card Header - Clinic info + item details */}
-              <div className="stock-card-header">
-                <div className="clinic-info">
-                  <h3>Provincial Health Office</h3>
-                  <p>Bohol, Province of Bohol - Ambulatory Care Center</p>
-                  <p>Tel. No.: (038) 512-3456</p>
-                </div>
-                <div className="stock-card-info">
-                  <div className="stock-card-field">
-                    <span className="field-label">Item:</span>
-                    <span className="field-value">{showMoreInfo.name}</span>
+              {/* Stock Card Header - New format */}
+              <div className="stock-card-header" style={{ border: '1px solid #e5e7eb', borderRadius: '8px', padding: '20px', marginBottom: '24px', backgroundColor: '#f9fafb' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', alignItems: 'start' }}>
+                  <div>
+                    <div style={{ display: 'flex', marginBottom: '12px' }}>
+                      <span style={{ width: '140px', fontWeight: '600', color: '#4b5563' }}>Location:</span>
+                      <span style={{ color: '#1f2937' }}>{showMoreInfo.location || '-'}</span>
+                    </div>
+                    <div style={{ display: 'flex', marginBottom: '12px' }}>
+                      <span style={{ width: '140px', fontWeight: '600', color: '#4b5563' }}>Item Description:</span>
+                      <span style={{ color: '#1f2937', fontWeight: '500' }}>{showMoreInfo.name}</span>
+                    </div>
+                    <div style={{ display: 'flex' }}>
+                      <span style={{ width: '140px', fontWeight: '600', color: '#4b5563' }}>Unit of Measure:</span>
+                      <span style={{ color: '#1f2937' }}>{showMoreInfo.unit}</span>
+                    </div>
                   </div>
-                  <div className="stock-card-field">
-                    <span className="field-label">Stock No.:</span>
-                    <span className="field-value">{showMoreInfo.sku}</span>
-                  </div>
-                  <div className="stock-card-field">
-                    <span className="field-label">Reorder Point:</span>
-                    <span className="field-value">{showMoreInfo.minStock} {showMoreInfo.unit}</span>
-                  </div>
-                  <div className="stock-card-field">
-                    <span className="field-label">Unit:</span>
-                    <span className="field-value">{showMoreInfo.unit}</span>
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                      <span style={{ fontWeight: '600', color: '#4b5563' }}>Stock No.:</span>
+                      <span style={{ marginLeft: '8px', color: '#1f2937', fontWeight: '500' }}>{showMoreInfo.sku}</span>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* Transaction Log Section (with Add Transaction button) */}
-              <div className="stock-card-actions no-print" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                <h4 className="detail-subtitle" style={{ margin: 0 }}>Transaction Log</h4>
-                <button className="btn-primary" onClick={() => handleOpenTransactionModal(false, null)}>
-                <Icon src={addTransactionIcon} alt="Add Transaction" size={20} />
-                Add Transaction
-              </button>
-              </div>
-
-              {/* Stock Card Transaction Table - Formal format for printing */}
+              {/* Stock Card Transaction Table - Updated format */}
               <div className="stock-card-table-container">
-                <table className="stock-card-table">
-                  <thead>
+                <table className="stock-card-table" style={{ borderCollapse: 'collapse', width: '100%' }}>
+                  <thead style={{ backgroundColor: '#f3f4f6', color: '#000', fontSize: '18px', fontWeight: '700' }}>
                     <tr>
-                      <th rowSpan={2}>Date</th>
-                      <th rowSpan={2}>Reference</th>
-                      <th rowSpan={2}>Receipt<br/>Qty</th>
-                      <th colSpan={2} className="table-header-group">Issuance</th>
-                      <th rowSpan={2}>Balance<br/>Qty</th>
-                      <th rowSpan={2} className="actions-header no-print">Actions</th>
+                      <th rowSpan={2} style={{ border: '1px solid #d1d5db', padding: '12px', textAlign: 'center' }}>Date</th>
+                      <th colSpan={3} style={{ border: '1px solid #d1d5db', padding: '12px', textAlign: 'center' }}>Quantity</th>
+                      <th rowSpan={2} style={{ border: '1px solid #d1d5db', padding: '12px', textAlign: 'center' }}>Cost<br/>(Price/Unit)</th>
+                      <th rowSpan={2} style={{ border: '1px solid #d1d5db', padding: '12px', textAlign: 'center' }}>IR/DR/SI/RIS/PTR/BL No.<br/>No.</th>
+                      <th rowSpan={2} style={{ border: '1px solid #d1d5db', padding: '12px', textAlign: 'center' }}>Recipient/Remarks</th>
                     </tr>
                     <tr>
-                      <th>Qty</th>
-                      <th>Office</th>
+                      <th style={{ border: '1px solid #d1d5db', padding: '12px', textAlign: 'center' }}>Received</th>
+                      <th style={{ border: '1px solid #d1d5db', padding: '12px', textAlign: 'center' }}>Issued</th>
+                      <th style={{ border: '1px solid #d1d5db', padding: '12px', textAlign: 'center' }}>Balance</th>
                     </tr>
                   </thead>
                   <tbody>
                     {showMoreInfo.transactions && showMoreInfo.transactions.map((tx, idx) => (
-                      <tr key={idx}>
-                        <td>{new Date(tx.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</td>
-                        <td>{tx.reference}</td>
-                        <td className="number-cell">{tx.receiptQty > 0 ? tx.receiptQty : ''}</td>
-                        <td className="number-cell">{tx.issuanceQty > 0 ? tx.issuanceQty : ''}</td>
-                        <td>{tx.issuanceQty > 0 ? tx.office : ''}</td>
-                        <td className="number-cell">{tx.balance}</td>
-                        <td className="transaction-actions no-print">
-                          <button className="btn-icon" onClick={() => handleOpenTransactionModal(true, idx)} title="Edit">
-                            <Icon src={editIcon} alt="Edit" size={20} />
-                          </button>
-                          <button className="btn-icon" onClick={() => handleDeleteTransaction(idx)} title="Delete">
-                            <Icon src={deleteIcon} alt="Delete" size={20} />
-                          </button>
+                      <tr key={idx} style={{ backgroundColor: idx % 2 === 0 ? '#f9fafb' : '#fff' }}>
+                        <td style={{ border: '1px solid #d1d5db', padding: '12px', textAlign: 'center' }}>
+                          {new Date(tx.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                        </td>
+                        <td style={{ border: '1px solid #d1d5db', padding: '12px', textAlign: 'center' }}>
+                          {tx.receiptQty > 0 ? tx.receiptQty : ''}
+                        </td>
+                        <td style={{ border: '1px solid #d1d5db', padding: '12px', textAlign: 'center' }}>
+                          {tx.issuanceQty > 0 ? tx.issuanceQty : ''}
+                        </td>
+                        <td style={{ border: '1px solid #d1d5db', padding: '12px', textAlign: 'center', fontWeight: '600', fontSize: '16px' }}>
+                          {tx.balance}
+                        </td>
+                        <td style={{ border: '1px solid #d1d5db', padding: '12px', textAlign: 'center' }}>
+                          {tx.ptr || '-'}
+                        </td>
+                        <td style={{ border: '1px solid #d1d5db', padding: '12px', textAlign: 'center' }}>
+                          {tx.reference || '-'}
+                        </td>
+                        <td style={{ border: '1px solid #d1d5db', padding: '12px', textAlign: 'left' }}>
+                          {tx.remarks || tx.office || '-'}
                         </td>
                       </tr>
                     ))}
@@ -990,7 +1010,7 @@ const Inventory = () => {
                         if (selectedBatch) {
                           const batch = showMoreInfo.batches.find(b => b.batchId === selectedBatch)
                           const nextCount = (batch?.transactionCount || 0) + 1
-                          reference = `${showMoreInfo.sku}${selectedBatch}-${nextCount}`
+                          reference = `${selectedBatch}-${String(nextCount).padStart(3, '0')}`
                         }
                         setTransactionForm({ ...transactionForm, selectedBatch, reference })
                       }}
