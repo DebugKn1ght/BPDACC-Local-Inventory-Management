@@ -84,9 +84,11 @@ const Inventory = () => {
     if (!expiryDate) return false
     const today = new Date()
     const expiry = new Date(expiryDate)
-    const diffTime = expiry - today
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-    return diffDays <= 30 && diffDays > 0
+    // Calculate 2 months before expiry date
+    const twoMonthsBefore = new Date(expiry)
+    twoMonthsBefore.setMonth(twoMonthsBefore.getMonth() - 2)
+    // Check if today is between 2 months before expiry and expiry date
+    return today >= twoMonthsBefore && today <= expiry
   }
 
   /**
