@@ -8,9 +8,9 @@
  * - Search & Office filtering
  */
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Icon from '../components/Icon'
-import { mockDb } from '../utils/mockDb'
+import { supabaseDb } from '../utils/supabaseDb'
 
 // Import inventory management icons from assets
 import searchIcon from '../assets/icons/inventory/search-icon.svg'
@@ -80,11 +80,43 @@ const Inventory = () => {
   })
   
   const [editFormData, setEditFormData] = useState(null)
+  const [notification, setNotification] = useState(null) // { type: 'success' | 'error', message: string }
+  const [confirmation, setConfirmation] = useState(null) // { title: string, message: string, onConfirm: function, onCancel: function }
 
   // ==========================================
-  // MOCK DATA (Saved/loaded via mockDb)
+  // DATA (Loaded from Supabase)
   // ==========================================
-  const [inventoryItems, setInventoryItems] = useState(() => mockDb.getItems())
+  const [inventoryItems, setInventoryItems] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  // Helper to show notifications
+  const showNotification = (type, message) => {
+    setNotification({ type, message })
+    // Auto hide after 3 seconds
+    setTimeout(() => setNotification(null), 3000)
+  }
+
+  // Helper to show custom confirmation dialog
+  const showConfirmation = (title, message, onConfirm, onCancel) => {
+    setConfirmation({ title, message, onConfirm, onCancel })
+  }
+
+  const loadItems = async () => {
+    setLoading(true)
+    try {
+      const items = await supabaseDb.getItems()
+      setInventoryItems(items)
+    } catch (e) {
+      console.error('Failed to load items:', e)
+      setInventoryItems([])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    loadItems()
+  }, [])
 
   /**
    * Check if a date is near expiry (within 30 days)
@@ -254,13 +286,14 @@ const Inventory = () => {
         brand: '',
         supplier: '',
         ptr: '',
+        costPerUnit: '',
         remarks: ''
       }
     })
     setShowAddModal(true)
   }
 
-  const handleAddItem = () => {
+  const handleAddItem = async () => {
     const minStockVal = parseInt(addFormData.minStock)
     const qtyVal = parseInt(addFormData.initialBatch.quantity)
     
@@ -279,7 +312,6 @@ const Inventory = () => {
 
     const nextSku = addFormData.sku || generateSKU()
     const newItem = {
-      id: inventoryItems.length + 1,
       sku: nextSku,
       name: addFormData.name,
       location: addFormData.location,
@@ -287,7 +319,7 @@ const Inventory = () => {
       minStock: minStockVal,
       batches: [
         {
-          batchId: addFormData.initialBatch.batchId || `${nextSku}-1`,
+          batchId: addFormData.initialBatch.batchId || `${nextSku}-001`,
           brand: addFormData.initialBatch.brand,
           supplier: addFormData.initialBatch.supplier,
           stockNumber: `SN-${Date.now().toString().slice(-4)}`,
@@ -303,8 +335,8 @@ const Inventory = () => {
       transactions: [
         {
           date: new Date().toISOString().split('T')[0],
-          reference: addFormData.initialBatch.batchId || `${nextSku}-1`,
-          selectedBatch: addFormData.initialBatch.batchId || `${nextSku}-1`,
+          reference: addFormData.initialBatch.batchId || `${nextSku}-001`,
+          selectedBatch: addFormData.initialBatch.batchId || `${nextSku}-001`,
           receiptQty: qtyVal,
           issuanceQty: 0,
           office: addFormData.initialBatch.assignedFor,
@@ -316,10 +348,15 @@ const Inventory = () => {
       ]
     }
 
-    const updated = [...inventoryItems, newItem]
-    mockDb.saveItems(updated)
-    setInventoryItems(updated)
-    setShowAddModal(false)
+    try {
+      await supabaseDb.addItem(newItem)
+      await loadItems() // Refresh the list from DB
+      setShowAddModal(false)
+      showNotification('success', 'Item added successfully!')
+    } catch (e) {
+      console.error('Failed to add item:', e)
+      showNotification('error', 'Failed to add item: ' + e.message)
+    }
   }
 
   const handleOpenEditModal = (item) => {
@@ -327,7 +364,7 @@ const Inventory = () => {
     setShowEditModal(item)
   }
 
-  const handleSaveItemEdit = () => {
+  const handleSaveItemEdit = async () => {
     if (!editFormData) return
     const minStockVal = parseInt(editFormData.minStock)
     if (isNaN(minStockVal) || minStockVal <= 0) {
@@ -339,23 +376,29 @@ const Inventory = () => {
       return
     }
 
-    const updated = inventoryItems.map(item => {
-      if (item.id === editFormData.id) {
-        return {
-          ...item,
-          name: editFormData.name,
-          location: editFormData.location,
-          minStock: minStockVal,
-          batches: editFormData.batches
+    // Show confirmation dialog
+    showConfirmation(
+      'Confirm Save',
+      'Are you sure you want to save changes to this item?',
+      async () => { // On confirm
+        try {
+          await supabaseDb.updateItem({
+            ...editFormData,
+            minStock: minStockVal
+          })
+          await loadItems() // Refresh from DB
+          setShowEditModal(null)
+          setEditFormData(null)
+          showNotification('success', 'Item updated successfully!')
+        } catch (e) {
+          console.error('Failed to update item:', e)
+          showNotification('error', 'Failed to update item: ' + e.message)
+        } finally {
+          setConfirmation(null)
         }
-      }
-      return item
-    })
-
-    mockDb.saveItems(updated)
-    setInventoryItems(updated)
-    setShowEditModal(null)
-    setEditFormData(null)
+      },
+      () => { setConfirmation(null) } // On cancel
+    )
   }
 
   const handleAddBatchInEdit = () => {
@@ -428,69 +471,68 @@ const Inventory = () => {
   /**
    * Save transaction (add new or update existing)
    */
-  const handleSaveTransaction = () => {
+  const handleSaveTransaction = async () => {
     if (!showMoreInfo) return
 
-    const updatedItems = [...inventoryItems]
-    const itemIndex = updatedItems.findIndex(item => item.id === showMoreInfo.id)
-
-    if (itemIndex === -1) return
-
-    const item = { ...updatedItems[itemIndex] }
-    let transactions = [...(item.transactions || [])]
-
     if (showTransactionModal.isEdit && showTransactionModal.index !== null) {
-      // ======================================
-      // UPDATE EXISTING TRANSACTION
-      // ======================================
-      transactions[showTransactionModal.index] = { ...transactionForm }
+      // Show confirmation dialog for edit
+      showConfirmation(
+        'Confirm Save',
+        'Are you sure you want to save changes to this transaction?',
+        async () => {
+          try {
+            await supabaseDb.updateTransaction(showMoreInfo.id, showTransactionModal.index, transactionForm)
+            await supabaseDb.recalculateBalances(showMoreInfo.id)
+            showNotification('success', 'Transaction updated successfully!')
+            await loadItems() // Refresh
+            const refreshedItems = await supabaseDb.getItems()
+            const refreshedItem = refreshedItems.find(i => i.id === showMoreInfo.id)
+            setShowMoreInfo(refreshedItem)
+            setShowTransactionModal({ visible: false, isEdit: false, index: null })
+          } catch (e) {
+            console.error('Failed to save transaction:', e)
+            showNotification('error', 'Failed to save transaction: ' + e.message)
+          } finally {
+            setConfirmation(null)
+          }
+        },
+        () => setConfirmation(null)
+      )
     } else {
-      // ======================================
-      // ADD NEW TRANSACTION
-      // ======================================
-      const lastTx = transactions.length > 0 ? transactions[transactions.length - 1] : null
-      // Calculate new balance based on previous balance
-      const newBalance = lastTx
-        ? lastTx.balance + transactionForm.receiptQty - transactionForm.issuanceQty
-        : transactionForm.receiptQty - transactionForm.issuanceQty
+      // Add new transaction, no confirmation needed
+      try {
+        const itemTransactions = (inventoryItems.find(i => i.id === showMoreInfo.id)?.transactions || [])
+        const lastTx = itemTransactions.length > 0 ? itemTransactions[itemTransactions.length - 1] : null
+        const newBalance = lastTx
+          ? lastTx.balance + transactionForm.receiptQty - transactionForm.issuanceQty
+          : transactionForm.receiptQty - transactionForm.issuanceQty
 
-      // Auto-generate reference with incrementing count (format: {SKU}{BatchID}-{Count})
-      let reference = transactionForm.reference
-      let newTransactionCount = null
-      if (transactionForm.selectedBatch && showMoreInfo) {
-        const batchIndex = item.batches.findIndex(b => b.batchId === transactionForm.selectedBatch)
-        if (batchIndex !== -1) {
-          const batch = { ...item.batches[batchIndex] }
-          newTransactionCount = (batch.transactionCount || 0) + 1
-          batch.transactionCount = newTransactionCount
-          
-          // Update the batch stock!
-          batch.stock += transactionForm.receiptQty - transactionForm.issuanceQty
-          
-          item.batches = [...item.batches]
-          item.batches[batchIndex] = batch
-
-          // Only auto-generate if reference wasn't manually provided
-          if (!reference) {
-            reference = `${transactionForm.selectedBatch}-${String(newTransactionCount).padStart(3, '0')}`
+        let reference = transactionForm.reference
+        if (transactionForm.selectedBatch) {
+          const batch = showMoreInfo.batches.find(b => b.batchId === transactionForm.selectedBatch)
+          if (batch) {
+            if (!reference) {
+              reference = `${transactionForm.selectedBatch}-${String((batch.transactionCount || 0) + 1).padStart(3, '0')}`
+            }
           }
         }
+
+        await supabaseDb.addTransaction(showMoreInfo.id, {
+          ...transactionForm,
+          reference,
+          balance: newBalance
+        })
+        showNotification('success', 'Transaction added successfully!')
+        await loadItems() // Refresh
+        const refreshedItems = await supabaseDb.getItems()
+        const refreshedItem = refreshedItems.find(i => i.id === showMoreInfo.id)
+        setShowMoreInfo(refreshedItem)
+        setShowTransactionModal({ visible: false, isEdit: false, index: null })
+      } catch (e) {
+        console.error('Failed to save transaction:', e)
+        showNotification('error', 'Failed to save transaction: ' + e.message)
       }
-
-      // Push new transaction
-      transactions.push({
-        ...transactionForm,
-        reference,
-        balance: newBalance
-      })
     }
-
-    // Update state and close modal
-    item.transactions = transactions
-    updatedItems[itemIndex] = item
-    setInventoryItems(updatedItems)
-    setShowMoreInfo(item)
-    setShowTransactionModal({ visible: false, isEdit: false, index: null })
   }
 
   /**
@@ -529,7 +571,7 @@ const Inventory = () => {
   /**
    * Handle restock form submission
    */
-  const handleSaveRestock = () => {
+  const handleSaveRestock = async () => {
     if (!showRestockModal) return
     const qty = Number(restockForm.restockQty)
     if (!restockForm.restockQty.trim() || isNaN(qty) || qty <= 0) {
@@ -537,101 +579,126 @@ const Inventory = () => {
       return
     }
 
-    const updatedItems = [...inventoryItems]
-    const itemIndex = updatedItems.findIndex(item => item.id === showRestockModal.id)
-
-    if (itemIndex === -1) return
-
-    const item = { ...updatedItems[itemIndex] }
-    let transactions = [...(item.transactions || [])]
-
-    // Calculate new balance
-    const lastTx = transactions.length > 0 ? transactions[transactions.length - 1] : null
-    const newBalance = lastTx ? lastTx.balance + qty : qty
-
-    // Auto-generate reference with incrementing count
-    let reference = ''
-    if (restockForm.selectedBatch) {
-      const batchIndex = item.batches.findIndex(b => b.batchId === restockForm.selectedBatch)
-      if (batchIndex !== -1) {
-        const batch = { ...item.batches[batchIndex] }
-        const newTransactionCount = (batch.transactionCount || 0) + 1
-        batch.transactionCount = newTransactionCount
-        // Update batch stock
-        batch.stock += qty
-        // Update cost and ptr on batch if provided
-        if (restockForm.costPerUnit) {
-          batch.costPerUnit = restockForm.costPerUnit
+    // Show confirmation dialog
+    showConfirmation(
+      'Confirm Restock',
+      `Are you sure you want to restock this item with ${qty} units?`,
+      async () => {
+        try {
+          const office = restockForm.selectedBatch 
+            ? showRestockModal.batches.find(b => b.batchId === restockForm.selectedBatch)?.office 
+            : 'Hemodialysis'
+            
+          await supabaseDb.restockItem(showRestockModal.id, {
+            ...restockForm,
+            quantity: qty,
+            office
+          })
+          await loadItems() // Refresh
+          const refreshedItems = await supabaseDb.getItems()
+          const refreshedItem = refreshedItems.find(i => i.id === showRestockModal.id)
+          setShowMoreInfo(refreshedItem)
+          setShowRestockModal(null)
+          showNotification('success', 'Item restocked successfully!')
+        } catch (e) {
+          console.error('Failed to restock:', e)
+          showNotification('error', 'Failed to restock: ' + e.message)
+        } finally {
+          setConfirmation(null)
         }
-        if (restockForm.ptrNo) {
-          batch.ptr = restockForm.ptrNo
-        }
-        item.batches = [...item.batches]
-        item.batches[batchIndex] = batch
-        reference = `${restockForm.selectedBatch}-${String(newTransactionCount).padStart(3, '0')}`
-      }
-    }
-
-    // Add new transaction
-    transactions.push({
-      date: restockForm.date,
-      reference,
-      selectedBatch: restockForm.selectedBatch,
-      receiptQty: qty,
-      issuanceQty: 0,
-      office: restockForm.selectedBatch 
-        ? item.batches.find(b => b.batchId === restockForm.selectedBatch)?.office 
-        : 'Hemodialysis',
-      balance: newBalance,
-      ptr: restockForm.ptrNo,
-      costPerUnit: restockForm.costPerUnit,
-      remarks: restockForm.remarks || 'Restock'
-    })
-
-    // Update state
-    item.transactions = transactions
-    updatedItems[itemIndex] = item
-    setInventoryItems(updatedItems)
-    setShowMoreInfo(item)
-    setShowRestockModal(null)
+      },
+      () => { setConfirmation(null) }
+    )
   }
 
   /**
    * Delete transaction and recalculate all balances
    * @param {number} index - Index of transaction to delete
    */
-  const handleDeleteTransaction = (index) => {
-    // Confirm deletion
-    if (!showMoreInfo || !window.confirm('Are you sure you want to delete this transaction?')) return
+  const handleDeleteTransaction = async (index) => {
+    if (!showMoreInfo) return
 
-    const updatedItems = [...inventoryItems]
-    const itemIndex = updatedItems.findIndex(item => item.id === showMoreInfo.id)
-
-    if (itemIndex === -1) return
-
-    const item = { ...updatedItems[itemIndex] }
-    let transactions = [...(item.transactions || [])]
-    // Remove transaction
-    transactions.splice(index, 1)
-
-    // ======================================
-    // RECALCULATE BALANCES FOR ALL TRANSACTIONS
-    // ======================================
-    let balance = 0
-    transactions = transactions.map((tx, idx) => {
-      balance = balance + tx.receiptQty - tx.issuanceQty
-      return { ...tx, balance }
-    })
-
-    // Update state
-    item.transactions = transactions
-    updatedItems[itemIndex] = item
-    setInventoryItems(updatedItems)
-    setShowMoreInfo(item)
+    // Show confirmation dialog
+    showConfirmation(
+      'Confirm Deletion',
+      'Are you sure you want to delete this transaction?',
+      async () => {
+        try {
+          await supabaseDb.deleteTransaction(showMoreInfo.id, index)
+          await supabaseDb.recalculateBalances(showMoreInfo.id)
+          await loadItems()
+          const refreshedItems = await supabaseDb.getItems()
+          const refreshedItem = refreshedItems.find(i => i.id === showMoreInfo.id)
+          setShowMoreInfo(refreshedItem)
+          showNotification('success', 'Transaction deleted successfully!')
+        } catch (e) {
+          console.error('Failed to delete transaction:', e)
+          showNotification('error', 'Failed to delete transaction: ' + e.message)
+        } finally {
+          setConfirmation(null)
+        }
+      },
+      () => setConfirmation(null)
+    )
   }
 
   return (
     <div className="inventory">
+      {/* Notification */}
+      {notification && (
+        <div 
+          style={{
+            position: 'fixed',
+            top: '20px',
+            right: '20px',
+            padding: '16px 24px',
+            borderRadius: '8px',
+            color: '#fff',
+            fontWeight: '600',
+            zIndex: 9999,
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+            backgroundColor: notification.type === 'success' ? '#4ade80' : '#f87171'
+          }}
+        >
+          {notification.message}
+        </div>
+      )}
+
+      {/* Custom Confirmation Modal */}
+      {confirmation && (
+        <div 
+          className="modal-overlay" 
+          onClick={() => { /* Do nothing when clicking overlay, since we have cancel button */ }}
+          style={{ zIndex: 10000 }}
+        >
+          <div className="modal" style={{ maxWidth: '400px' }} onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2 className="modal-title">{confirmation.title}</h2>
+            </div>
+            <div className="modal-body" style={{ padding: '24px' }}>
+              <p style={{ margin: 0, color: '#374151', fontSize: '16px' }}>{confirmation.message}</p>
+            </div>
+            <div className="modal-footer" style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+              <button 
+                className="btn-secondary" 
+                onClick={() => { 
+                  if (confirmation.onCancel) confirmation.onCancel() 
+                }}
+              >
+                Cancel
+              </button>
+              <button 
+                className="btn-primary" 
+                onClick={() => { 
+                  if (confirmation.onConfirm) confirmation.onConfirm() 
+                }}
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {/* ==========================================
           PAGE HEADER
           ========================================== */}
@@ -1363,7 +1430,7 @@ const Inventory = () => {
                     />
                   </div>
                   <div className="form-group">
-                    <label className="form-label">SKU (Auto-generated)</label>
+                    <label className="form-label">SKU </label>
                     <input type="text" className="form-input" value={addFormData.sku} disabled />
                   </div>
                   <div className="form-group">
@@ -1410,7 +1477,7 @@ const Inventory = () => {
                 </h3>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px', marginBottom: '16px' }}>
                   <div className="form-group">
-                    <label className="form-label">Batch ID (Auto-generated)</label>
+                    <label className="form-label">Batch ID</label>
                     <input 
                       type="text" 
                       className="form-input" 
@@ -1419,7 +1486,7 @@ const Inventory = () => {
                     />
                   </div>
                   <div className="form-group">
-                    <label className="form-label">SKU (Auto-generated)</label>
+                    <label className="form-label">SKU</label>
                     <input 
                       type="text" 
                       className="form-input" 

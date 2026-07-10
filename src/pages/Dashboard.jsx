@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Icon from '../components/Icon'
+import { supabaseDb } from '../utils/supabaseDb'
 
 // Import dashboard icons from assets folder
 import totalItemsIcon from '../assets/icons/dashboard/dashboard-totalitems-icon.svg'
@@ -20,91 +21,102 @@ import activityAddedIcon from '../assets/icons/dashboard/dashboard-activityadded
  * - Donut chart showing inventory by office
  */
 const Dashboard = () => {
+  const [inventoryItems, setInventoryItems] = useState([])
+  const [activities, setActivities] = useState([])
+  const [requisitions, setRequisitions] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  const loadData = async () => {
+    setLoading(true)
+    try {
+      const items = await supabaseDb.getItems()
+      const acts = await supabaseDb.getActivities()
+      const reqs = await supabaseDb.getRequisitions()
+      setInventoryItems(items)
+      setActivities(acts)
+      setRequisitions(reqs)
+    } catch (e) {
+      console.error('Failed to load dashboard data', e)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    loadData()
+  }, [])
+
+  // Default data if nothing loaded
+  const defaultInventoryItems = [
+    { 
+      id:1, 
+      sku:'MED-001', 
+      name:'Syringes 5ml', 
+      location:'', 
+      minStock:0, 
+      unit:'', 
+      batches:[{
+        batchId:'B-001', 
+        brand:'', 
+        supplier:'', 
+        stockNumber:'', 
+        expiryDate:null, 
+        office:'Hemodialysis', 
+        stock:450, 
+        transactionCount:0, 
+        ptr:'', 
+        costPerUnit:'', 
+        remarks:''
+      }],
+      transactions: [] 
+    },
+  ]
+  const defaultActivities = [
+    { id:1, item:'Syringes 5ml', office:'Hemodialysis', action:'Issued', time:'Just now', type:'issued' },
+  ]
+  const defaultRequisitions = []
+
+  const items = inventoryItems.length > 0 ? inventoryItems : defaultInventoryItems
+  const acts = activities.length >0 ? activities : defaultActivities
+  const reqs = requisitions.length>0 ? requisitions : defaultRequisitions
+
+  // Calculate statistics
+  const totalStock = items.reduce((sum, item) => 
+    sum + item.batches.reduce((batchSum, batch) => batchSum + batch.stock, 0)
+  , 0)
+  const lowStockCount = items.filter(item => {
+    const total = item.batches.reduce((sum, b) => sum + b.stock, 0)
+    return total < item.minStock
+  }).length
+  const pendingCount = reqs.filter(r => r.status === 'Pending').length
+
   // Statistics cards data
   const stats = [
-    { label: 'Total Items', value: '1,247', icon: totalItemsIcon, bgColor: '#e8f0fe' },
-    { label: 'Low Stock', value: '23', icon: lowStockIcon, bgColor: '#fff799ff' },
-    { label: 'Pending Requisitions', value: '8', icon: pendingIcon, bgColor: '#f9e49eff' },
-    { label: 'Issued Today', value: '45', icon: issuedIcon, bgColor: '#e6f9e6' },
+    { label: 'Total Stock', value: totalStock.toLocaleString(), icon: totalItemsIcon, bgColor: '#e8f0fe' },
+    { label: 'Low Stock', value: lowStockCount.toString(), icon: lowStockIcon, bgColor: '#fff799ff' },
+    { label: 'Pending Requisitions', value: pendingCount.toString(), icon: pendingIcon, bgColor: '#f9e49eff' },
+    { label: 'Issued Today', value: '0', icon: issuedIcon, bgColor: '#e6f9e6' },
   ]
 
   // Recent activity feed data
-  const recentActivity = [
-    { id: 1, item: 'Syringes 5ml', office: 'Hemodialysis', action: 'Issued', time: '2 hours ago', icon: activityIssuedIcon, bgColor: '#e6fff3ff' },
-    { id: 2, item: 'Alcohol Swabs', office: 'Admin Office', action: 'Expired', time: '3 hours ago', type: 'expired', icon: activityExpiredIcon, bgColor: '#ffe6e6' },
-    { id: 3, item: 'Gauze Pads (4x4)', office: 'Radiology', action: 'About to Expire', time: '4 hours ago', type: 'warning', icon: activityNearExpiryIcon, bgColor: '#fff3cd' },
-    { id: 4, item: 'Bandages (Assorted)', office: 'Hemodialysis', action: 'Allocated', time: '5 hours ago', icon: activityAllocatedIcon, bgColor: '#eac7ffff' },
-    { id: 5, item: 'Needles 21G', office: 'Clinical Laboratory', action: 'Added', time: '6 hours ago', type: 'added', icon: activityAddedIcon, bgColor: '#e6f9e6' },
-  ]
-
-  // Mock inventory data (will come from API later)
-  const inventoryItems = [
-    {
-      id: 1,
-      sku: 'MED-001',
-      name: 'Syringes 5ml',
-      brand: 'BD Medical',
-      location: 'Shelf A-12',
-      minStock: 100,
-      unit: 'pcs',
-      batches: [
-        { batchId: 'B-001', expiryDate: null, office: 'Hemodialysis', stock: 450 },
-        { batchId: 'B-002', expiryDate: null, office: 'Clinical Laboratory', stock: 320 },
-        { batchId: 'B-003', expiryDate: null, office: 'Hemodialysis', stock: 200 },
-      ],
-    },
-    {
-      id: 2,
-      sku: 'MED-002',
-      name: 'Gauze Pads (4x4)',
-      brand: 'Johnson & Johnson',
-      location: 'Shelf B-05',
-      minStock: 50,
-      unit: 'packs',
-      batches: [
-        { batchId: 'B-004', expiryDate: '2026-07-15', office: 'Radiology', stock: 80 },
-        { batchId: 'B-005', expiryDate: '2027-03-20', office: 'Radiology', stock: 40 },
-      ],
-    },
-    {
-      id: 3,
-      sku: 'MED-003',
-      name: 'Alcohol Swabs',
-      brand: 'Kendall',
-      location: 'Shelf C-08',
-      minStock: 100,
-      unit: 'boxes',
-      batches: [
-        { batchId: 'B-006', expiryDate: '2026-06-30', office: 'Admin Office', stock: 35 },
-        { batchId: 'B-007', expiryDate: '2026-08-10', office: 'Hemodialysis', stock: 40 },
-      ],
-    },
-    {
-      id: 4,
-      sku: 'MED-004',
-      name: 'Bandages (Assorted)',
-      brand: '3M',
-      location: 'Shelf B-10',
-      minStock: 150,
-      unit: 'boxes',
-      batches: [
-        { batchId: 'B-008', expiryDate: null, office: 'Hemodialysis', stock: 150 },
-        { batchId: 'B-009', expiryDate: null, office: 'Unallocated', stock: 50 },
-      ],
-    },
-    {
-      id: 5,
-      sku: 'MED-005',
-      name: 'Needles 21G',
-      brand: 'BD Medical',
-      location: 'Shelf A-15',
-      minStock: 200,
-      unit: 'pcs',
-      batches: [
-        { batchId: 'B-010', expiryDate: '2028-12-01', office: 'Clinical Laboratory', stock: 500 },
-      ],
-    },
-  ]
+  const recentActivity = acts.map(act => ({
+    id: act.id,
+    item: act.item,
+    office: act.office,
+    action: act.action,
+    time: act.time,
+    type: act.type,
+    icon: act.type === 'expired' ? activityExpiredIcon 
+      : act.type === 'warning' ? activityNearExpiryIcon 
+      : act.type === 'allocated' ? activityAllocatedIcon 
+      : act.type === 'added' ? activityAddedIcon 
+      : activityIssuedIcon,
+    bgColor: act.type === 'expired' ? '#ffe6e6' 
+      : act.type === 'warning' ? '#fff3cd' 
+      : act.type === 'allocated' ? '#eac7ffff' 
+      : act.type === 'added' ? '#e6f9e6' 
+      : '#e6fff3ff'
+  }))
 
   /**
    * Calculate total inventory stock per office
@@ -120,7 +132,7 @@ const Dashboard = () => {
     }
 
     // Sum stock from all batches for each office
-    inventoryItems.forEach(item => {
+    items.forEach(item => {
       item.batches.forEach(batch => {
         if (totals.hasOwnProperty(batch.office)) {
           totals[batch.office] += batch.stock
