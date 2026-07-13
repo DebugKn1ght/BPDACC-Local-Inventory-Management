@@ -153,7 +153,7 @@ const Settings = () => {
         <button className="btn-primary">Save Changes</button>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .settings {
           padding: 0;
         }

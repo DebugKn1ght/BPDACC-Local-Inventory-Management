@@ -231,7 +231,7 @@ const RequisitionRequests = () => {
         </div>
       )}
 
-      <style jsx>{`
+      <style>{`
         .page {
           padding: 24px;
           max-width: 1400px;

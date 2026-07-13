@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import Icon from '../components/Icon'
-import { supabaseDb } from '../utils/supabaseDb'
+import { supabaseDb } from '../utils/apiDb'
 import { useUserRole } from '../context/UserRoleContext'
 
 // Import dashboard icons from assets folder
@@ -70,39 +71,9 @@ const Dashboard = () => {
     }
   })
 
-  // Default data if nothing loaded
-  const defaultInventoryItems = [
-    { 
-      id:1, 
-      sku:'MED-001', 
-      name:'Syringes 5ml', 
-      location:'', 
-      minStock:0, 
-      unit:'', 
-      batches:[{
-        batchId:'B-001', 
-        brand:'', 
-        supplier:'', 
-        stockNumber:'', 
-        expiryDate:null, 
-        office:'Hemodialysis', 
-        stock:450, 
-        transactionCount:0, 
-        ptr:'', 
-        costPerUnit:'', 
-        remarks:''
-      }],
-      transactions: [] 
-    },
-  ]
-  const defaultActivities = [
-    { id:1, item:'Syringes 5ml', office:'Hemodialysis', action:'Issued', time:'Just now', type:'issued' },
-  ]
-  const defaultRequisitions = []
-
-  const items = inventoryItems.length > 0 ? inventoryItems : defaultInventoryItems
-  const acts = activities.length >0 ? activities : defaultActivities
-  const reqs = requisitions.length>0 ? requisitions : defaultRequisitions
+  const items = inventoryItems
+  const acts = activities
+  const reqs = requisitions
 
   // Calculate statistics
   const totalStock = items.reduce((sum, item) => 
@@ -364,7 +335,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .dashboard {
           padding: 0;
         }

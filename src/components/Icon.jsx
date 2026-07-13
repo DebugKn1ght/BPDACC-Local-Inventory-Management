@@ -11,9 +11,12 @@ import React from 'react'
  * @param {object} style - Additional inline styles to apply
  */
 const Icon = ({ src, alt = '', size = 24, className = '', style = {} }) => {
+  // Next.js imports static assets as objects with a .src property
+  const actualSrc = typeof src === 'object' && src !== null && 'src' in src ? src.src : src;
+
   return (
     <img
-      src={src}
+      src={actualSrc}
       alt={alt}
       draggable={false}
       style={{

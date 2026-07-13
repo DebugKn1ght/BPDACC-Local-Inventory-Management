@@ -178,7 +178,7 @@ const Requisition = () => {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .requisition {
           padding: 0;
         }

@@ -93,7 +93,7 @@ const Users = () => {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .users {
           padding: 0;
         }

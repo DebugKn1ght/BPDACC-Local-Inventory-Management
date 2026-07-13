@@ -130,7 +130,7 @@ const Sidebar = () => {
             </select>
           </div>
         </div>
-        <style jsx>{`
+        <style>{`
           .sidebar {
             width: 220px;
             background: white;

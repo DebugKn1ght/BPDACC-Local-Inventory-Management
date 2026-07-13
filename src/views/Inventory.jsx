@@ -10,7 +10,7 @@
 
 import React, { useState, useEffect } from 'react'
 import Icon from '../components/Icon'
-import { supabaseDb } from '../utils/supabaseDb'
+import { supabaseDb } from '../utils/apiDb'
 import { useUserRole } from '../context/UserRoleContext'
 
 // Import inventory management icons from assets
@@ -770,7 +770,7 @@ const Inventory = () => {
           <table className="inventory-table">
             <thead>
               <tr>
-                <th style={{width: '40px'}}></th> {/* Expand/Collapse column */}
+                <th style={{width: '40px'}}></th>
                 <th>SKU</th>
                 <th>Item Name</th>
                 <th>Total Stock</th>
@@ -1632,7 +1632,7 @@ const Inventory = () => {
         </div>
       )}
 
-      <style jsx>{`
+      <style>{`
         .inventory {
           padding: 0;
         }

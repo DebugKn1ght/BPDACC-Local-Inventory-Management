@@ -1,52 +1,62 @@
 ================================================================================
-                   BPDACC INVENTORY MANAGEMENT SYSTEM
-                           Setup & User Guide
+BPDACC LOCAL INVENTORY MANAGEMENT - SETUP GUIDE
 ================================================================================
 
---------------------------------------------------------------------------------
-[1] ONE-TIME SETUP
---------------------------------------------------------------------------------
-
-1. INSTALL NODE.JS (Windows 7 Compatible)
-   - Download Node.js 14.x from: https://nodejs.org/dist/latest-v14.x/
-   - Choose the .msi installer (e.g., node-v14.21.3-x64.msi)
-   - Run the installer, follow the prompts (use default settings)
-   - Restart your computer
-
-2. INSTALL POSTGRESQL
-   - Download PostgreSQL 12 (Windows 7 compatible) from: 
-     https://www.postgresql.org/download/windows/
-   - Run the installer:
-     * Set a password for the "postgres" user (remember this!)
-     * Use default port (5432)
-     * Complete the installation
-   - Open "pgAdmin" (from Start Menu) to manage your database
-
-3. CREATE DATABASE
-   - Open pgAdmin
-   - Right-click "Databases" → Create → Database
-   - Name it: bpdacc_inventory
-   - Click "Save"
+This system has been upgraded to use Next.js, Prisma, and MySQL.
 
 --------------------------------------------------------------------------------
-[2] STARTING THE APPLICATION
+[1] PREREQUISITES INSTALLATION
 --------------------------------------------------------------------------------
 
-1. Double-click the file "START_SERVER.bat" in this folder
-2. Wait for it to finish (it may take a minute the first time)
-3. When you see "🚀 BPDACC Inventory Server is running!" open your browser
-4. Go to: http://localhost:3000
+1. INSTALL NODE.JS
+   - Download Node.js (v18 or higher recommended) from: https://nodejs.org/
+   - Run the installer with default settings
 
-That's it! The app is now running.
+2. INSTALL MYSQL
+   - Download MySQL Community Server from: 
+     https://dev.mysql.com/downloads/installer/
+   - Run the installer. Choose the "Server only" or "Developer Default" setup.
+   - During configuration:
+     * Set a strong "Root Password" (you will need this!)
+     * Keep the default port as 3306.
+     * Configure MySQL to start at system startup.
+   - (Optional but recommended) Install MySQL Workbench to manage your database visually.
+
+3. CREATE THE DATABASE
+   - Open MySQL Workbench (or MySQL Command Line Client).
+   - Login with your root user and password.
+   - Run the following SQL command to create the database:
+     CREATE DATABASE bpdacc_inventory;
 
 --------------------------------------------------------------------------------
-[3] STOPPING THE APPLICATION
+[2] SYSTEM CONFIGURATION
 --------------------------------------------------------------------------------
 
-1. Go to the black command prompt window
-2. Press Ctrl + C
-3. Type Y and press Enter
+1. SET UP ENVIRONMENT VARIABLES
+   - Create a new file in this folder named EXACTLY `.env` (with the dot at the beginning).
+   - Open the `.env` file in Notepad.
+   - Add this line, replacing `your_password` with the Root Password you set earlier:
+     DATABASE_URL="mysql://root:your_password@localhost:3306/bpdacc_inventory"
 
-================================================================================
-For technical questions, contact your system administrator!
-================================================================================
+2. INSTALL PROJECT DEPENDENCIES
+   - Open Command Prompt or PowerShell in this folder.
+   - Run the following command:
+     npm install
+
+3. PUSH THE DATABASE SCHEMA
+   - Still in Command Prompt/PowerShell, run this command to build the tables:
+     npm run db:push
+   - This command reads `prisma/schema.prisma` and creates all necessary tables in MySQL.
+
+--------------------------------------------------------------------------------
+[3] STARTING THE APPLICATION
+--------------------------------------------------------------------------------
+
+1. START THE DEVELOPMENT SERVER
+   - In Command Prompt/PowerShell (in this folder), run:
+     npm run dev
+2. Wait until you see "Ready in ... ms"
+3. Open your web browser and go to:
+     http://localhost:3000
+
+(Note: You can view and edit your database contents visually anytime by running `npm run db:studio` in a new terminal window!)

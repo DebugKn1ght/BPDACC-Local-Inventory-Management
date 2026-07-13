@@ -629,7 +629,7 @@ const Reports = () => {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .reports {
           padding: 0;
         }
