@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Icon from '../components/Icon'
 import { supabaseDb } from '../utils/supabaseDb'
+import { useUserRole } from '../context/UserRoleContext'
 
 // Import dashboard icons from assets folder
 import totalItemsIcon from '../assets/icons/dashboard/dashboard-totalitems-icon.svg'
@@ -12,6 +13,7 @@ import activityExpiredIcon from '../assets/icons/dashboard/dashboard-activityexp
 import activityNearExpiryIcon from '../assets/icons/dashboard/dashboard-activitynearexpiry-icon.svg'
 import activityAllocatedIcon from '../assets/icons/dashboard/dashboard-activityallocated-icon.svg'
 import activityAddedIcon from '../assets/icons/dashboard/dashboard-activityadded-icon.svg'
+import searchIcon from '../assets/icons/inventory/search-icon.svg'
 
 /**
  * Dashboard page - Home page showing overview of inventory system
@@ -21,16 +23,19 @@ import activityAddedIcon from '../assets/icons/dashboard/dashboard-activityadded
  * - Donut chart showing inventory by office
  */
 const Dashboard = () => {
+  const { userRole, userOffice } = useUserRole()
   const [inventoryItems, setInventoryItems] = useState([])
   const [activities, setActivities] = useState([])
   const [requisitions, setRequisitions] = useState([])
   const [loading, setLoading] = useState(true)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [sortOrder, setSortOrder] = useState('newest') // 'newest' or 'oldest'
 
   const loadData = async () => {
     setLoading(true)
     try {
       const items = await supabaseDb.getItems()
-      const acts = await supabaseDb.getActivities()
+      const acts = await supabaseDb.getActivities(userRole, userOffice)
       const reqs = await supabaseDb.getRequisitions()
       setInventoryItems(items)
       setActivities(acts)
@@ -44,7 +49,26 @@ const Dashboard = () => {
 
   useEffect(() => {
     loadData()
-  }, [])
+  }, [userRole, userOffice])
+
+  // Filter and sort activities
+  const processedActivities = [...activities].filter(activity => {
+    if (!searchQuery) return true
+    const query = searchQuery.toLowerCase()
+    return (
+      activity.item?.toLowerCase().includes(query) ||
+      activity.office?.toLowerCase().includes(query) ||
+      activity.action?.toLowerCase().includes(query)
+    )
+  }).sort((a, b) => {
+    const dateA = new Date(a.created_at || a.time)
+    const dateB = new Date(b.created_at || b.time)
+    if (sortOrder === 'newest') {
+      return dateB - dateA
+    } else {
+      return dateA - dateB
+    }
+  })
 
   // Default data if nothing loaded
   const defaultInventoryItems = [
@@ -99,7 +123,7 @@ const Dashboard = () => {
   ]
 
   // Recent activity feed data
-  const recentActivity = acts.map(act => ({
+  const recentActivity = processedActivities.map(act => ({
     id: act.id,
     item: act.item,
     office: act.office,
@@ -110,11 +134,13 @@ const Dashboard = () => {
       : act.type === 'warning' ? activityNearExpiryIcon 
       : act.type === 'allocated' ? activityAllocatedIcon 
       : act.type === 'added' ? activityAddedIcon 
+      : act.type === 'restocked' ? activityAddedIcon
       : activityIssuedIcon,
     bgColor: act.type === 'expired' ? '#ffe6e6' 
       : act.type === 'warning' ? '#fff3cd' 
       : act.type === 'allocated' ? '#eac7ffff' 
       : act.type === 'added' ? '#e6f9e6' 
+      : act.type === 'restocked' ? '#dbeafe'
       : '#e6fff3ff'
   }))
 
@@ -225,20 +251,6 @@ const Dashboard = () => {
           <h1 className="page-title">Dashboard</h1>
           <p className="page-subtitle">Welcome back! Here's what's happening.</p>
         </div>
-        <div className="header-actions">
-          <select className="select-input">
-            <option>Today</option>
-            <option>This Week</option>
-            <option>This Month</option>
-          </select>
-          <select className="select-input">
-            <option>All Offices</option>
-            <option>Hemodialysis</option>
-            <option>Clinical Laboratory</option>
-            <option>Radiology</option>
-            <option>Admin Office</option>
-          </select>
-        </div>
       </div>
 
       <div className="stats-grid">
@@ -256,29 +268,54 @@ const Dashboard = () => {
       </div>
 
       <div className="dashboard-grid">
-        <div className="card">
-          <div className="card-header">
-            <h2 className="card-title">Recent Activity</h2>
-            <a href="#" className="card-link">View All</a>
+        <div className="column-wrapper">
+          {/* Filters bar for Recent Activity */}
+          <div className="filters-bar">
+            <div className="search-box">
+              <span className="search-icon">
+                <Icon src={searchIcon} alt="Search" size={20} />
+              </span>
+              <input
+                type="text"
+                placeholder="Search activities..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            <select 
+              className="select-input" 
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+            >
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
+            </select>
           </div>
-          <div className="activity-list">
-            {recentActivity.map((activity) => (
-              <div key={activity.id} className={`activity-item ${activity.type ? activity.type : ''}`} style={{ background: activity.bgColor }}>
-                <div className="activity-icon">
-                  <Icon src={activity.icon} alt={activity.action} size={28} />
-                </div>
-                <div className="activity-details">
-                  <div className="activity-item-name">{activity.item}</div>
-                  <div className="activity-meta">
-                    <span className="facility-tag">{activity.office}</span>
-                    <span className="activity-time">{activity.time}</span>
+          
+          <div className="card">
+            <div className="card-header">
+              <h2 className="card-title">Recent Activity</h2>
+              <a href="#" className="card-link">View All</a>
+            </div>
+            <div className="activity-list">
+              {recentActivity.map((activity) => (
+                <div key={activity.id} className={`activity-item ${activity.type ? activity.type : ''}`} style={{ background: activity.bgColor }}>
+                  <div className="activity-icon">
+                    <Icon src={activity.icon} alt={activity.action} size={28} />
                   </div>
+                  <div className="activity-details">
+                    <div className="activity-item-name">{activity.item}</div>
+                    <div className="activity-meta">
+                      <span className="facility-tag">{activity.office}</span>
+                      <span className="activity-time">{activity.time}</span>
+                    </div>
+                  </div>
+                  <span className={`activity-status ${activity.action.toLowerCase().replace(/ /g, '-')}`}>
+                    {activity.action}
+                  </span>
                 </div>
-                <span className={`activity-status ${activity.action.toLowerCase().replace(/ /g, '-')}`}>
-                  {activity.action}
-                </span>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
 
@@ -358,15 +395,6 @@ const Dashboard = () => {
           flex-wrap: wrap;
         }
 
-        .select-input {
-          padding: 10px 16px;
-          border: 1px solid #e5e7eb;
-          border-radius: 8px;
-          font-size: 14px;
-          background: white;
-          cursor: pointer;
-        }
-
         .stats-grid {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
@@ -408,6 +436,52 @@ const Dashboard = () => {
           display: grid;
           grid-template-columns: 2fr 1fr;
           gap: 20px;
+        }
+
+        .column-wrapper {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }
+
+        .filters-bar {
+          display: flex;
+          gap: 16px;
+          flex-wrap: wrap;
+        }
+
+        .search-box {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          background: white;
+          border: 1px solid #e5e7eb;
+          border-radius: 8px;
+          padding: 0 16px;
+          gap: 10px;
+          min-width: 200px;
+        }
+
+        .search-icon {
+          font-size: 18px;
+        }
+
+        .search-box input {
+          flex: 1;
+          border: none;
+          padding: 12px 0;
+          font-size: 14px;
+          outline: none;
+        }
+
+        .select-input {
+          padding: 12px 16px;
+          border: 1px solid #e5e7eb;
+          border-radius: 8px;
+          font-size: 14px;
+          background: white;
+          cursor: pointer;
+          min-width: 150px;
         }
 
         .card {

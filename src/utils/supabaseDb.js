@@ -565,12 +565,145 @@ export const supabaseDb = {
     }
   },
 
+  /**
+   * Log an activity to the database
+   */
+  async addActivity(activityData) {
+    try {
+      const { data, error } = await supabase
+        .from('activities')
+        .insert({
+          item: activityData.item,
+          office: activityData.office,
+          action: activityData.action,
+          type: activityData.type, // 'issued', 'expired', 'warning', 'allocated', 'added', 'restocked', 'requisition_pending', 'requisition_approved', 'requisition_rejected'
+          time: new Date().toISOString(),
+          created_at: new Date().toISOString(),
+          details: activityData.details || {} // Store extra info (like requester name)
+        })
+        .select()
+
+      if (error) throw error
+      return data[0]
+    } catch (e) {
+      console.error('Failed to add activity:', e)
+      throw e
+    }
+  },
+
+  /**
+   * Helper function to check if a date is near expiry
+   * @param {string} expiryDate - ISO date string
+   * @returns {boolean}
+   */
+  isNearExpiry(expiryDate) {
+    if (!expiryDate) return false
+    const today = new Date()
+    const expiry = new Date(expiryDate)
+    // Calculate 2 months before expiry date
+    const twoMonthsBefore = new Date(expiry)
+    twoMonthsBefore.setMonth(twoMonthsBefore.getMonth() - 2)
+    // Check if today is between 2 months before expiry and expiry date
+    return today >= twoMonthsBefore && today <= expiry
+  },
+
+  /**
+   * Helper function to check if a date is expired
+   * @param {string} expiryDate - ISO date string
+   * @returns {boolean}
+   */
+  isExpired(expiryDate) {
+    if (!expiryDate) return false
+    const today = new Date()
+    const expiry = new Date(expiryDate)
+    return expiry < today
+  },
+
+  /**
+   * Get all activities, including dynamically generated ones (expiry, near expiry)
+   */
+  async getActivities(userRole = 'Admin', userOffice = 'All') {
+    try {
+      // Get logged activities from Supabase
+      const { data: loggedActivities, error: activitiesErr } = await supabase
+        .from('activities')
+        .select('*')
+        .order('created_at', { ascending: false })
+
+      if (activitiesErr) throw activitiesErr
+
+      // Get items to generate expiry/near expiry activities
+      const items = await this.getItems()
+
+      const allActivities = [...(loggedActivities || [])]
+
+      // Generate dynamic expiry/near expiry activities
+      items.forEach(item => {
+        item.batches.forEach(batch => {
+          // Filter by office if user is not admin
+          if (userRole !== 'Admin' && userOffice !== 'All' && batch.office !== userOffice) {
+            return
+          }
+
+          if (this.isExpired(batch.expiryDate)) {
+            allActivities.push({
+              id: `expired-${item.id}-${batch.batchId}`,
+              item: `${item.name} (Batch ${batch.batchId})`,
+              office: batch.office,
+              action: 'Expired',
+              type: 'expired',
+              time: 'Just now',
+              created_at: batch.expiryDate
+            })
+          } else if (this.isNearExpiry(batch.expiryDate)) {
+            allActivities.push({
+              id: `near-expiry-${item.id}-${batch.batchId}`,
+              item: `${item.name} (Batch ${batch.batchId})`,
+              office: batch.office,
+              action: 'Near Expiry',
+              type: 'warning',
+              time: 'Just now',
+              created_at: new Date().toISOString()
+            })
+          }
+        })
+      })
+
+      // Filter logged activities based on user role/office
+      const filteredActivities = allActivities.filter(activity => {
+        // If admin, show all except if office doesn't match and not admin
+        if (userRole !== 'Admin' && userOffice !== 'All') {
+          if (activity.office && activity.office !== userOffice && activity.office !== 'All') {
+            return false
+          }
+        }
+
+        // If not admin, hide admin-only activities
+        if (userRole !== 'Admin') {
+          if (activity.type === 'requisition_pending' || 
+              activity.type === 'requisition_approved' || 
+              activity.type === 'requisition_rejected') {
+            return false
+          }
+        }
+
+        return true
+      })
+
+      // Sort all activities by created_at (newest first)
+      filteredActivities.sort((a, b) => new Date(b.created_at || b.time) - new Date(a.created_at || a.time))
+
+      return filteredActivities
+    } catch (e) {
+      console.error('Failed to get activities:', e)
+      return []
+    }
+  },
+
   async saveItems() {
     // Not used anymore, individual operations are used
   },
   async getRequisitions() { return [] },
-  async getActivities() { return [] },
-  async addActivity() {},
   async issueItem() {},
   async createRequisition() {},
   async approveRequisition() {},

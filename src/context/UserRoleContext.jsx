@@ -1,33 +1,51 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 
 /**
- * Context for managing user role and permissions throughout the application
+ * Context for managing user role, office, and permissions throughout the application
  */
 const UserRoleContext = createContext()
 
 /**
- * UserRoleProvider - Wraps the entire app to provide role management
- * Persists user role in localStorage so it survives page refreshes
+ * UserRoleProvider - Wraps the entire app to provide user management
+ * Persists user info in localStorage so it survives page refreshes
  * 
  * @param {React.ReactNode} children - Child components that will have access to the context
  */
 export const UserRoleProvider = ({ children }) => {
-  // Initialize userRole from localStorage, default to 'Admin' if not found
+  // Initialize user info from localStorage
   const [userRole, setUserRole] = useState(() => {
     const savedRole = localStorage.getItem('bpdacc-user-role')
     return savedRole || 'Admin'
   })
+  const [userOffice, setUserOffice] = useState(() => {
+    const savedOffice = localStorage.getItem('bpdacc-user-office')
+    return savedOffice || 'All'
+  })
+  const [currentUser, setCurrentUser] = useState(() => {
+    const savedUser = localStorage.getItem('bpdacc-current-user')
+    return savedUser ? JSON.parse(savedUser) : { id: 1, name: 'John Doe', email: 'john@clinic.com', role: 'Admin', office: 'All' }
+  })
 
-  // Save userRole to localStorage whenever it changes
+  // Save to localStorage whenever values change
   useEffect(() => {
     localStorage.setItem('bpdacc-user-role', userRole)
   }, [userRole])
+  useEffect(() => {
+    localStorage.setItem('bpdacc-user-office', userOffice)
+  }, [userOffice])
+  useEffect(() => {
+    localStorage.setItem('bpdacc-current-user', JSON.stringify(currentUser))
+  }, [currentUser])
 
   // Context value that will be provided to children
   const value = {
-    userRole, // Current user role (e.g., 'Admin', 'Nurse', 'Pharmacist', 'Lab Tech')
-    setUserRole, // Function to update the user role
-    isAdmin: userRole === 'Admin' // Convenience flag for admin-specific features
+    userRole,
+    setUserRole,
+    userOffice,
+    setUserOffice,
+    currentUser,
+    setCurrentUser,
+    isAdmin: userRole === 'Admin'
   }
 
   return (
@@ -41,7 +59,7 @@ export const UserRoleProvider = ({ children }) => {
  * Custom hook to access user role context
  * Must be used within a UserRoleProvider
  * 
- * @returns {Object} Context object with { userRole, setUserRole, isAdmin }
+ * @returns {Object} Context object with user info
  */
 export const useUserRole = () => {
   const context = useContext(UserRoleContext)

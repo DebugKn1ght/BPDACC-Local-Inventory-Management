@@ -11,6 +11,7 @@
 import React, { useState, useEffect } from 'react'
 import Icon from '../components/Icon'
 import { supabaseDb } from '../utils/supabaseDb'
+import { useUserRole } from '../context/UserRoleContext'
 
 // Import inventory management icons from assets
 import searchIcon from '../assets/icons/inventory/search-icon.svg'
@@ -26,6 +27,8 @@ import closeIcon from '../assets/icons/inventory/close-icon.svg'
 import printIcon from '../assets/icons/inventory/print-icon.svg'
 
 const Inventory = () => {
+  const { userRole, userOffice } = useUserRole()
+  
   // ==========================================
   // STATE VARIABLES
   // ==========================================
@@ -350,6 +353,15 @@ const Inventory = () => {
 
     try {
       await supabaseDb.addItem(newItem)
+      
+      // Log the activity
+      await supabaseDb.addActivity({
+        item: newItem.name,
+        office: newItem.batches[0].office,
+        action: 'Added',
+        type: 'added'
+      })
+      
       await loadItems() // Refresh the list from DB
       setShowAddModal(false)
       showNotification('success', 'Item added successfully!')
@@ -590,16 +602,25 @@ const Inventory = () => {
             : 'Hemodialysis'
             
           await supabaseDb.restockItem(showRestockModal.id, {
-            ...restockForm,
-            quantity: qty,
-            office
-          })
-          await loadItems() // Refresh
-          const refreshedItems = await supabaseDb.getItems()
-          const refreshedItem = refreshedItems.find(i => i.id === showRestockModal.id)
-          setShowMoreInfo(refreshedItem)
-          setShowRestockModal(null)
-          showNotification('success', 'Item restocked successfully!')
+        ...restockForm,
+        quantity: qty,
+        office
+      })
+      
+      // Log the restock activity
+      await supabaseDb.addActivity({
+        item: showRestockModal.name,
+        office: office,
+        action: 'Restocked',
+        type: 'restocked'
+      })
+      
+      await loadItems() // Refresh
+      const refreshedItems = await supabaseDb.getItems()
+      const refreshedItem = refreshedItems.find(i => i.id === showRestockModal.id)
+      setShowMoreInfo(refreshedItem)
+      setShowRestockModal(null)
+      showNotification('success', 'Item restocked successfully!')
         } catch (e) {
           console.error('Failed to restock:', e)
           showNotification('error', 'Failed to restock: ' + e.message)
