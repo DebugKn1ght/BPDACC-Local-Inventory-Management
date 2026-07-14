@@ -12,6 +12,7 @@ import React, { useState, useEffect } from 'react'
 import Icon from '../components/Icon'
 import { supabaseDb } from '../utils/apiDb'
 import { useUserRole } from '../context/UserRoleContext'
+import { useUI } from '../context/UIContext'
 
 // Import inventory management icons from assets
 import searchIcon from '../assets/icons/inventory/search-icon.svg'
@@ -301,15 +302,15 @@ const Inventory = () => {
     const qtyVal = parseInt(addFormData.initialBatch.quantity)
     
     if (!addFormData.name.trim()) {
-      alert('Item Name is required!')
+      showToast('Item Name is required!', 'error')
       return
     }
     if (isNaN(minStockVal) || minStockVal <= 0) {
-      alert('Minimum Stock Level must be a number greater than 0!')
+      showToast('Minimum Stock Level must be a number greater than 0!', 'error')
       return
     }
     if (isNaN(qtyVal) || qtyVal < 0) {
-      alert('Initial Batch Quantity must be a number 0 or greater!')
+      showToast('Initial Batch Quantity must be a number 0 or greater!', 'error')
       return
     }
 
@@ -380,11 +381,11 @@ const Inventory = () => {
     if (!editFormData) return
     const minStockVal = parseInt(editFormData.minStock)
     if (isNaN(minStockVal) || minStockVal <= 0) {
-      alert('Minimum Stock Level must be a number greater than 0!')
+      showToast('Minimum Stock Level must be a number greater than 0!', 'error')
       return
     }
     if (!editFormData.name.trim()) {
-      alert('Item Name is required!')
+      showToast('Item Name is required!', 'error')
       return
     }
 
@@ -436,7 +437,7 @@ const Inventory = () => {
 
   const handleRemoveBatchInEdit = (idx) => {
     if (editFormData.batches.length <= 1) {
-      alert('An item must have at least one batch!')
+      showToast('An item must have at least one batch!', 'error')
       return
     }
     const updatedBatches = [...editFormData.batches]
@@ -587,7 +588,7 @@ const Inventory = () => {
     if (!showRestockModal) return
     const qty = Number(restockForm.restockQty)
     if (!restockForm.restockQty.trim() || isNaN(qty) || qty <= 0) {
-      alert('Restock quantity must be a number greater than 0!')
+      showToast('Restock quantity must be a number greater than 0!', 'error')
       return
     }
 

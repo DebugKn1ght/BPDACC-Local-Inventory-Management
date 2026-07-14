@@ -79,16 +79,70 @@ async function POST(req) {
         const { method, args } = body;
         let result;
         switch(method){
+            case 'login':
+                {
+                    const [email, password] = args;
+                    const user = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$db$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["default"].user.findUnique({
+                        where: {
+                            email
+                        },
+                        include: {
+                            office: true
+                        }
+                    });
+                    if (!user || user.password !== password) {
+                        throw new Error('Invalid email or password');
+                    }
+                    if (user.status !== 'Active') {
+                        throw new Error('User account is inactive');
+                    }
+                    result = {
+                        id: user.id,
+                        name: user.name,
+                        email: user.email,
+                        role: user.role,
+                        office: user.office ? user.office.name : 'All'
+                    };
+                    break;
+                }
             case 'getItems':
                 {
+                    const [office] = args;
                     const items = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$db$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["default"].inventoryItem.findMany({
-                        include: {
+                        where: office && office !== 'All' ? {
                             batches: {
+                                some: {
+                                    office: {
+                                        name: office
+                                    }
+                                }
+                            }
+                        } : undefined,
+                        include: {
+                            batches: office && office !== 'All' ? {
+                                where: {
+                                    office: {
+                                        name: office
+                                    }
+                                },
+                                orderBy: {
+                                    id: 'asc'
+                                }
+                            } : {
                                 orderBy: {
                                     id: 'asc'
                                 }
                             },
-                            transactions: {
+                            transactions: office && office !== 'All' ? {
+                                where: {
+                                    office: {
+                                        name: office
+                                    }
+                                },
+                                orderBy: {
+                                    id: 'asc'
+                                }
+                            } : {
                                 orderBy: {
                                     id: 'asc'
                                 }

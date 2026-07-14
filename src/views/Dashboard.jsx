@@ -24,19 +24,21 @@ import searchIcon from '../assets/icons/inventory/search-icon.svg'
  * - Donut chart showing inventory by office
  */
 const Dashboard = () => {
-  const { userRole, userOffice } = useUserRole()
+  const { userOffice, isAdmin } = useUserRole()
   const [inventoryItems, setInventoryItems] = useState([])
   const [activities, setActivities] = useState([])
   const [requisitions, setRequisitions] = useState([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
   const [sortOrder, setSortOrder] = useState('newest') // 'newest' or 'oldest'
+  const [selectedOffice, setSelectedOffice] = useState(isAdmin ? 'All' : userOffice)
 
   const loadData = async () => {
     setLoading(true)
     try {
-      const items = await supabaseDb.getItems()
-      const acts = await supabaseDb.getActivities(userRole, userOffice)
+      const officeToFetch = isAdmin ? selectedOffice : userOffice
+      const items = await supabaseDb.getItems(officeToFetch)
+      const acts = await supabaseDb.getActivities(isAdmin, officeToFetch)
       const reqs = await supabaseDb.getRequisitions()
       setInventoryItems(items)
       setActivities(acts)
@@ -50,7 +52,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     loadData()
-  }, [userRole, userOffice])
+  }, [isAdmin, userOffice, selectedOffice])
 
   // Filter and sort activities
   const processedActivities = [...activities].filter(activity => {
@@ -222,6 +224,30 @@ const Dashboard = () => {
           <h1 className="page-title">Dashboard</h1>
           <p className="page-subtitle">Welcome back! Here's what's happening.</p>
         </div>
+        {isAdmin && (
+          <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <label style={{ fontSize: '14px', fontWeight: '500', color: '#4b5563' }}>Filter Office:</label>
+            <select 
+              value={selectedOffice} 
+              onChange={(e) => setSelectedOffice(e.target.value)}
+              style={{
+                padding: '8px 12px',
+                borderRadius: '8px',
+                border: '1px solid #d1d5db',
+                background: 'white',
+                fontSize: '14px',
+                outline: 'none',
+                minWidth: '180px'
+              }}
+            >
+              <option value="All">All Offices & Unallocated</option>
+              <option value="Hemodialysis">Hemodialysis</option>
+              <option value="Clinical Laboratory">Clinical Laboratory</option>
+              <option value="Radiology">Radiology</option>
+              <option value="Admin Office">Admin Office</option>
+            </select>
+          </div>
+        )}
       </div>
 
       <div className="stats-grid">

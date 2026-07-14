@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import prisma from '../../../lib/db';
+import bcrypt from 'bcryptjs';
 
 export const dynamic = 'force-dynamic';
 
@@ -10,13 +11,158 @@ export async function POST(req) {
 
     let result;
     switch (method) {
+      case 'login': {
+        const [email, password] = args;
+        const user = await prisma.user.findUnique({
+          where: { email },
+          include: { office: true }
+        });
+        if (!user) {
+          throw new Error('Invalid email or password');
+        }
+        
+        // We will support both bcrypt hashes and raw passwords (for the initial seeded admin)
+        // However, we should encourage encrypting all passwords. If it's the old 'admin' plain text, 
+        // we'll allow it for now, but newly created accounts use bcrypt.
+        const isMatch = user.password.startsWith('$2a$') || user.password.startsWith('$2b$') 
+          ? await bcrypt.compare(password, user.password)
+          : user.password === password;
+
+        if (!isMatch) {
+          throw new Error('Invalid email or password');
+        }
+        if (user.status !== 'Active') {
+          throw new Error('User account is inactive');
+        }
+        result = {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          isAdmin: user.isAdmin,
+          office: user.office ? user.office.name : 'N/A'
+        };
+        break;
+      }
+
+      case 'getUsers': {
+        const users = await prisma.user.findMany({
+          include: { office: true },
+          orderBy: { name: 'asc' }
+        });
+        // Remove passwords before sending to client
+        result = users.map(u => {
+          const { password, ...userWithoutPassword } = u;
+          return {
+            ...userWithoutPassword,
+            officeName: u.office ? u.office.name : 'N/A'
+          };
+        });
+        break;
+      }
+
+      case 'addUser': {
+        const [userData] = args;
+        
+        // Check if email already exists
+        const existingUser = await prisma.user.findUnique({
+          where: { email: userData.email }
+        });
+        if (existingUser) {
+          throw new Error('A user with this email already exists');
+        }
+
+        // Hash the password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(userData.password, salt);
+
+        let officeId = null;
+        if (userData.office) {
+          const office = await prisma.office.findFirst({
+            where: { name: userData.office }
+          });
+          if (office) officeId = office.id;
+        }
+
+        const newUser = await prisma.user.create({
+          data: {
+            name: userData.name,
+            email: userData.email,
+            password: hashedPassword,
+            officeId: officeId,
+            status: userData.status || 'Active'
+          }
+        });
+        
+        const { password, ...userWithoutPassword } = newUser;
+        result = userWithoutPassword;
+        break;
+      }
+
+      case 'updateUser': {
+        const [userData] = args;
+        
+        let officeId = null;
+        if (userData.office) {
+          const office = await prisma.office.findFirst({
+            where: { name: userData.office }
+          });
+          if (office) officeId = office.id;
+        }
+
+        const dataToUpdate = {
+          name: userData.name,
+          email: userData.email,
+          officeId: officeId,
+          status: userData.status
+        };
+
+        if (userData.password && userData.password.trim() !== '') {
+          const salt = await bcrypt.genSalt(10);
+          dataToUpdate.password = await bcrypt.hash(userData.password, salt);
+        }
+
+        const updatedUser = await prisma.user.update({
+          where: { id: userData.id },
+          data: dataToUpdate
+        });
+        
+        const { password, ...userWithoutPassword } = updatedUser;
+        result = userWithoutPassword;
+        break;
+      }
+
+      case 'deleteUser': {
+        const [userId] = args;
+        
+        // Ensure user is not an admin
+        const user = await prisma.user.findUnique({ where: { id: userId } });
+        if (user && user.isAdmin) {
+          throw new Error('Cannot delete super admin account');
+        }
+
+        result = await prisma.user.delete({ where: { id: userId } });
+        break;
+      }
+
       case 'getItems': {
+        const [office] = args;
         const items = await prisma.inventoryItem.findMany({
-          include: {
+          where: office && office !== 'All' ? {
             batches: {
+              some: { office: { name: office } }
+            }
+          } : undefined,
+          include: {
+            batches: office && office !== 'All' ? {
+              where: { office: { name: office } },
+              orderBy: { id: 'asc' }
+            } : {
               orderBy: { id: 'asc' }
             },
-            transactions: {
+            transactions: office && office !== 'All' ? {
+              where: { office: { name: office } },
+              orderBy: { id: 'asc' }
+            } : {
               orderBy: { id: 'asc' }
             }
           },

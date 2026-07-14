@@ -20,13 +20,12 @@ import inventoryIcon from '../assets/icons/sidebar/inventory-icon.svg'
 import reportsIcon from '../assets/icons/sidebar/reports-icon.svg'
 import risIcon from '../assets/icons/sidebar/ris-icon.svg'
 import rislistIcon from '../assets/icons/sidebar/rislist-icon.svg'
-import settingsIcon from '../assets/icons/sidebar/settings-icon.svg'
 import usersIcon from '../assets/icons/sidebar/users-icon.svg'
 
 const Sidebar = () => {
   const location = useLocation() // Get current path for active state
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const { userRole, setUserRole, isAdmin } = useUserRole()
+  const { currentUser, isAdmin, logout } = useUserRole()
 
   // Navigation menu items - role-based visibility
   const menuItems = [
@@ -44,9 +43,8 @@ const Sidebar = () => {
       label: 'Requisition Requests', 
       visible: isAdmin // Visible to admins only
     },
-    { path: '/reports', icon: reportsIcon, label: 'Reports', visible: true },
+    { path: '/reports', icon: reportsIcon, label: 'Reports', visible: isAdmin },
     { path: '/users', icon: usersIcon, label: 'Users', visible: isAdmin },
-    { path: '/settings', icon: settingsIcon, label: 'Settings', visible: true },
   ].filter(item => item.visible) // Filter out hidden items
 
   /**
@@ -101,34 +99,29 @@ const Sidebar = () => {
         {/* Sidebar Footer - User Info & Role Switcher */}
         <div className="sidebar-footer">
           <div className="user-info">
-            <div className="user-avatar">JD</div>
+            <div className="user-avatar">{currentUser?.name?.charAt(0) || 'U'}</div>
             <div>
-              <div className="user-name">John Doe</div>
-              <div className="user-role">{userRole}</div>
+              <div className="user-name">{currentUser?.name || 'User'}</div>
+              <div className="user-role">{isAdmin ? 'Super Admin' : 'Office User'}</div>
             </div>
           </div>
-          <div style={{ marginTop: '12px' }}>
-            <label style={{ fontSize: '12px', color: '#6b7280', display: 'block', marginBottom: '4px' }}>
-              Switch Role (Testing):
-            </label>
-            <select 
-              value={userRole}
-              onChange={(e) => setUserRole(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '6px 8px',
-                border: '1px solid #e5e7eb',
-                borderRadius: '6px',
-                fontSize: '12px',
-                cursor: 'pointer'
-              }}
-            >
-              <option value="Admin">Admin</option>
-              <option value="Nurse">Nurse</option>
-              <option value="Pharmacist">Pharmacist</option>
-              <option value="Lab Tech">Lab Tech</option>
-            </select>
-          </div>
+          <button 
+            onClick={logout}
+            style={{
+              width: '100%',
+              marginTop: '15px',
+              padding: '8px',
+              background: '#fee2e2',
+              color: '#dc2626',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontWeight: '600',
+              transition: 'background 0.2s'
+            }}
+          >
+            Logout
+          </button>
         </div>
         <style>{`
           .sidebar {
