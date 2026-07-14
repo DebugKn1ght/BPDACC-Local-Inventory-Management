@@ -24,7 +24,7 @@ import searchIcon from '../assets/icons/inventory/search-icon.svg'
  * - Donut chart showing inventory by office
  */
 const Dashboard = () => {
-  const { userOffice, isAdmin } = useUserRole()
+  const { userOffice, isAdmin, userOfficeId } = useUserRole()
   const [inventoryItems, setInventoryItems] = useState([])
   const [activities, setActivities] = useState([])
   const [requisitions, setRequisitions] = useState([])
@@ -37,7 +37,7 @@ const Dashboard = () => {
     setLoading(true)
     try {
       const officeToFetch = isAdmin ? selectedOffice : userOffice
-      const items = await supabaseDb.getItems(officeToFetch)
+      const items = await supabaseDb.getItems(officeToFetch, isAdmin, userOfficeId)
       const acts = await supabaseDb.getActivities(isAdmin, officeToFetch)
       const reqs = await supabaseDb.getRequisitions()
       setInventoryItems(items)
@@ -52,7 +52,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     loadData()
-  }, [isAdmin, userOffice, selectedOffice])
+  }, [isAdmin, userOffice, selectedOffice, userOfficeId])
 
   // Filter and sort activities
   const processedActivities = [...activities].filter(activity => {

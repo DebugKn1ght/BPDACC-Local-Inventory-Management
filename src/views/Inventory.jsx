@@ -28,14 +28,14 @@ import closeIcon from '../assets/icons/inventory/close-icon.svg'
 import printIcon from '../assets/icons/inventory/print-icon.svg'
 
 const Inventory = () => {
-  const { userRole, userOffice } = useUserRole()
+  const { currentUser, userOffice, userOfficeId, isAdmin } = useUserRole()
   
   // ==========================================
   // STATE VARIABLES
   // ==========================================
   
   // Filter states for searching and office filtering
-  const [selectedOffice, setSelectedOffice] = useState('all') // 'all' or specific office name
+  const [selectedOffice, setSelectedOffice] = useState('All') // 'All' or specific office name
   const [searchQuery, setSearchQuery] = useState('') // Search term for item name or SKU
   
   // Modal visibility states
@@ -106,9 +106,11 @@ const Inventory = () => {
   }
 
   const loadItems = async () => {
+    console.log('[Inventory loadItems] Calling getItems with:', { selectedOffice, isAdmin, userOfficeId })
     setLoading(true)
     try {
-      const items = await supabaseDb.getItems()
+      const items = await supabaseDb.getItems(selectedOffice, isAdmin, userOfficeId)
+      console.log('[Inventory loadItems] Got items back:', items)
       setInventoryItems(items)
     } catch (e) {
       console.error('Failed to load items:', e)
@@ -120,7 +122,7 @@ const Inventory = () => {
 
   useEffect(() => {
     loadItems()
-  }, [])
+  }, [selectedOffice, isAdmin, userOfficeId])
 
   /**
    * Check if a date is near expiry (within 30 days)
@@ -246,7 +248,7 @@ const Inventory = () => {
       item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.sku.toLowerCase().includes(searchQuery.toLowerCase())
 
-    const matchesOffice = selectedOffice === 'all' || 
+    const matchesOffice = selectedOffice === 'All' || 
       item.batches.some(batch => batch.office === selectedOffice)
 
     return matchesSearch && matchesOffice
@@ -729,10 +731,12 @@ const Inventory = () => {
           <h1 className="page-title">Inventory Management</h1>
           <p className="page-subtitle">Manage and track your medical supplies by batches</p>
         </div>
-        <button className="btn-primary" onClick={handleOpenAddModal}>
-          <Icon src={addItemIcon} alt="Add Item" size={20} />
-          Add Item
-        </button>
+        {isAdmin && (
+          <button className="btn-primary" onClick={handleOpenAddModal}>
+            <Icon src={addItemIcon} alt="Add Item" size={20} />
+            Add Item
+          </button>
+        )}
       </div>
 
       {/* ==========================================
@@ -750,18 +754,20 @@ const Inventory = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-        <select
-          className="select-input"
-          value={selectedOffice}
-          onChange={(e) => setSelectedOffice(e.target.value)}
-        >
-          <option value="all">All Offices</option>
-          <option value="Hemodialysis">Hemodialysis</option>
-          <option value="Clinical Laboratory">Clinical Laboratory</option>
-          <option value="Radiology">Radiology</option>
-          <option value="Admin Office">Admin Office</option>
-          <option value="Unallocated">Unallocated</option>
-        </select>
+        {isAdmin && (
+          <select
+            className="select-input"
+            value={selectedOffice}
+            onChange={(e) => setSelectedOffice(e.target.value)}
+          >
+            <option value="All">All Offices</option>
+            <option value="Hemodialysis">Hemodialysis</option>
+            <option value="Clinical Laboratory">Clinical Laboratory</option>
+            <option value="Radiology">Radiology</option>
+            <option value="Admin Office">Admin Office</option>
+            <option value="Unallocated">Unallocated</option>
+          </select>
+        )}
       </div>
 
       {/* ==========================================
@@ -812,26 +818,30 @@ const Inventory = () => {
                       </td>
                       <td onClick={(e) => e.stopPropagation()}> {/* Prevent row expansion when clicking action buttons */}
                         <div className="actions">
-                          <button 
-                            className="btn-icon" 
-                            title="Restock Item"
-                            onClick={() => handleOpenRestockModal(item)}
-                          >
-                            <Icon src={restockIcon} alt="Restock" size={20} />
-                          </button>
+                          {isAdmin && (
+                            <>
+                              <button 
+                                className="btn-icon" 
+                                title="Restock Item"
+                                onClick={() => handleOpenRestockModal(item)}
+                              >
+                                <Icon src={restockIcon} alt="Restock" size={20} />
+                              </button>
+                              <button 
+                                className="btn-icon" 
+                                title="Edit Item"
+                                onClick={() => handleOpenEditModal(item)}
+                              >
+                                <Icon src={editIcon} alt="Edit" size={20} />
+                              </button>
+                            </>
+                          )}
                           <button 
                             className="btn-icon" 
                             title="View Stock Card"
                             onClick={() => setShowMoreInfo(item)}
                           >
                             <Icon src={stockCardIcon} alt="Stock Card" size={20} />
-                          </button>
-                          <button 
-                            className="btn-icon" 
-                            title="Edit Item"
-                            onClick={() => handleOpenEditModal(item)}
-                          >
-                            <Icon src={editIcon} alt="Edit" size={20} />
                           </button>
                         </div>
                       </td>

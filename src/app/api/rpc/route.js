@@ -39,7 +39,8 @@ export async function POST(req) {
           name: user.name,
           email: user.email,
           isAdmin: user.isAdmin,
-          office: user.office ? user.office.name : 'N/A'
+          office: user.office ? user.office.name : 'N/A',
+          officeId: user.officeId
         };
         break;
       }
@@ -145,13 +146,19 @@ export async function POST(req) {
       }
 
       case 'getItems': {
-        const [office] = args;
+        const [office, isAdmin, userOfficeId] = args;
+        console.log('[API getItems] args:', { office, isAdmin, userOfficeId });
         
         let officeCondition = undefined;
         let batchCondition = undefined;
         let txCondition = undefined;
         
-        if (office && office !== 'All') {
+        // If user is not admin, filter to show only items with batches in their office
+        if (!isAdmin && userOfficeId) {
+          officeCondition = { batches: { some: { officeId: userOfficeId } } };
+          batchCondition = { where: { officeId: userOfficeId }, orderBy: { id: 'asc' }, include: { office: true } };
+          txCondition = { where: { officeId: userOfficeId }, orderBy: { id: 'asc' }, include: { office: true } };
+        } else if (office && office !== 'All') {
           if (office === 'Unallocated') {
              officeCondition = { batches: { some: { officeId: null } } };
              batchCondition = { where: { officeId: null }, orderBy: { id: 'asc' }, include: { office: true } };
@@ -162,9 +169,12 @@ export async function POST(req) {
              txCondition = { where: { office: { name: office } }, orderBy: { id: 'asc' }, include: { office: true } };
           }
         } else {
+           // No office condition - show everything!
            batchCondition = { orderBy: { id: 'asc' }, include: { office: true } };
            txCondition = { orderBy: { id: 'asc' }, include: { office: true } };
         }
+
+        console.log('[API getItems] Query params:', { where: officeCondition, include: { batches: batchCondition, transactions: txCondition } });
 
         const items = await prisma.inventoryItem.findMany({
           where: officeCondition,
@@ -174,6 +184,8 @@ export async function POST(req) {
           },
           orderBy: { id: 'asc' }
         });
+
+        console.log('[API getItems] Found items count:', items.length, 'items:', items);
 
         // The frontend expects `batch.office` and `tx.office` to be strings.
         result = items.map(item => ({

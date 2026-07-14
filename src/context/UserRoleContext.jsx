@@ -39,6 +39,7 @@ export const UserRoleProvider = ({ children }) => {
   const value = {
     currentUser,
     userOffice: currentUser?.office || '',
+    userOfficeId: currentUser?.officeId,
     isAdmin: currentUser?.isAdmin || currentUser?.role === 'Super Admin' || false,
     login,
     logout
