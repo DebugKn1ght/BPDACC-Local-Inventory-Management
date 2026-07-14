@@ -19,72 +19,49 @@ var _s = __turbopack_context__.k.signature(), _s1 = __turbopack_context__.k.sign
 const UserRoleProvider = ({ children })=>{
     _s();
     // Initialize user info from localStorage
-    const [userRole, setUserRole] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({
-        "UserRoleProvider.useState": ()=>{
-            const savedRole = localStorage.getItem('bpdacc-user-role');
-            return savedRole || 'Admin';
-        }
-    }["UserRoleProvider.useState"]);
-    const [userOffice, setUserOffice] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({
-        "UserRoleProvider.useState": ()=>{
-            const savedOffice = localStorage.getItem('bpdacc-user-office');
-            return savedOffice || 'All';
-        }
-    }["UserRoleProvider.useState"]);
     const [currentUser, setCurrentUser] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({
         "UserRoleProvider.useState": ()=>{
             const savedUser = localStorage.getItem('bpdacc-current-user');
-            return savedUser ? JSON.parse(savedUser) : {
-                id: 1,
-                name: 'John Doe',
-                email: 'john@clinic.com',
-                role: 'Admin',
-                office: 'All'
-            };
+            return savedUser ? JSON.parse(savedUser) : null;
         }
     }["UserRoleProvider.useState"]);
     // Save to localStorage whenever values change
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "UserRoleProvider.useEffect": ()=>{
-            localStorage.setItem('bpdacc-user-role', userRole);
-        }
-    }["UserRoleProvider.useEffect"], [
-        userRole
-    ]);
-    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
-        "UserRoleProvider.useEffect": ()=>{
-            localStorage.setItem('bpdacc-user-office', userOffice);
-        }
-    }["UserRoleProvider.useEffect"], [
-        userOffice
-    ]);
-    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
-        "UserRoleProvider.useEffect": ()=>{
-            localStorage.setItem('bpdacc-current-user', JSON.stringify(currentUser));
+            if (currentUser) {
+                localStorage.setItem('bpdacc-current-user', JSON.stringify(currentUser));
+            } else {
+                localStorage.removeItem('bpdacc-current-user');
+            }
         }
     }["UserRoleProvider.useEffect"], [
         currentUser
     ]);
+    const login = (userData)=>{
+        setCurrentUser(userData);
+    };
+    const logout = ()=>{
+        setCurrentUser(null);
+    };
     // Context value that will be provided to children
     const value = {
-        userRole,
-        setUserRole,
-        userOffice,
-        setUserOffice,
         currentUser,
-        setCurrentUser,
-        isAdmin: userRole === 'Admin'
+        userRole: currentUser?.role || '',
+        userOffice: currentUser?.office || '',
+        isAdmin: currentUser?.role === 'Super Admin',
+        login,
+        logout
     };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(UserRoleContext.Provider, {
         value: value,
         children: children
     }, void 0, false, {
         fileName: "[project]/src/context/UserRoleContext.jsx",
-        lineNumber: 52,
+        lineNumber: 49,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };
-_s(UserRoleProvider, "eSqPsNOylEJl+RUAb8svYpdQayA=");
+_s(UserRoleProvider, "VLBcjtPNPnwsQ8MAPWRv/2QYAi4=");
 _c = UserRoleProvider;
 const useUserRole = ()=>{
     _s1();
@@ -930,7 +907,8 @@ __turbopack_context__.s([
 const supabaseDb = {
     // We keep the object name `supabaseDb` in the exports so we don't have to rewrite 
     // every single reference in Inventory.jsx and Dashboard.jsx
-    getItems: ()=>rpcCall('getItems'),
+    login: (email, password)=>rpcCall('login', email, password),
+    getItems: (office)=>rpcCall('getItems', office),
     addItem: (item)=>rpcCall('addItem', item),
     updateItem: (item)=>rpcCall('updateItem', item),
     addTransaction: (itemId, data)=>rpcCall('addTransaction', itemId, data),

@@ -25,7 +25,8 @@ async function rpcCall(method, ...args) {
 export const supabaseDb = {
   // We keep the object name `supabaseDb` in the exports so we don't have to rewrite 
   // every single reference in Inventory.jsx and Dashboard.jsx
-  getItems: () => rpcCall('getItems'),
+  login: (email, password) => rpcCall('login', email, password),
+  getItems: (office) => rpcCall('getItems', office),
   addItem: (item) => rpcCall('addItem', item),
   updateItem: (item) => rpcCall('updateItem', item),
   addTransaction: (itemId, data) => rpcCall('addTransaction', itemId, data),
@@ -37,5 +38,9 @@ export const supabaseDb = {
   deleteItem: (itemId) => rpcCall('deleteItem', itemId),
   getActivities: (role, office) => rpcCall('getActivities', role, office),
   getOffices: () => rpcCall('getOffices'),
-  getRequisitions: () => rpcCall('getRequisitions')
+  getRequisitions: () => rpcCall('getRequisitions'),
+  getUsers: () => rpcCall('getUsers'),
+  addUser: (userData) => rpcCall('addUser', userData),
+  updateUser: (userData) => rpcCall('updateUser', userData),
+  deleteUser: (userId) => rpcCall('deleteUser', userId)
 };
