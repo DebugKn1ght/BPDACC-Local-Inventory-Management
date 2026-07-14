@@ -760,6 +760,7 @@ const Inventory = () => {
           <option value="Clinical Laboratory">Clinical Laboratory</option>
           <option value="Radiology">Radiology</option>
           <option value="Admin Office">Admin Office</option>
+          <option value="Unallocated">Unallocated</option>
         </select>
       </div>
 

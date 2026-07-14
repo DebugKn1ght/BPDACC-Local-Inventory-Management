@@ -3719,6 +3719,14 @@ const Inventory = ()=>{
                                 fileName: "[project]/src/views/Inventory.jsx",
                                 lineNumber: 762,
                                 columnNumber: 11
+                            }, ("TURBOPACK compile-time value", void 0)),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                value: "Unallocated",
+                                children: "Unallocated"
+                            }, void 0, false, {
+                                fileName: "[project]/src/views/Inventory.jsx",
+                                lineNumber: 763,
+                                columnNumber: 11
                             }, ("TURBOPACK compile-time value", void 0))
                         ]
                     }, void 0, true, {
@@ -3748,60 +3756,60 @@ const Inventory = ()=>{
                                             }
                                         }, void 0, false, {
                                             fileName: "[project]/src/views/Inventory.jsx",
-                                            lineNumber: 774,
+                                            lineNumber: 775,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
                                             children: "SKU"
                                         }, void 0, false, {
                                             fileName: "[project]/src/views/Inventory.jsx",
-                                            lineNumber: 775,
+                                            lineNumber: 776,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
                                             children: "Item Name"
                                         }, void 0, false, {
                                             fileName: "[project]/src/views/Inventory.jsx",
-                                            lineNumber: 776,
+                                            lineNumber: 777,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
                                             children: "Total Stock"
                                         }, void 0, false, {
                                             fileName: "[project]/src/views/Inventory.jsx",
-                                            lineNumber: 777,
+                                            lineNumber: 778,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
                                             children: "Location"
                                         }, void 0, false, {
                                             fileName: "[project]/src/views/Inventory.jsx",
-                                            lineNumber: 778,
+                                            lineNumber: 779,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
                                             children: "Status"
                                         }, void 0, false, {
                                             fileName: "[project]/src/views/Inventory.jsx",
-                                            lineNumber: 779,
+                                            lineNumber: 780,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
                                             children: "Actions"
                                         }, void 0, false, {
                                             fileName: "[project]/src/views/Inventory.jsx",
-                                            lineNumber: 780,
+                                            lineNumber: 781,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0))
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/views/Inventory.jsx",
-                                    lineNumber: 773,
+                                    lineNumber: 774,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0))
                             }, void 0, false, {
                                 fileName: "[project]/src/views/Inventory.jsx",
-                                lineNumber: 772,
+                                lineNumber: 773,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
@@ -3825,17 +3833,17 @@ const Inventory = ()=>{
                                                                 size: 20
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 796,
+                                                                lineNumber: 797,
                                                                 columnNumber: 27
                                                             }, ("TURBOPACK compile-time value", void 0))
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/views/Inventory.jsx",
-                                                            lineNumber: 795,
+                                                            lineNumber: 796,
                                                             columnNumber: 25
                                                         }, ("TURBOPACK compile-time value", void 0))
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 794,
+                                                        lineNumber: 795,
                                                         columnNumber: 23
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -3843,7 +3851,7 @@ const Inventory = ()=>{
                                                         children: item.sku
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 799,
+                                                        lineNumber: 800,
                                                         columnNumber: 23
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -3852,12 +3860,12 @@ const Inventory = ()=>{
                                                             children: item.name
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/views/Inventory.jsx",
-                                                            lineNumber: 801,
+                                                            lineNumber: 802,
                                                             columnNumber: 25
                                                         }, ("TURBOPACK compile-time value", void 0))
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 800,
+                                                        lineNumber: 801,
                                                         columnNumber: 23
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -3870,19 +3878,19 @@ const Inventory = ()=>{
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/views/Inventory.jsx",
-                                                            lineNumber: 804,
+                                                            lineNumber: 805,
                                                             columnNumber: 25
                                                         }, ("TURBOPACK compile-time value", void 0))
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 803,
+                                                        lineNumber: 804,
                                                         columnNumber: 23
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
                                                         children: item.location
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 808,
+                                                        lineNumber: 809,
                                                         columnNumber: 23
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -3891,12 +3899,12 @@ const Inventory = ()=>{
                                                             children: status.label
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/views/Inventory.jsx",
-                                                            lineNumber: 810,
+                                                            lineNumber: 811,
                                                             columnNumber: 25
                                                         }, ("TURBOPACK compile-time value", void 0))
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 809,
+                                                        lineNumber: 810,
                                                         columnNumber: 23
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -3916,12 +3924,12 @@ const Inventory = ()=>{
                                                                             size: 20
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/views/Inventory.jsx",
-                                                                            lineNumber: 819,
+                                                                            lineNumber: 820,
                                                                             columnNumber: 29
                                                                         }, ("TURBOPACK compile-time value", void 0))
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                                        lineNumber: 814,
+                                                                        lineNumber: 815,
                                                                         columnNumber: 27
                                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3934,12 +3942,12 @@ const Inventory = ()=>{
                                                                             size: 20
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/views/Inventory.jsx",
-                                                                            lineNumber: 826,
+                                                                            lineNumber: 827,
                                                                             columnNumber: 29
                                                                         }, ("TURBOPACK compile-time value", void 0))
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                                        lineNumber: 821,
+                                                                        lineNumber: 822,
                                                                         columnNumber: 27
                                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3952,30 +3960,30 @@ const Inventory = ()=>{
                                                                             size: 20
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/views/Inventory.jsx",
-                                                                            lineNumber: 833,
+                                                                            lineNumber: 834,
                                                                             columnNumber: 29
                                                                         }, ("TURBOPACK compile-time value", void 0))
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                                        lineNumber: 828,
+                                                                        lineNumber: 829,
                                                                         columnNumber: 27
                                                                     }, ("TURBOPACK compile-time value", void 0))
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 813,
+                                                                lineNumber: 814,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0))
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 812,
+                                                        lineNumber: 813,
                                                         columnNumber: 23
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 793,
+                                                lineNumber: 794,
                                                 columnNumber: 21
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             isExpanded && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
@@ -3994,67 +4002,67 @@ const Inventory = ()=>{
                                                                                 children: "Batch ID"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                                lineNumber: 847,
+                                                                                lineNumber: 848,
                                                                                 columnNumber: 35
                                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
                                                                                 children: "Brand"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                                lineNumber: 848,
+                                                                                lineNumber: 849,
                                                                                 columnNumber: 35
                                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
                                                                                 children: "Supplier"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                                lineNumber: 849,
+                                                                                lineNumber: 850,
                                                                                 columnNumber: 35
                                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
                                                                                 children: "Stock #"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                                lineNumber: 850,
+                                                                                lineNumber: 851,
                                                                                 columnNumber: 35
                                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
                                                                                 children: "Office"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                                lineNumber: 851,
+                                                                                lineNumber: 852,
                                                                                 columnNumber: 35
                                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
                                                                                 children: "Stock"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                                lineNumber: 852,
+                                                                                lineNumber: 853,
                                                                                 columnNumber: 35
                                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
                                                                                 children: "Expiry Date"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                                lineNumber: 853,
+                                                                                lineNumber: 854,
                                                                                 columnNumber: 35
                                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
                                                                                 children: "Status"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                                lineNumber: 854,
+                                                                                lineNumber: 855,
                                                                                 columnNumber: 35
                                                                             }, ("TURBOPACK compile-time value", void 0))
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                                        lineNumber: 846,
+                                                                        lineNumber: 847,
                                                                         columnNumber: 33
                                                                     }, ("TURBOPACK compile-time value", void 0))
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/views/Inventory.jsx",
-                                                                    lineNumber: 845,
+                                                                    lineNumber: 846,
                                                                     columnNumber: 31
                                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
@@ -4083,28 +4091,28 @@ const Inventory = ()=>{
                                                                                     children: batch.batchId
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/src/views/Inventory.jsx",
-                                                                                    lineNumber: 871,
+                                                                                    lineNumber: 872,
                                                                                     columnNumber: 39
                                                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
                                                                                     children: batch.brand || '-'
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/src/views/Inventory.jsx",
-                                                                                    lineNumber: 872,
+                                                                                    lineNumber: 873,
                                                                                     columnNumber: 39
                                                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
                                                                                     children: batch.supplier || '-'
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/src/views/Inventory.jsx",
-                                                                                    lineNumber: 873,
+                                                                                    lineNumber: 874,
                                                                                     columnNumber: 39
                                                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
                                                                                     children: batch.stockNumber || '-'
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/src/views/Inventory.jsx",
-                                                                                    lineNumber: 874,
+                                                                                    lineNumber: 875,
                                                                                     columnNumber: 39
                                                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -4113,12 +4121,12 @@ const Inventory = ()=>{
                                                                                         children: batch.office
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                                                        lineNumber: 875,
+                                                                                        lineNumber: 876,
                                                                                         columnNumber: 43
                                                                                     }, ("TURBOPACK compile-time value", void 0))
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/src/views/Inventory.jsx",
-                                                                                    lineNumber: 875,
+                                                                                    lineNumber: 876,
                                                                                     columnNumber: 39
                                                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -4129,7 +4137,7 @@ const Inventory = ()=>{
                                                                                     ]
                                                                                 }, void 0, true, {
                                                                                     fileName: "[project]/src/views/Inventory.jsx",
-                                                                                    lineNumber: 876,
+                                                                                    lineNumber: 877,
                                                                                     columnNumber: 39
                                                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -4137,7 +4145,7 @@ const Inventory = ()=>{
                                                                                     children: formatExpiryDate(batch.expiryDate)
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/src/views/Inventory.jsx",
-                                                                                    lineNumber: 877,
+                                                                                    lineNumber: 878,
                                                                                     columnNumber: 39
                                                                                 }, ("TURBOPACK compile-time value", void 0)),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -4146,73 +4154,73 @@ const Inventory = ()=>{
                                                                                         children: batchStatus.label
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                                                        lineNumber: 881,
+                                                                                        lineNumber: 882,
                                                                                         columnNumber: 41
                                                                                     }, ("TURBOPACK compile-time value", void 0))
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/src/views/Inventory.jsx",
-                                                                                    lineNumber: 880,
+                                                                                    lineNumber: 881,
                                                                                     columnNumber: 39
                                                                                 }, ("TURBOPACK compile-time value", void 0))
                                                                             ]
                                                                         }, idx, true, {
                                                                             fileName: "[project]/src/views/Inventory.jsx",
-                                                                            lineNumber: 870,
+                                                                            lineNumber: 871,
                                                                             columnNumber: 37
                                                                         }, ("TURBOPACK compile-time value", void 0));
                                                                     })
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/views/Inventory.jsx",
-                                                                    lineNumber: 857,
+                                                                    lineNumber: 858,
                                                                     columnNumber: 31
                                                                 }, ("TURBOPACK compile-time value", void 0))
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/views/Inventory.jsx",
-                                                            lineNumber: 844,
+                                                            lineNumber: 845,
                                                             columnNumber: 29
                                                         }, ("TURBOPACK compile-time value", void 0))
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 843,
+                                                        lineNumber: 844,
                                                         columnNumber: 27
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/views/Inventory.jsx",
-                                                    lineNumber: 842,
+                                                    lineNumber: 843,
                                                     columnNumber: 25
                                                 }, ("TURBOPACK compile-time value", void 0))
                                             }, void 0, false, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 841,
+                                                lineNumber: 842,
                                                 columnNumber: 23
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, item.id, true, {
                                         fileName: "[project]/src/views/Inventory.jsx",
-                                        lineNumber: 791,
+                                        lineNumber: 792,
                                         columnNumber: 19
                                     }, ("TURBOPACK compile-time value", void 0));
                                 })
                             }, void 0, false, {
                                 fileName: "[project]/src/views/Inventory.jsx",
-                                lineNumber: 783,
+                                lineNumber: 784,
                                 columnNumber: 13
                             }, ("TURBOPACK compile-time value", void 0))
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/views/Inventory.jsx",
-                        lineNumber: 771,
+                        lineNumber: 772,
                         columnNumber: 11
                     }, ("TURBOPACK compile-time value", void 0))
                 }, void 0, false, {
                     fileName: "[project]/src/views/Inventory.jsx",
-                    lineNumber: 770,
+                    lineNumber: 771,
                     columnNumber: 9
                 }, ("TURBOPACK compile-time value", void 0))
             }, void 0, false, {
                 fileName: "[project]/src/views/Inventory.jsx",
-                lineNumber: 769,
+                lineNumber: 770,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0)),
             showMoreInfo && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4234,7 +4242,7 @@ const Inventory = ()=>{
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/views/Inventory.jsx",
-                                    lineNumber: 911,
+                                    lineNumber: 912,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -4246,18 +4254,18 @@ const Inventory = ()=>{
                                         size: 24
                                     }, void 0, false, {
                                         fileName: "[project]/src/views/Inventory.jsx",
-                                        lineNumber: 913,
+                                        lineNumber: 914,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0))
                                 }, void 0, false, {
                                     fileName: "[project]/src/views/Inventory.jsx",
-                                    lineNumber: 912,
+                                    lineNumber: 913,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0))
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/views/Inventory.jsx",
-                            lineNumber: 910,
+                            lineNumber: 911,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4297,7 +4305,7 @@ const Inventory = ()=>{
                                                                 children: "Location:"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 922,
+                                                                lineNumber: 923,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -4307,13 +4315,13 @@ const Inventory = ()=>{
                                                                 children: showMoreInfo.location || '-'
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 923,
+                                                                lineNumber: 924,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0))
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 921,
+                                                        lineNumber: 922,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4331,7 +4339,7 @@ const Inventory = ()=>{
                                                                 children: "Item Description:"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 926,
+                                                                lineNumber: 927,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -4342,13 +4350,13 @@ const Inventory = ()=>{
                                                                 children: showMoreInfo.name
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 927,
+                                                                lineNumber: 928,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0))
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 925,
+                                                        lineNumber: 926,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4365,7 +4373,7 @@ const Inventory = ()=>{
                                                                 children: "Unit of Measure:"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 930,
+                                                                lineNumber: 931,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -4375,19 +4383,19 @@ const Inventory = ()=>{
                                                                 children: showMoreInfo.unit
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 931,
+                                                                lineNumber: 932,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0))
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 929,
+                                                        lineNumber: 930,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 920,
+                                                lineNumber: 921,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4405,7 +4413,7 @@ const Inventory = ()=>{
                                                             children: "Stock No.:"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/views/Inventory.jsx",
-                                                            lineNumber: 936,
+                                                            lineNumber: 937,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -4417,29 +4425,29 @@ const Inventory = ()=>{
                                                             children: showMoreInfo.sku
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/views/Inventory.jsx",
-                                                            lineNumber: 937,
+                                                            lineNumber: 938,
                                                             columnNumber: 23
                                                         }, ("TURBOPACK compile-time value", void 0))
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/views/Inventory.jsx",
-                                                    lineNumber: 935,
+                                                    lineNumber: 936,
                                                     columnNumber: 21
                                                 }, ("TURBOPACK compile-time value", void 0))
                                             }, void 0, false, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 934,
+                                                lineNumber: 935,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/views/Inventory.jsx",
-                                        lineNumber: 919,
+                                        lineNumber: 920,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0))
                                 }, void 0, false, {
                                     fileName: "[project]/src/views/Inventory.jsx",
-                                    lineNumber: 918,
+                                    lineNumber: 919,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4471,7 +4479,7 @@ const Inventory = ()=>{
                                                                 children: "Date"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 948,
+                                                                lineNumber: 949,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -4484,7 +4492,7 @@ const Inventory = ()=>{
                                                                 children: "Quantity"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 949,
+                                                                lineNumber: 950,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -4498,31 +4506,10 @@ const Inventory = ()=>{
                                                                     "Cost",
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("br", {}, void 0, false, {
                                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                                        lineNumber: 950,
+                                                                        lineNumber: 951,
                                                                         columnNumber: 121
                                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                                     "(Price/Unit)"
-                                                                ]
-                                                            }, void 0, true, {
-                                                                fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 950,
-                                                                columnNumber: 23
-                                                            }, ("TURBOPACK compile-time value", void 0)),
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
-                                                                rowSpan: 2,
-                                                                style: {
-                                                                    border: '1px solid #d1d5db',
-                                                                    padding: '12px',
-                                                                    textAlign: 'center'
-                                                                },
-                                                                children: [
-                                                                    "IR/DR/SI/RIS/PTR/BL No.",
-                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("br", {}, void 0, false, {
-                                                                        fileName: "[project]/src/views/Inventory.jsx",
-                                                                        lineNumber: 951,
-                                                                        columnNumber: 140
-                                                                    }, ("TURBOPACK compile-time value", void 0)),
-                                                                    "No."
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
@@ -4536,16 +4523,37 @@ const Inventory = ()=>{
                                                                     padding: '12px',
                                                                     textAlign: 'center'
                                                                 },
+                                                                children: [
+                                                                    "IR/DR/SI/RIS/PTR/BL No.",
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("br", {}, void 0, false, {
+                                                                        fileName: "[project]/src/views/Inventory.jsx",
+                                                                        lineNumber: 952,
+                                                                        columnNumber: 140
+                                                                    }, ("TURBOPACK compile-time value", void 0)),
+                                                                    "No."
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/src/views/Inventory.jsx",
+                                                                lineNumber: 952,
+                                                                columnNumber: 23
+                                                            }, ("TURBOPACK compile-time value", void 0)),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
+                                                                rowSpan: 2,
+                                                                style: {
+                                                                    border: '1px solid #d1d5db',
+                                                                    padding: '12px',
+                                                                    textAlign: 'center'
+                                                                },
                                                                 children: "Recipient/Remarks"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 952,
+                                                                lineNumber: 953,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0))
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 947,
+                                                        lineNumber: 948,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tr", {
@@ -4559,7 +4567,7 @@ const Inventory = ()=>{
                                                                 children: "Received"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 955,
+                                                                lineNumber: 956,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -4571,7 +4579,7 @@ const Inventory = ()=>{
                                                                 children: "Issued"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 956,
+                                                                lineNumber: 957,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
@@ -4583,19 +4591,19 @@ const Inventory = ()=>{
                                                                 children: "Balance"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 957,
+                                                                lineNumber: 958,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0))
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 954,
+                                                        lineNumber: 955,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 946,
+                                                lineNumber: 947,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("tbody", {
@@ -4617,7 +4625,7 @@ const Inventory = ()=>{
                                                                 })
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 963,
+                                                                lineNumber: 964,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -4629,7 +4637,7 @@ const Inventory = ()=>{
                                                                 children: tx.receiptQty > 0 ? tx.receiptQty : ''
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 966,
+                                                                lineNumber: 967,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -4641,7 +4649,7 @@ const Inventory = ()=>{
                                                                 children: tx.issuanceQty > 0 ? tx.issuanceQty : ''
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 969,
+                                                                lineNumber: 970,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -4655,7 +4663,7 @@ const Inventory = ()=>{
                                                                 children: tx.balance
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 972,
+                                                                lineNumber: 973,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -4667,7 +4675,7 @@ const Inventory = ()=>{
                                                                 children: tx.costPerUnit || '-'
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 975,
+                                                                lineNumber: 976,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -4679,7 +4687,7 @@ const Inventory = ()=>{
                                                                 children: tx.ptr || tx.reference || '-'
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 978,
+                                                                lineNumber: 979,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("td", {
@@ -4691,35 +4699,35 @@ const Inventory = ()=>{
                                                                 children: tx.remarks || tx.office || '-'
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 981,
+                                                                lineNumber: 982,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0))
                                                         ]
                                                     }, idx, true, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 962,
+                                                        lineNumber: 963,
                                                         columnNumber: 23
                                                     }, ("TURBOPACK compile-time value", void 0)))
                                             }, void 0, false, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 960,
+                                                lineNumber: 961,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/views/Inventory.jsx",
-                                        lineNumber: 945,
+                                        lineNumber: 946,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0))
                                 }, void 0, false, {
                                     fileName: "[project]/src/views/Inventory.jsx",
-                                    lineNumber: 944,
+                                    lineNumber: 945,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0))
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/views/Inventory.jsx",
-                            lineNumber: 916,
+                            lineNumber: 917,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4735,14 +4743,14 @@ const Inventory = ()=>{
                                             size: 20
                                         }, void 0, false, {
                                             fileName: "[project]/src/views/Inventory.jsx",
-                                            lineNumber: 992,
+                                            lineNumber: 993,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         "Print"
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/views/Inventory.jsx",
-                                    lineNumber: 991,
+                                    lineNumber: 992,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -4751,24 +4759,24 @@ const Inventory = ()=>{
                                     children: "Close"
                                 }, void 0, false, {
                                     fileName: "[project]/src/views/Inventory.jsx",
-                                    lineNumber: 995,
+                                    lineNumber: 996,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0))
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/views/Inventory.jsx",
-                            lineNumber: 990,
+                            lineNumber: 991,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0))
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/views/Inventory.jsx",
-                    lineNumber: 909,
+                    lineNumber: 910,
                     columnNumber: 11
                 }, ("TURBOPACK compile-time value", void 0))
             }, void 0, false, {
                 fileName: "[project]/src/views/Inventory.jsx",
-                lineNumber: 908,
+                lineNumber: 909,
                 columnNumber: 9
             }, ("TURBOPACK compile-time value", void 0)),
             showEditModal && editFormData && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4789,7 +4797,7 @@ const Inventory = ()=>{
                                     children: "Edit Item"
                                 }, void 0, false, {
                                     fileName: "[project]/src/views/Inventory.jsx",
-                                    lineNumber: 1006,
+                                    lineNumber: 1007,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -4804,18 +4812,18 @@ const Inventory = ()=>{
                                         size: 24
                                     }, void 0, false, {
                                         fileName: "[project]/src/views/Inventory.jsx",
-                                        lineNumber: 1008,
+                                        lineNumber: 1009,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0))
                                 }, void 0, false, {
                                     fileName: "[project]/src/views/Inventory.jsx",
-                                    lineNumber: 1007,
+                                    lineNumber: 1008,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0))
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/views/Inventory.jsx",
-                            lineNumber: 1005,
+                            lineNumber: 1006,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4831,7 +4839,7 @@ const Inventory = ()=>{
                                                 children: "Item Name"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1014,
+                                                lineNumber: 1015,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -4844,13 +4852,13 @@ const Inventory = ()=>{
                                                     })
                                             }, void 0, false, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1015,
+                                                lineNumber: 1016,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/views/Inventory.jsx",
-                                        lineNumber: 1013,
+                                        lineNumber: 1014,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4861,7 +4869,7 @@ const Inventory = ()=>{
                                                 children: "SKU"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1023,
+                                                lineNumber: 1024,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -4871,13 +4879,13 @@ const Inventory = ()=>{
                                                 disabled: true
                                             }, void 0, false, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1024,
+                                                lineNumber: 1025,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/views/Inventory.jsx",
-                                        lineNumber: 1022,
+                                        lineNumber: 1023,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4888,7 +4896,7 @@ const Inventory = ()=>{
                                                 children: "Location"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1027,
+                                                lineNumber: 1028,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -4901,13 +4909,13 @@ const Inventory = ()=>{
                                                     })
                                             }, void 0, false, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1028,
+                                                lineNumber: 1029,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/views/Inventory.jsx",
-                                        lineNumber: 1026,
+                                        lineNumber: 1027,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4918,7 +4926,7 @@ const Inventory = ()=>{
                                                 children: "Minimum Stock Level"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1036,
+                                                lineNumber: 1037,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -4931,13 +4939,13 @@ const Inventory = ()=>{
                                                     })
                                             }, void 0, false, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1037,
+                                                lineNumber: 1038,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/views/Inventory.jsx",
-                                        lineNumber: 1035,
+                                        lineNumber: 1036,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4948,7 +4956,7 @@ const Inventory = ()=>{
                                                 children: "Batches"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1046,
+                                                lineNumber: 1047,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -4964,7 +4972,7 @@ const Inventory = ()=>{
                                                                         children: "Batch ID"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                                        lineNumber: 1051,
+                                                                        lineNumber: 1052,
                                                                         columnNumber: 27
                                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -4986,13 +4994,13 @@ const Inventory = ()=>{
                                                                         }
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                                        lineNumber: 1052,
+                                                                        lineNumber: 1053,
                                                                         columnNumber: 27
                                                                     }, ("TURBOPACK compile-time value", void 0))
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 1050,
+                                                                lineNumber: 1051,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5003,7 +5011,7 @@ const Inventory = ()=>{
                                                                         children: "Brand"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                                        lineNumber: 1064,
+                                                                        lineNumber: 1065,
                                                                         columnNumber: 27
                                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -5025,13 +5033,13 @@ const Inventory = ()=>{
                                                                         }
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                                        lineNumber: 1065,
+                                                                        lineNumber: 1066,
                                                                         columnNumber: 27
                                                                     }, ("TURBOPACK compile-time value", void 0))
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 1063,
+                                                                lineNumber: 1064,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5042,7 +5050,7 @@ const Inventory = ()=>{
                                                                         children: "Supplier"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                                        lineNumber: 1077,
+                                                                        lineNumber: 1078,
                                                                         columnNumber: 27
                                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -5064,13 +5072,13 @@ const Inventory = ()=>{
                                                                         }
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                                        lineNumber: 1078,
+                                                                        lineNumber: 1079,
                                                                         columnNumber: 27
                                                                     }, ("TURBOPACK compile-time value", void 0))
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 1076,
+                                                                lineNumber: 1077,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5081,7 +5089,7 @@ const Inventory = ()=>{
                                                                         children: "Stock #"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                                        lineNumber: 1090,
+                                                                        lineNumber: 1091,
                                                                         columnNumber: 27
                                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -5103,13 +5111,13 @@ const Inventory = ()=>{
                                                                         }
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                                        lineNumber: 1091,
+                                                                        lineNumber: 1092,
                                                                         columnNumber: 27
                                                                     }, ("TURBOPACK compile-time value", void 0))
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 1089,
+                                                                lineNumber: 1090,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5120,7 +5128,7 @@ const Inventory = ()=>{
                                                                         children: "Office"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                                        lineNumber: 1103,
+                                                                        lineNumber: 1104,
                                                                         columnNumber: 27
                                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -5145,7 +5153,7 @@ const Inventory = ()=>{
                                                                                 children: "Hemodialysis"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                                lineNumber: 1113,
+                                                                                lineNumber: 1114,
                                                                                 columnNumber: 29
                                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -5153,7 +5161,7 @@ const Inventory = ()=>{
                                                                                 children: "Clinical Laboratory"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                                lineNumber: 1114,
+                                                                                lineNumber: 1115,
                                                                                 columnNumber: 29
                                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -5161,7 +5169,7 @@ const Inventory = ()=>{
                                                                                 children: "Radiology"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                                lineNumber: 1115,
+                                                                                lineNumber: 1116,
                                                                                 columnNumber: 29
                                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -5169,7 +5177,7 @@ const Inventory = ()=>{
                                                                                 children: "Admin Office"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                                lineNumber: 1116,
+                                                                                lineNumber: 1117,
                                                                                 columnNumber: 29
                                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -5177,19 +5185,19 @@ const Inventory = ()=>{
                                                                                 children: "Unallocated"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                                lineNumber: 1117,
+                                                                                lineNumber: 1118,
                                                                                 columnNumber: 29
                                                                             }, ("TURBOPACK compile-time value", void 0))
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                                        lineNumber: 1104,
+                                                                        lineNumber: 1105,
                                                                         columnNumber: 27
                                                                     }, ("TURBOPACK compile-time value", void 0))
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 1102,
+                                                                lineNumber: 1103,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5200,7 +5208,7 @@ const Inventory = ()=>{
                                                                         children: "Stock"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                                        lineNumber: 1121,
+                                                                        lineNumber: 1122,
                                                                         columnNumber: 27
                                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -5222,13 +5230,13 @@ const Inventory = ()=>{
                                                                         }
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                                        lineNumber: 1122,
+                                                                        lineNumber: 1123,
                                                                         columnNumber: 27
                                                                     }, ("TURBOPACK compile-time value", void 0))
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 1120,
+                                                                lineNumber: 1121,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5254,19 +5262,19 @@ const Inventory = ()=>{
                                                                             }
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/views/Inventory.jsx",
-                                                                            lineNumber: 1135,
+                                                                            lineNumber: 1136,
                                                                             columnNumber: 27
                                                                         }, ("TURBOPACK compile-time value", void 0)),
                                                                         "Has Expiry"
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/src/views/Inventory.jsx",
-                                                                    lineNumber: 1134,
+                                                                    lineNumber: 1135,
                                                                     columnNumber: 25
                                                                 }, ("TURBOPACK compile-time value", void 0))
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 1133,
+                                                                lineNumber: 1134,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5277,7 +5285,7 @@ const Inventory = ()=>{
                                                                         children: "Expiry Date"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                                        lineNumber: 1148,
+                                                                        lineNumber: 1149,
                                                                         columnNumber: 25
                                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -5300,13 +5308,13 @@ const Inventory = ()=>{
                                                                         }
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                                        lineNumber: 1149,
+                                                                        lineNumber: 1150,
                                                                         columnNumber: 25
                                                                     }, ("TURBOPACK compile-time value", void 0))
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 1147,
+                                                                lineNumber: 1148,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5317,7 +5325,7 @@ const Inventory = ()=>{
                                                                         children: "PTR (Document Serial)"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                                        lineNumber: 1162,
+                                                                        lineNumber: 1163,
                                                                         columnNumber: 25
                                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -5339,13 +5347,13 @@ const Inventory = ()=>{
                                                                         }
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                                        lineNumber: 1163,
+                                                                        lineNumber: 1164,
                                                                         columnNumber: 25
                                                                     }, ("TURBOPACK compile-time value", void 0))
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 1161,
+                                                                lineNumber: 1162,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5356,7 +5364,7 @@ const Inventory = ()=>{
                                                                         children: "Cost per Unit"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                                        lineNumber: 1175,
+                                                                        lineNumber: 1176,
                                                                         columnNumber: 25
                                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -5378,13 +5386,13 @@ const Inventory = ()=>{
                                                                         }
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                                        lineNumber: 1176,
+                                                                        lineNumber: 1177,
                                                                         columnNumber: 25
                                                                     }, ("TURBOPACK compile-time value", void 0))
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 1174,
+                                                                lineNumber: 1175,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -5397,40 +5405,40 @@ const Inventory = ()=>{
                                                                     size: 20
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/views/Inventory.jsx",
-                                                                    lineNumber: 1188,
+                                                                    lineNumber: 1189,
                                                                     columnNumber: 27
                                                                 }, ("TURBOPACK compile-time value", void 0))
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 1187,
+                                                                lineNumber: 1188,
                                                                 columnNumber: 25
                                                             }, ("TURBOPACK compile-time value", void 0))
                                                         ]
                                                     }, idx, true, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1049,
+                                                        lineNumber: 1050,
                                                         columnNumber: 23
                                                     }, ("TURBOPACK compile-time value", void 0)))
                                             }, void 0, false, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1047,
+                                                lineNumber: 1048,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/views/Inventory.jsx",
-                                        lineNumber: 1045,
+                                        lineNumber: 1046,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/views/Inventory.jsx",
-                                lineNumber: 1012,
+                                lineNumber: 1013,
                                 columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0))
                         }, void 0, false, {
                             fileName: "[project]/src/views/Inventory.jsx",
-                            lineNumber: 1011,
+                            lineNumber: 1012,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5442,7 +5450,7 @@ const Inventory = ()=>{
                                     children: "Add Batch"
                                 }, void 0, false, {
                                     fileName: "[project]/src/views/Inventory.jsx",
-                                    lineNumber: 1197,
+                                    lineNumber: 1198,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5457,7 +5465,7 @@ const Inventory = ()=>{
                                             children: "Cancel"
                                         }, void 0, false, {
                                             fileName: "[project]/src/views/Inventory.jsx",
-                                            lineNumber: 1199,
+                                            lineNumber: 1200,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0)),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -5466,30 +5474,30 @@ const Inventory = ()=>{
                                             children: "Save Changes"
                                         }, void 0, false, {
                                             fileName: "[project]/src/views/Inventory.jsx",
-                                            lineNumber: 1200,
+                                            lineNumber: 1201,
                                             columnNumber: 17
                                         }, ("TURBOPACK compile-time value", void 0))
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/views/Inventory.jsx",
-                                    lineNumber: 1198,
+                                    lineNumber: 1199,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0))
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/views/Inventory.jsx",
-                            lineNumber: 1196,
+                            lineNumber: 1197,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0))
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/views/Inventory.jsx",
-                    lineNumber: 1004,
+                    lineNumber: 1005,
                     columnNumber: 11
                 }, ("TURBOPACK compile-time value", void 0))
             }, void 0, false, {
                 fileName: "[project]/src/views/Inventory.jsx",
-                lineNumber: 1003,
+                lineNumber: 1004,
                 columnNumber: 9
             }, ("TURBOPACK compile-time value", void 0)),
             showTransactionModal.visible && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5511,7 +5519,7 @@ const Inventory = ()=>{
                                     children: showTransactionModal.isEdit ? 'Edit Transaction' : 'Add Transaction'
                                 }, void 0, false, {
                                     fileName: "[project]/src/views/Inventory.jsx",
-                                    lineNumber: 1212,
+                                    lineNumber: 1213,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -5527,18 +5535,18 @@ const Inventory = ()=>{
                                         size: 24
                                     }, void 0, false, {
                                         fileName: "[project]/src/views/Inventory.jsx",
-                                        lineNumber: 1216,
+                                        lineNumber: 1217,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0))
                                 }, void 0, false, {
                                     fileName: "[project]/src/views/Inventory.jsx",
-                                    lineNumber: 1215,
+                                    lineNumber: 1216,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0))
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/views/Inventory.jsx",
-                            lineNumber: 1211,
+                            lineNumber: 1212,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5554,7 +5562,7 @@ const Inventory = ()=>{
                                                 children: "Date"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1222,
+                                                lineNumber: 1223,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -5567,13 +5575,13 @@ const Inventory = ()=>{
                                                     })
                                             }, void 0, false, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1223,
+                                                lineNumber: 1224,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/views/Inventory.jsx",
-                                        lineNumber: 1221,
+                                        lineNumber: 1222,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     showMoreInfo && showMoreInfo.batches && showMoreInfo.batches.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5584,7 +5592,7 @@ const Inventory = ()=>{
                                                 children: "Batch"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1233,
+                                                lineNumber: 1234,
                                                 columnNumber: 21
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -5610,7 +5618,7 @@ const Inventory = ()=>{
                                                         children: "Select a Batch"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1248,
+                                                        lineNumber: 1249,
                                                         columnNumber: 23
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     showMoreInfo.batches.map((batch, idx)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -5629,19 +5637,19 @@ const Inventory = ()=>{
                                                             ]
                                                         }, idx, true, {
                                                             fileName: "[project]/src/views/Inventory.jsx",
-                                                            lineNumber: 1250,
+                                                            lineNumber: 1251,
                                                             columnNumber: 25
                                                         }, ("TURBOPACK compile-time value", void 0)))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1234,
+                                                lineNumber: 1235,
                                                 columnNumber: 21
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/views/Inventory.jsx",
-                                        lineNumber: 1232,
+                                        lineNumber: 1233,
                                         columnNumber: 19
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5652,7 +5660,7 @@ const Inventory = ()=>{
                                                 children: "Reference"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1258,
+                                                lineNumber: 1259,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -5665,13 +5673,13 @@ const Inventory = ()=>{
                                                     })
                                             }, void 0, false, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1259,
+                                                lineNumber: 1260,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/views/Inventory.jsx",
-                                        lineNumber: 1257,
+                                        lineNumber: 1258,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5689,7 +5697,7 @@ const Inventory = ()=>{
                                                         children: "Receipt Qty"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1268,
+                                                        lineNumber: 1269,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -5702,13 +5710,13 @@ const Inventory = ()=>{
                                                             })
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1269,
+                                                        lineNumber: 1270,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1267,
+                                                lineNumber: 1268,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5719,7 +5727,7 @@ const Inventory = ()=>{
                                                         children: "Issuance Qty"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1277,
+                                                        lineNumber: 1278,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -5732,19 +5740,19 @@ const Inventory = ()=>{
                                                             })
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1278,
+                                                        lineNumber: 1279,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1276,
+                                                lineNumber: 1277,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/views/Inventory.jsx",
-                                        lineNumber: 1266,
+                                        lineNumber: 1267,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5755,7 +5763,7 @@ const Inventory = ()=>{
                                                 children: "Office"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1287,
+                                                lineNumber: 1288,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -5771,7 +5779,7 @@ const Inventory = ()=>{
                                                         children: "Hemodialysis"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1293,
+                                                        lineNumber: 1294,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -5779,7 +5787,7 @@ const Inventory = ()=>{
                                                         children: "Clinical Laboratory"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1294,
+                                                        lineNumber: 1295,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -5787,7 +5795,7 @@ const Inventory = ()=>{
                                                         children: "Radiology"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1295,
+                                                        lineNumber: 1296,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -5795,7 +5803,7 @@ const Inventory = ()=>{
                                                         children: "Admin Office"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1296,
+                                                        lineNumber: 1297,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -5803,30 +5811,30 @@ const Inventory = ()=>{
                                                         children: "All"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1297,
+                                                        lineNumber: 1298,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1288,
+                                                lineNumber: 1289,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/views/Inventory.jsx",
-                                        lineNumber: 1286,
+                                        lineNumber: 1287,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/views/Inventory.jsx",
-                                lineNumber: 1220,
+                                lineNumber: 1221,
                                 columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0))
                         }, void 0, false, {
                             fileName: "[project]/src/views/Inventory.jsx",
-                            lineNumber: 1219,
+                            lineNumber: 1220,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5842,7 +5850,7 @@ const Inventory = ()=>{
                                     children: "Cancel"
                                 }, void 0, false, {
                                     fileName: "[project]/src/views/Inventory.jsx",
-                                    lineNumber: 1303,
+                                    lineNumber: 1304,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -5851,24 +5859,24 @@ const Inventory = ()=>{
                                     children: "Save"
                                 }, void 0, false, {
                                     fileName: "[project]/src/views/Inventory.jsx",
-                                    lineNumber: 1306,
+                                    lineNumber: 1307,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0))
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/views/Inventory.jsx",
-                            lineNumber: 1302,
+                            lineNumber: 1303,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0))
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/views/Inventory.jsx",
-                    lineNumber: 1210,
+                    lineNumber: 1211,
                     columnNumber: 11
                 }, ("TURBOPACK compile-time value", void 0))
             }, void 0, false, {
                 fileName: "[project]/src/views/Inventory.jsx",
-                lineNumber: 1209,
+                lineNumber: 1210,
                 columnNumber: 9
             }, ("TURBOPACK compile-time value", void 0)),
             showRestockModal && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5889,7 +5897,7 @@ const Inventory = ()=>{
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/views/Inventory.jsx",
-                                    lineNumber: 1319,
+                                    lineNumber: 1320,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -5901,18 +5909,18 @@ const Inventory = ()=>{
                                         size: 24
                                     }, void 0, false, {
                                         fileName: "[project]/src/views/Inventory.jsx",
-                                        lineNumber: 1321,
+                                        lineNumber: 1322,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0))
                                 }, void 0, false, {
                                     fileName: "[project]/src/views/Inventory.jsx",
-                                    lineNumber: 1320,
+                                    lineNumber: 1321,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0))
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/views/Inventory.jsx",
-                            lineNumber: 1318,
+                            lineNumber: 1319,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5939,7 +5947,7 @@ const Inventory = ()=>{
                                                         children: "Item Name"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1329,
+                                                        lineNumber: 1330,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -5949,13 +5957,13 @@ const Inventory = ()=>{
                                                         disabled: true
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1330,
+                                                        lineNumber: 1331,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1328,
+                                                lineNumber: 1329,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5966,7 +5974,7 @@ const Inventory = ()=>{
                                                         children: "SKU"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1333,
+                                                        lineNumber: 1334,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -5976,13 +5984,13 @@ const Inventory = ()=>{
                                                         disabled: true
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1334,
+                                                        lineNumber: 1335,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1332,
+                                                lineNumber: 1333,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -5993,7 +6001,7 @@ const Inventory = ()=>{
                                                         children: "Current Stock"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1337,
+                                                        lineNumber: 1338,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -6003,13 +6011,13 @@ const Inventory = ()=>{
                                                         disabled: true
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1338,
+                                                        lineNumber: 1339,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1336,
+                                                lineNumber: 1337,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6020,7 +6028,7 @@ const Inventory = ()=>{
                                                         children: "Current PTR No."
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1341,
+                                                        lineNumber: 1342,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -6030,13 +6038,13 @@ const Inventory = ()=>{
                                                         disabled: true
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1342,
+                                                        lineNumber: 1343,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1340,
+                                                lineNumber: 1341,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6047,7 +6055,7 @@ const Inventory = ()=>{
                                                         children: "Current Department"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1345,
+                                                        lineNumber: 1346,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -6057,19 +6065,19 @@ const Inventory = ()=>{
                                                         disabled: true
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1346,
+                                                        lineNumber: 1347,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1344,
+                                                lineNumber: 1345,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/views/Inventory.jsx",
-                                        lineNumber: 1327,
+                                        lineNumber: 1328,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6087,7 +6095,7 @@ const Inventory = ()=>{
                                                         children: "Date of Restock"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1353,
+                                                        lineNumber: 1354,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -6100,13 +6108,13 @@ const Inventory = ()=>{
                                                             })
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1354,
+                                                        lineNumber: 1355,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1352,
+                                                lineNumber: 1353,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6117,7 +6125,7 @@ const Inventory = ()=>{
                                                         children: "Quantity to Add"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1362,
+                                                        lineNumber: 1363,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -6131,13 +6139,13 @@ const Inventory = ()=>{
                                                             })
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1363,
+                                                        lineNumber: 1364,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1361,
+                                                lineNumber: 1362,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6148,7 +6156,7 @@ const Inventory = ()=>{
                                                         children: "PTR No."
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1372,
+                                                        lineNumber: 1373,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -6162,13 +6170,13 @@ const Inventory = ()=>{
                                                             })
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1373,
+                                                        lineNumber: 1374,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1371,
+                                                lineNumber: 1372,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6179,7 +6187,7 @@ const Inventory = ()=>{
                                                         children: "Cost per Unit"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1382,
+                                                        lineNumber: 1383,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -6193,13 +6201,13 @@ const Inventory = ()=>{
                                                             })
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1383,
+                                                        lineNumber: 1384,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1381,
+                                                lineNumber: 1382,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6213,7 +6221,7 @@ const Inventory = ()=>{
                                                         children: "Remarks"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1392,
+                                                        lineNumber: 1393,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -6227,13 +6235,13 @@ const Inventory = ()=>{
                                                             })
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1393,
+                                                        lineNumber: 1394,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1391,
+                                                lineNumber: 1392,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             showRestockModal.batches && showRestockModal.batches.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6247,7 +6255,7 @@ const Inventory = ()=>{
                                                         children: "Select Batch"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1404,
+                                                        lineNumber: 1405,
                                                         columnNumber: 23
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -6271,35 +6279,35 @@ const Inventory = ()=>{
                                                                 ]
                                                             }, idx, true, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 1411,
+                                                                lineNumber: 1412,
                                                                 columnNumber: 27
                                                             }, ("TURBOPACK compile-time value", void 0)))
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1405,
+                                                        lineNumber: 1406,
                                                         columnNumber: 23
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1403,
+                                                lineNumber: 1404,
                                                 columnNumber: 21
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/views/Inventory.jsx",
-                                        lineNumber: 1351,
+                                        lineNumber: 1352,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/views/Inventory.jsx",
-                                lineNumber: 1325,
+                                lineNumber: 1326,
                                 columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0))
                         }, void 0, false, {
                             fileName: "[project]/src/views/Inventory.jsx",
-                            lineNumber: 1324,
+                            lineNumber: 1325,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6311,7 +6319,7 @@ const Inventory = ()=>{
                                     children: "Cancel"
                                 }, void 0, false, {
                                     fileName: "[project]/src/views/Inventory.jsx",
-                                    lineNumber: 1422,
+                                    lineNumber: 1423,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -6320,24 +6328,24 @@ const Inventory = ()=>{
                                     children: "Save Restock"
                                 }, void 0, false, {
                                     fileName: "[project]/src/views/Inventory.jsx",
-                                    lineNumber: 1423,
+                                    lineNumber: 1424,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0))
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/views/Inventory.jsx",
-                            lineNumber: 1421,
+                            lineNumber: 1422,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0))
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/views/Inventory.jsx",
-                    lineNumber: 1317,
+                    lineNumber: 1318,
                     columnNumber: 11
                 }, ("TURBOPACK compile-time value", void 0))
             }, void 0, false, {
                 fileName: "[project]/src/views/Inventory.jsx",
-                lineNumber: 1316,
+                lineNumber: 1317,
                 columnNumber: 9
             }, ("TURBOPACK compile-time value", void 0)),
             showAddModal && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6355,7 +6363,7 @@ const Inventory = ()=>{
                                     children: "Add New Item"
                                 }, void 0, false, {
                                     fileName: "[project]/src/views/Inventory.jsx",
-                                    lineNumber: 1434,
+                                    lineNumber: 1435,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -6367,18 +6375,18 @@ const Inventory = ()=>{
                                         size: 24
                                     }, void 0, false, {
                                         fileName: "[project]/src/views/Inventory.jsx",
-                                        lineNumber: 1436,
+                                        lineNumber: 1437,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0))
                                 }, void 0, false, {
                                     fileName: "[project]/src/views/Inventory.jsx",
-                                    lineNumber: 1435,
+                                    lineNumber: 1436,
                                     columnNumber: 15
                                 }, ("TURBOPACK compile-time value", void 0))
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/views/Inventory.jsx",
-                            lineNumber: 1433,
+                            lineNumber: 1434,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6394,7 +6402,7 @@ const Inventory = ()=>{
                                         children: "Item Details"
                                     }, void 0, false, {
                                         fileName: "[project]/src/views/Inventory.jsx",
-                                        lineNumber: 1442,
+                                        lineNumber: 1443,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6413,7 +6421,7 @@ const Inventory = ()=>{
                                                         children: "Item Name"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1445,
+                                                        lineNumber: 1446,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -6427,13 +6435,13 @@ const Inventory = ()=>{
                                                             })
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1446,
+                                                        lineNumber: 1447,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1444,
+                                                lineNumber: 1445,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6444,7 +6452,7 @@ const Inventory = ()=>{
                                                         children: "SKU "
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1455,
+                                                        lineNumber: 1456,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -6454,13 +6462,13 @@ const Inventory = ()=>{
                                                         disabled: true
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1456,
+                                                        lineNumber: 1457,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1454,
+                                                lineNumber: 1455,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6471,7 +6479,7 @@ const Inventory = ()=>{
                                                         children: "Unit of Measurement"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1459,
+                                                        lineNumber: 1460,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -6487,7 +6495,7 @@ const Inventory = ()=>{
                                                                 children: "Pieces"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 1465,
+                                                                lineNumber: 1466,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -6495,7 +6503,7 @@ const Inventory = ()=>{
                                                                 children: "Packs"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 1466,
+                                                                lineNumber: 1467,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -6503,7 +6511,7 @@ const Inventory = ()=>{
                                                                 children: "Boxes"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 1467,
+                                                                lineNumber: 1468,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -6511,7 +6519,7 @@ const Inventory = ()=>{
                                                                 children: "Bottles"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 1468,
+                                                                lineNumber: 1469,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -6519,7 +6527,7 @@ const Inventory = ()=>{
                                                                 children: "Vials"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 1469,
+                                                                lineNumber: 1470,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -6527,19 +6535,19 @@ const Inventory = ()=>{
                                                                 children: "Sets"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 1470,
+                                                                lineNumber: 1471,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0))
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1460,
+                                                        lineNumber: 1461,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1458,
+                                                lineNumber: 1459,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6550,7 +6558,7 @@ const Inventory = ()=>{
                                                         children: "Location"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1474,
+                                                        lineNumber: 1475,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -6564,13 +6572,13 @@ const Inventory = ()=>{
                                                             })
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1475,
+                                                        lineNumber: 1476,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1473,
+                                                lineNumber: 1474,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6581,7 +6589,7 @@ const Inventory = ()=>{
                                                         children: "Minimum Stock Level"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1484,
+                                                        lineNumber: 1485,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -6595,19 +6603,19 @@ const Inventory = ()=>{
                                                             })
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1485,
+                                                        lineNumber: 1486,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1483,
+                                                lineNumber: 1484,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/views/Inventory.jsx",
-                                        lineNumber: 1443,
+                                        lineNumber: 1444,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -6625,13 +6633,13 @@ const Inventory = ()=>{
                                                 children: "(Required)"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1498,
+                                                lineNumber: 1499,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/views/Inventory.jsx",
-                                        lineNumber: 1496,
+                                        lineNumber: 1497,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6650,7 +6658,7 @@ const Inventory = ()=>{
                                                         children: "Batch ID"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1502,
+                                                        lineNumber: 1503,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -6660,13 +6668,13 @@ const Inventory = ()=>{
                                                         disabled: true
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1503,
+                                                        lineNumber: 1504,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1501,
+                                                lineNumber: 1502,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6677,7 +6685,7 @@ const Inventory = ()=>{
                                                         children: "SKU"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1511,
+                                                        lineNumber: 1512,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -6687,13 +6695,13 @@ const Inventory = ()=>{
                                                         disabled: true
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1512,
+                                                        lineNumber: 1513,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1510,
+                                                lineNumber: 1511,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6704,7 +6712,7 @@ const Inventory = ()=>{
                                                         children: "Quantity"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1520,
+                                                        lineNumber: 1521,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -6721,13 +6729,13 @@ const Inventory = ()=>{
                                                             })
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1521,
+                                                        lineNumber: 1522,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1519,
+                                                lineNumber: 1520,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6738,7 +6746,7 @@ const Inventory = ()=>{
                                                         children: "Assigned For"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1530,
+                                                        lineNumber: 1531,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -6757,7 +6765,7 @@ const Inventory = ()=>{
                                                                 children: "Hemodialysis"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 1539,
+                                                                lineNumber: 1540,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -6765,7 +6773,7 @@ const Inventory = ()=>{
                                                                 children: "Clinical Laboratory"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 1540,
+                                                                lineNumber: 1541,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -6773,7 +6781,7 @@ const Inventory = ()=>{
                                                                 children: "Radiology"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 1541,
+                                                                lineNumber: 1542,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -6781,7 +6789,7 @@ const Inventory = ()=>{
                                                                 children: "Admin Office"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 1542,
+                                                                lineNumber: 1543,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -6789,19 +6797,19 @@ const Inventory = ()=>{
                                                                 children: "Unallocated"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                                lineNumber: 1543,
+                                                                lineNumber: 1544,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0))
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1531,
+                                                        lineNumber: 1532,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1529,
+                                                lineNumber: 1530,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6812,7 +6820,7 @@ const Inventory = ()=>{
                                                         children: "Brand"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1547,
+                                                        lineNumber: 1548,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -6829,13 +6837,13 @@ const Inventory = ()=>{
                                                             })
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1548,
+                                                        lineNumber: 1549,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1546,
+                                                lineNumber: 1547,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6846,7 +6854,7 @@ const Inventory = ()=>{
                                                         children: "Supplier"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1560,
+                                                        lineNumber: 1561,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -6863,13 +6871,13 @@ const Inventory = ()=>{
                                                             })
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1561,
+                                                        lineNumber: 1562,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1559,
+                                                lineNumber: 1560,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6880,7 +6888,7 @@ const Inventory = ()=>{
                                                         children: "PTR (Document Serial)"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1573,
+                                                        lineNumber: 1574,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -6897,13 +6905,13 @@ const Inventory = ()=>{
                                                             })
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1574,
+                                                        lineNumber: 1575,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1572,
+                                                lineNumber: 1573,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6914,7 +6922,7 @@ const Inventory = ()=>{
                                                         children: "Cost per Unit"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1586,
+                                                        lineNumber: 1587,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -6931,13 +6939,13 @@ const Inventory = ()=>{
                                                             })
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1587,
+                                                        lineNumber: 1588,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1585,
+                                                lineNumber: 1586,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6948,7 +6956,7 @@ const Inventory = ()=>{
                                                         children: "Date (Auto-generated)"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1599,
+                                                        lineNumber: 1600,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -6958,13 +6966,13 @@ const Inventory = ()=>{
                                                         disabled: true
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1600,
+                                                        lineNumber: 1601,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1598,
+                                                lineNumber: 1599,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -6975,7 +6983,7 @@ const Inventory = ()=>{
                                                         children: "Remarks"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1608,
+                                                        lineNumber: 1609,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -6992,30 +7000,30 @@ const Inventory = ()=>{
                                                             })
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/views/Inventory.jsx",
-                                                        lineNumber: 1609,
+                                                        lineNumber: 1610,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1607,
+                                                lineNumber: 1608,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/views/Inventory.jsx",
-                                        lineNumber: 1500,
+                                        lineNumber: 1501,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/views/Inventory.jsx",
-                                lineNumber: 1440,
+                                lineNumber: 1441,
                                 columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0))
                         }, void 0, false, {
                             fileName: "[project]/src/views/Inventory.jsx",
-                            lineNumber: 1439,
+                            lineNumber: 1440,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -7032,7 +7040,7 @@ const Inventory = ()=>{
                                         children: "Cancel"
                                     }, void 0, false, {
                                         fileName: "[project]/src/views/Inventory.jsx",
-                                        lineNumber: 1625,
+                                        lineNumber: 1626,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -7045,36 +7053,36 @@ const Inventory = ()=>{
                                                 size: 20
                                             }, void 0, false, {
                                                 fileName: "[project]/src/views/Inventory.jsx",
-                                                lineNumber: 1627,
+                                                lineNumber: 1628,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             "Add Item"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/views/Inventory.jsx",
-                                        lineNumber: 1626,
+                                        lineNumber: 1627,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/views/Inventory.jsx",
-                                lineNumber: 1624,
+                                lineNumber: 1625,
                                 columnNumber: 15
                             }, ("TURBOPACK compile-time value", void 0))
                         }, void 0, false, {
                             fileName: "[project]/src/views/Inventory.jsx",
-                            lineNumber: 1623,
+                            lineNumber: 1624,
                             columnNumber: 13
                         }, ("TURBOPACK compile-time value", void 0))
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/views/Inventory.jsx",
-                    lineNumber: 1432,
+                    lineNumber: 1433,
                     columnNumber: 11
                 }, ("TURBOPACK compile-time value", void 0))
             }, void 0, false, {
                 fileName: "[project]/src/views/Inventory.jsx",
-                lineNumber: 1431,
+                lineNumber: 1432,
                 columnNumber: 9
             }, ("TURBOPACK compile-time value", void 0)),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("style", {
@@ -7763,7 +7771,7 @@ const Inventory = ()=>{
       `
             }, void 0, false, {
                 fileName: "[project]/src/views/Inventory.jsx",
-                lineNumber: 1636,
+                lineNumber: 1637,
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0))
         ]
