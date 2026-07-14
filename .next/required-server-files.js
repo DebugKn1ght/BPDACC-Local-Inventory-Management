@@ -104,7 +104,7 @@ self.__SERVER_FILES_MANIFEST={
         "transform": "lodash/{{member}}"
       }
     },
-    "outputFileTracingRoot": "C:\\Users\\OJ\\Codess\\BPDACC Inv collab ed\\BPDACC-Local-Inventory-Management",
+    "outputFileTracingRoot": "C:\\Users\\joshu\\Documents\\GitHub\\BPDACC-Local-Inventory-Management",
     "cacheComponents": false,
     "cacheLife": {
       "default": {
@@ -166,7 +166,7 @@ self.__SERVER_FILES_MANIFEST={
       "proxyPrefetch": "flexible",
       "optimisticClientCache": true,
       "manualClientBasePath": false,
-      "cpus": 7,
+      "cpus": 15,
       "memoryBasedWorkersCount": false,
       "imgOptConcurrency": null,
       "imgOptTimeoutInSeconds": 7,
@@ -304,11 +304,11 @@ self.__SERVER_FILES_MANIFEST={
     "bundlePagesRouterDependencies": false,
     "configFileName": "next.config.js",
     "turbopack": {
-      "root": "C:\\Users\\OJ\\Codess\\BPDACC Inv collab ed\\BPDACC-Local-Inventory-Management"
+      "root": "C:\\Users\\joshu\\Documents\\GitHub\\BPDACC-Local-Inventory-Management"
     },
     "distDirRoot": ".next"
   },
-  "appDir": "C:\\Users\\OJ\\Codess\\BPDACC Inv collab ed\\BPDACC-Local-Inventory-Management",
+  "appDir": "C:\\Users\\joshu\\Documents\\GitHub\\BPDACC-Local-Inventory-Management",
   "relativeAppDir": "",
   "files": [
     ".next\\package.json",

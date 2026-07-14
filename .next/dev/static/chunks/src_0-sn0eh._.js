@@ -411,7 +411,7 @@ const UIProvider = ({ children })=>{
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };
-_s(UIProvider, "enMt75NSQUF351iRDkmOIvb/Ec8=");
+_s(UIProvider, "/HmWozq8m83zdSu5tFuG9+vTBvw=");
 _c = UIProvider;
 const useUI = ()=>{
     _s1();
