@@ -13,39 +13,35 @@ const UserRoleContext = createContext()
  */
 export const UserRoleProvider = ({ children }) => {
   // Initialize user info from localStorage
-  const [userRole, setUserRole] = useState(() => {
-    const savedRole = localStorage.getItem('bpdacc-user-role')
-    return savedRole || 'Admin'
-  })
-  const [userOffice, setUserOffice] = useState(() => {
-    const savedOffice = localStorage.getItem('bpdacc-user-office')
-    return savedOffice || 'All'
-  })
   const [currentUser, setCurrentUser] = useState(() => {
     const savedUser = localStorage.getItem('bpdacc-current-user')
-    return savedUser ? JSON.parse(savedUser) : { id: 1, name: 'John Doe', email: 'john@clinic.com', role: 'Admin', office: 'All' }
+    return savedUser ? JSON.parse(savedUser) : null
   })
 
   // Save to localStorage whenever values change
   useEffect(() => {
-    localStorage.setItem('bpdacc-user-role', userRole)
-  }, [userRole])
-  useEffect(() => {
-    localStorage.setItem('bpdacc-user-office', userOffice)
-  }, [userOffice])
-  useEffect(() => {
-    localStorage.setItem('bpdacc-current-user', JSON.stringify(currentUser))
+    if (currentUser) {
+      localStorage.setItem('bpdacc-current-user', JSON.stringify(currentUser))
+    } else {
+      localStorage.removeItem('bpdacc-current-user')
+    }
   }, [currentUser])
+
+  const login = (userData) => {
+    setCurrentUser(userData)
+  }
+
+  const logout = () => {
+    setCurrentUser(null)
+  }
 
   // Context value that will be provided to children
   const value = {
-    userRole,
-    setUserRole,
-    userOffice,
-    setUserOffice,
     currentUser,
-    setCurrentUser,
-    isAdmin: userRole === 'Admin'
+    userOffice: currentUser?.office || '',
+    isAdmin: currentUser?.isAdmin || currentUser?.role === 'Super Admin' || false,
+    login,
+    logout
   }
 
   return (
