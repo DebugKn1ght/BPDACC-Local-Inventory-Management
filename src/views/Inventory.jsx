@@ -1479,6 +1479,9 @@ const Inventory = () => {
                       <option value="Bottles">Bottles</option>
                       <option value="Vials">Vials</option>
                       <option value="Sets">Sets</option>
+                      <option value="Tablets">Tablets</option>
+                      <option value="Ampoules">Ampoules</option>
+                      <option value="Kits">Kits</option>
                     </select>
                   </div>
                   <div className="form-group">
