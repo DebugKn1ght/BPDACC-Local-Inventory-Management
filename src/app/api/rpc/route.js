@@ -502,42 +502,81 @@ export async function POST(req) {
 
       case 'restockItem': {
         const [itemId, data] = args;
-        const batches = await prisma.inventoryBatch.findMany({
+        const allOffices = await prisma.office.findMany();
+        const officeMap = allOffices.reduce((map, o) => { map[o.name] = o.id; return map; }, {});
+
+        const existingBatches = await prisma.inventoryBatch.findMany({
+          where: { inventoryItemId: itemId },
+          select: { batchId: true },
+          orderBy: { id: 'asc' }
+        });
+
+        const item = await prisma.inventoryItem.findUnique({
+          where: { id: itemId },
+          select: { sku: true }
+        });
+
+        const computeNextBatchId = (sku, batchIds) => {
+          const prefix = `${sku}-`;
+          let maxNum = 0;
+          for (const raw of batchIds) {
+            const id = raw?.batchId;
+            if (!id || typeof id !== 'string') continue;
+            if (!id.startsWith(prefix)) continue;
+            const suffix = id.slice(prefix.length);
+            const num = Number(suffix);
+            if (!Number.isNaN(num) && num > maxNum) maxNum = num;
+          }
+          return `${sku}-${String(maxNum + 1).padStart(3, '0')}`;
+        };
+
+        const batchId = data.batchId || (item?.sku ? computeNextBatchId(item.sku, existingBatches) : null);
+        if (!batchId) {
+          throw new Error('Unable to generate batchId for restock.');
+        }
+
+        const officeId = officeMap[data.office] || null;
+        const qty = Number(data.quantity);
+        if (!Number.isFinite(qty) || qty <= 0) {
+          throw new Error('Restock quantity must be a number greater than 0.');
+        }
+
+        const newBatch = await prisma.inventoryBatch.create({
+          data: {
+            inventoryItemId: itemId,
+            batchId,
+            stockNumber: `SN-${Date.now().toString().slice(-6)}`,
+            expiryDate: null,
+            officeId,
+            stock: qty,
+            transactionCount: 0,
+            ptr: data.ptrNo || null,
+            costPerUnit: data.costPerUnit ? parseFloat(data.costPerUnit) : null,
+            remarks: data.remarks || null
+          }
+        });
+
+        const txs = await prisma.inventoryTransaction.findMany({
           where: { inventoryItemId: itemId },
           orderBy: { id: 'asc' }
         });
-        const allOffices = await prisma.office.findMany();
-        const officeMap = allOffices.reduce((map, o) => { map[o.name] = o.id; return map; }, {});
-        if (batches.length > 0) {
-          // Update stock of the first batch
-          await prisma.inventoryBatch.update({
-            where: { id: batches[0].id },
-            data: { stock: batches[0].stock + data.quantity }
-          });
-          
-          // Fetch transactions to calculate new balance
-          const txs = await prisma.inventoryTransaction.findMany({
-            where: { inventoryItemId: itemId },
-            orderBy: { id: 'asc' }
-          });
-          const lastBalance = txs.length > 0 ? txs[txs.length - 1].balance : 0;
+        const lastBalance = txs.length > 0 ? txs[txs.length - 1].balance : 0;
 
-          // Create restock transaction
-          result = await prisma.inventoryTransaction.create({
-            data: {
-              inventoryItemId: itemId,
-              date: new Date(data.date),
-              reference: data.ptrNo || 'RESTOCK',
-              receiptQty: data.quantity,
-              issuanceQty: 0,
-              balance: lastBalance + data.quantity,
-              officeId: officeMap[data.office] || null,
-              ptr: data.ptrNo,
-              costPerUnit: data.costPerUnit ? parseFloat(data.costPerUnit) : null,
-              remarks: data.remarks
-            }
-          });
-        }
+        result = await prisma.inventoryTransaction.create({
+          data: {
+            inventoryItemId: itemId,
+            inventoryBatchId: newBatch.id,
+            date: new Date(data.date),
+            reference: data.ptrNo || batchId,
+            receiptQty: qty,
+            issuanceQty: 0,
+            balance: lastBalance + qty,
+            officeId,
+            ptr: data.ptrNo || null,
+            costPerUnit: data.costPerUnit ? parseFloat(data.costPerUnit) : null,
+            remarks: data.remarks || null
+          }
+        });
         break;
       }
 

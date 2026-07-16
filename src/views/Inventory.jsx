@@ -50,7 +50,8 @@ const Inventory = () => {
     ptrNo: '',
     remarks: '',
     costPerUnit: '',
-    selectedBatch: null
+    assignedFor: 'Hemodialysis',
+    batchId: ''
   })
   
   // Form data states
@@ -572,14 +573,29 @@ const Inventory = () => {
    * Open restock modal with prepopulated data
    */
   const handleOpenRestockModal = (item) => {
+    const computeNextBatchId = (sku, existingBatchIds) => {
+      const prefix = `${sku}-`
+      let maxNum = 0
+      for (const id of existingBatchIds) {
+        if (!id || typeof id !== 'string') continue
+        if (!id.startsWith(prefix)) continue
+        const suffix = id.slice(prefix.length)
+        const num = Number(suffix)
+        if (!Number.isNaN(num) && num > maxNum) maxNum = num
+      }
+      return `${sku}-${String(maxNum + 1).padStart(3, '0')}`
+    }
+
     setShowRestockModal(item)
+    const nextBatchId = computeNextBatchId(item.sku, (item.batches || []).map(b => b.batchId))
     setRestockForm({
       date: new Date().toISOString().split('T')[0],
       restockQty: '',
       ptrNo: '',
       remarks: '',
       costPerUnit: item.batches.length > 0 ? item.batches[0].costPerUnit || '' : '',
-      selectedBatch: item.batches.length > 0 ? item.batches[0].batchId : null
+      assignedFor: item.batches.length > 0 ? item.batches[0].office || 'Hemodialysis' : 'Hemodialysis',
+      batchId: nextBatchId
     })
   }
 
@@ -600,9 +616,7 @@ const Inventory = () => {
       `Are you sure you want to restock this item with ${qty} units?`,
       async () => {
         try {
-          const office = restockForm.selectedBatch 
-            ? showRestockModal.batches.find(b => b.batchId === restockForm.selectedBatch)?.office 
-            : 'Hemodialysis'
+          const office = restockForm.assignedFor || 'Hemodialysis'
             
           await supabaseDb.restockItem(showRestockModal.id, {
         ...restockForm,
@@ -1373,6 +1387,8 @@ const Inventory = () => {
                     <label className="form-label">Quantity to Add</label>
                     <input
                       type="number"
+                      min="1"
+                      step="1"
                       className="form-input"
                       placeholder="Enter quantity"
                       value={restockForm.restockQty}
@@ -1399,6 +1415,24 @@ const Inventory = () => {
                       onChange={(e) => setRestockForm({ ...restockForm, costPerUnit: e.target.value })}
                     />
                   </div>
+                  <div className="form-group">
+                    <label className="form-label">New Batch ID</label>
+                    <input type="text" className="form-input" value={restockForm.batchId} disabled />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Assign New Batch To</label>
+                    <select
+                      className="form-input"
+                      value={restockForm.assignedFor}
+                      onChange={(e) => setRestockForm({ ...restockForm, assignedFor: e.target.value })}
+                    >
+                      <option value="Hemodialysis">Hemodialysis</option>
+                      <option value="Clinical Laboratory">Clinical Laboratory</option>
+                      <option value="Radiology">Radiology</option>
+                      <option value="Admin Office">Admin Office</option>
+                      <option value="Unallocated">Unallocated</option>
+                    </select>
+                  </div>
                   <div className="form-group" style={{ gridColumn: 'span 2' }}>
                     <label className="form-label">Remarks</label>
                     <input
@@ -1409,23 +1443,6 @@ const Inventory = () => {
                       onChange={(e) => setRestockForm({ ...restockForm, remarks: e.target.value })}
                     />
                   </div>
-                  {/* Batch Selector */}
-                  {showRestockModal.batches && showRestockModal.batches.length > 0 && (
-                    <div className="form-group" style={{ gridColumn: 'span 2' }}>
-                      <label className="form-label">Select Batch</label>
-                      <select
-                        className="form-input"
-                        value={restockForm.selectedBatch || ''}
-                        onChange={(e) => setRestockForm({ ...restockForm, selectedBatch: e.target.value })}
-                      >
-                        {showRestockModal.batches.map((batch, idx) => (
-                          <option key={idx} value={batch.batchId}>
-                            {batch.batchId} - {batch.brand || 'No Brand'} ({batch.stock} {showRestockModal.unit})
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  )}
                 </div>
               </div>
             </div>

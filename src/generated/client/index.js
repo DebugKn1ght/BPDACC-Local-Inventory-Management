@@ -225,7 +225,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\joshu\\Documents\\GitHub\\BPDACC-Local-Inventory-Management\\src\\generated\\client",
+      "value": "C:\\Users\\OJ\\Codess\\BPDACC Inv collab ed\\BPDACC-Local-Inventory-Management\\src\\generated\\client",
       "fromEnvVar": null
     },
     "config": {
@@ -239,7 +239,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\joshu\\Documents\\GitHub\\BPDACC-Local-Inventory-Management\\prisma\\schema.prisma",
+    "sourceFilePath": "C:\\Users\\OJ\\Codess\\BPDACC Inv collab ed\\BPDACC-Local-Inventory-Management\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
