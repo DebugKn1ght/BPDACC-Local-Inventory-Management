@@ -1,0 +1,160 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/client"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Office {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique @db.VarChar(100)
+  description String?  @db.Text
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at")
+
+  users                 User[]
+  inventoryBatches      InventoryBatch[]
+  inventoryTransactions InventoryTransaction[]
+  requisitions          Requisition[]
+
+  @@map("offices")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(100)
+  email     String   @unique @db.VarChar(255)
+  password  String   @db.VarChar(255)
+  isAdmin   Boolean  @default(false) @map("is_admin")
+  officeId  Int?     @map("office_id")
+  status    String   @default("Active") @db.VarChar(20)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  office       Office?       @relation(fields: [officeId], references: [id])
+  requisitions Requisition[]
+
+  @@map("users")
+}
+
+model InventoryItem {
+  id        Int      @id @default(autoincrement())
+  sku       String   @unique @db.VarChar(50)
+  name      String   @db.VarChar(255)
+  location  String?  @db.VarChar(255)
+  minStock  Int      @default(0) @map("min_stock")
+  unit      String   @default("Pieces") @db.VarChar(50)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  batches          InventoryBatch[]
+  transactions     InventoryTransaction[]
+  requisitionItems RequisitionItem[]
+
+  @@map("inventory_items")
+}
+
+model InventoryBatch {
+  id               Int       @id @default(autoincrement())
+  inventoryItemId  Int       @map("inventory_item_id")
+  batchId          String    @map("batch_id") @db.VarChar(100)
+  brand            String?   @db.VarChar(255)
+  supplier         String?   @db.VarChar(255)
+  stockNumber      String?   @map("stock_number") @db.VarChar(100)
+  expiryDate       DateTime? @map("expiry_date") @db.Date
+  officeId         Int?      @map("office_id")
+  stock            Int       @default(0)
+  transactionCount Int       @default(0) @map("transaction_count")
+  ptr              String?   @db.VarChar(100)
+  costPerUnit      Decimal?  @map("cost_per_unit") @db.Decimal(10, 2)
+  remarks          String?   @db.Text
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @default(now()) @updatedAt @map("updated_at")
+
+  inventoryItem InventoryItem          @relation(fields: [inventoryItemId], references: [id], onDelete: Cascade)
+  office        Office?                @relation(fields: [officeId], references: [id])
+  transactions  InventoryTransaction[]
+
+  @@unique([inventoryItemId, batchId])
+  @@index([inventoryItemId])
+  @@map("inventory_batches")
+}
+
+model InventoryTransaction {
+  id               Int      @id @default(autoincrement())
+  inventoryItemId  Int      @map("inventory_item_id")
+  inventoryBatchId Int?     @map("inventory_batch_id")
+  date             DateTime @default(now())
+  reference        String?  @db.VarChar(100)
+  receiptQty       Int      @default(0) @map("receipt_qty")
+  issuanceQty      Int      @default(0) @map("issuance_qty")
+  balance          Int
+  officeId         Int?     @map("office_id")
+  ptr              String?  @db.VarChar(100)
+  costPerUnit      Decimal? @map("cost_per_unit") @db.Decimal(10, 2)
+  remarks          String?  @db.Text
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @default(now()) @updatedAt @map("updated_at")
+
+  inventoryItem  InventoryItem   @relation(fields: [inventoryItemId], references: [id], onDelete: Cascade)
+  inventoryBatch InventoryBatch? @relation(fields: [inventoryBatchId], references: [id], onDelete: SetNull)
+  office         Office?         @relation(fields: [officeId], references: [id])
+
+  @@index([inventoryItemId])
+  @@index([inventoryBatchId])
+  @@map("inventory_transactions")
+}
+
+model Requisition {
+  id                       Int      @id @default(autoincrement())
+  risNo                    String   @unique @map("ris_no") @db.VarChar(100)
+  responsibilityCenterCode String?  @map("responsibility_center_code") @db.VarChar(100)
+  requestDate              DateTime @default(now()) @map("request_date")
+  requestedById            Int?     @map("requested_by_id")
+  role                     String?  @db.VarChar(50)
+  officeId                 Int?     @map("office_id")
+  purpose                  String?  @db.Text
+  status                   String   @default("Pending") @db.VarChar(20)
+  createdAt                DateTime @default(now()) @map("created_at")
+  updatedAt                DateTime @default(now()) @updatedAt @map("updated_at")
+
+  requestedBy User?             @relation(fields: [requestedById], references: [id])
+  office      Office?           @relation(fields: [officeId], references: [id])
+  items       RequisitionItem[]
+
+  @@index([status])
+  @@map("requisitions")
+}
+
+model RequisitionItem {
+  id              Int      @id @default(autoincrement())
+  requisitionId   Int      @map("requisition_id")
+  inventoryItemId Int?     @map("inventory_item_id")
+  itemName        String   @map("item_name") @db.VarChar(255)
+  quantity        Int
+  unit            String   @db.VarChar(50)
+  stockNumber     String?  @map("stock_number") @db.VarChar(100)
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at")
+
+  requisition   Requisition    @relation(fields: [requisitionId], references: [id], onDelete: Cascade)
+  inventoryItem InventoryItem? @relation(fields: [inventoryItemId], references: [id])
+
+  @@index([requisitionId])
+  @@map("requisition_items")
+}
+
+model Activity {
+  id        Int      @id @default(autoincrement())
+  item      String?  @db.VarChar(255)
+  office    String?  @db.VarChar(100)
+  action    String   @db.VarChar(100)
+  type      String?  @db.VarChar(50)
+  time      String?  @db.VarChar(50)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("activities")
+}

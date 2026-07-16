@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  output   = "../src/generated/client"
 }
 
 datasource db {
@@ -110,6 +111,7 @@ model InventoryTransaction {
 model Requisition {
   id            Int      @id @default(autoincrement())
   risNo         String   @unique @db.VarChar(100) @map("ris_no")
+  responsibilityCenterCode String? @db.VarChar(100) @map("responsibility_center_code")
   requestDate   DateTime @default(now()) @map("request_date")
   requestedById Int?     @map("requested_by_id")
   role          String?  @db.VarChar(50)
@@ -134,6 +136,7 @@ model RequisitionItem {
   itemName        String   @db.VarChar(255) @map("item_name")
   quantity        Int
   unit            String   @db.VarChar(50)
+  stockNumber     String?  @db.VarChar(100) @map("stock_number")
   createdAt       DateTime @default(now()) @map("created_at")
   updatedAt       DateTime @default(now()) @updatedAt @map("updated_at")
 

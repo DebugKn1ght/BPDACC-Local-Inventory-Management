@@ -353,6 +353,54 @@ export async function POST(req) {
         });
         break;
       }
+
+      case 'addRequisition': {
+        const [requisitionData] = args;
+        
+        // Validate unique RIS No.
+        const existing = await prisma.requisition.findUnique({
+          where: { risNo: requisitionData.risNo }
+        });
+        if (existing) {
+          throw new Error('RIS No. already exists. Please use a unique RIS No.');
+        }
+
+        result = await prisma.$transaction(async (tx) => {
+          const req = await tx.requisition.create({
+            data: {
+              risNo: requisitionData.risNo,
+              responsibilityCenterCode: requisitionData.responsibilityCenterCode,
+              purpose: requisitionData.purpose,
+              requestedById: requisitionData.requestedById,
+              officeId: requisitionData.officeId,
+              status: 'Pending',
+              items: {
+                create: requisitionData.items.map(item => ({
+                  inventoryItemId: item.inventoryItemId || null,
+                  itemName: item.itemName,
+                  quantity: item.quantity,
+                  unit: item.unit,
+                  stockNumber: item.stockNumber || null
+                }))
+              }
+            },
+            include: { items: true }
+          });
+          
+          return req;
+        });
+        break;
+      }
+
+      case 'updateRequisitionStatus': {
+        const [requisitionId, newStatus] = args;
+        result = await prisma.requisition.update({
+          where: { id: requisitionId },
+          data: { status: newStatus },
+          include: { items: true, requestedBy: true, office: true }
+        });
+        break;
+      }
       
       case 'deleteItem': {
         const [itemId] = args;
