@@ -135,3 +135,65 @@ body {
     opacity: 1;
   }
 }
+
+/* Printable RIS form styling rules */
+.ris-print-container {
+  display: none;
+}
+
+@media print {
+  body, html {
+    background: white !important;
+    color: black !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+  
+  /* Reset parent containers so they do not hide their children */
+  .app, 
+  .app > div, 
+  .main-content {
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    background: none !important;
+    box-shadow: none !important;
+  }
+  
+  /* Hide navigation sidebar and other irrelevant panels */
+  .sidebar, 
+  .no-print,
+  .tabs-container,
+  .filters-card,
+  .ris-card,
+  .history-section,
+  .modal-overlay,
+  .page-header,
+  .card,
+  .toast,
+  button,
+  header,
+  nav {
+    display: none !important;
+  }
+  
+  /* Show and stretch only the print container */
+  .ris-print-container {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 10px !important;
+    border: none !important;
+  }
+  
+  /* Clean page size and margins */
+  @page {
+    size: portrait;
+    margin: 15mm;
+  }
+}
