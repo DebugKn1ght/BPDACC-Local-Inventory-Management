@@ -33,8 +33,8 @@ const RequisitionRequests = () => {
   }
 
   // Load all requisitions and offices
-  const loadData = async () => {
-    setLoading(true)
+  const loadData = async (showLoading = true) => {
+    if (showLoading) setLoading(true)
     try {
       const [reqData, officeData] = await Promise.all([
         supabaseDb.getRequisitions(),
@@ -44,14 +44,18 @@ const RequisitionRequests = () => {
       setOffices(officeData || [])
     } catch (err) {
       console.error('Error loading data:', err)
-      showNotification('error', 'Failed to load requisition requests')
+      if (showLoading) showNotification('error', 'Failed to load requisition requests')
     } finally {
-      setLoading(false)
+      if (showLoading) setLoading(false)
     }
   }
 
   useEffect(() => {
-    loadData()
+    loadData(true)
+    const intervalId = setInterval(() => {
+      loadData(false)
+    }, 5000) // Poll every 5 seconds for realtime updates
+    return () => clearInterval(intervalId)
   }, [])
 
   // Open request details modal — reset releaseData

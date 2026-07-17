@@ -95,8 +95,8 @@ const Requisition = () => {
   }, [userOffice, userOfficeId])
 
   // Load history of requisitions
-  const fetchHistory = async () => {
-    setLoadingHistory(true)
+  const fetchHistory = async (showLoading = true) => {
+    if (showLoading) setLoadingHistory(true)
     try {
       const data = await supabaseDb.getRequisitions()
       const userHistory = data.filter(req => req.requestedById === currentUser?.id)
@@ -104,13 +104,17 @@ const Requisition = () => {
     } catch (err) {
       console.error('Error fetching history:', err)
     } finally {
-      setLoadingHistory(false)
+      if (showLoading) setLoadingHistory(false)
     }
   }
 
   useEffect(() => {
     if (activeTab === 'history') {
-      fetchHistory()
+      fetchHistory(true)
+      const intervalId = setInterval(() => {
+        fetchHistory(false)
+      }, 5000)
+      return () => clearInterval(intervalId)
     }
   }, [activeTab])
 

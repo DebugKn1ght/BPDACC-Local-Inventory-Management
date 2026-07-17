@@ -351,21 +351,11 @@ export async function POST(req) {
         const mm = String(now.getMonth() + 1).padStart(2, '0');
         const yearMonth = `${yy}${mm}`;
 
-        // Count all requisitions created this calendar month to determine next number
-        const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-        const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-
-        const countThisMonth = await prisma.requisition.count({
-          where: {
-            createdAt: {
-              gte: monthStart,
-              lt: monthEnd
-            }
-          }
+        const counterRecord = await prisma.risCounter.findUnique({
+          where: { yearMonth }
         });
 
-        // Next number = count of existing this month + 1
-        const nextNumber = countThisMonth + 1;
+        const nextNumber = (counterRecord ? counterRecord.counter : 0) + 1;
 
         result = { risNo: `RIS-${yearMonth}-${String(nextNumber).padStart(4, '0')}` };
         break;
@@ -374,17 +364,23 @@ export async function POST(req) {
       case 'addRequisition': {
         const [requisitionData] = args;
         
-        const existing = await prisma.requisition.findUnique({
-          where: { risNo: requisitionData.risNo }
-        });
-        if (existing) {
-          throw new Error('RIS No. already exists. Please use a unique RIS No.');
-        }
-
         result = await prisma.$transaction(async (tx) => {
+          const now = new Date();
+          const yy = String(now.getFullYear()).slice(-2);
+          const mm = String(now.getMonth() + 1).padStart(2, '0');
+          const yearMonth = `${yy}${mm}`;
+
+          const counterRecord = await tx.risCounter.upsert({
+            where: { yearMonth },
+            update: { counter: { increment: 1 } },
+            create: { yearMonth, counter: 1 }
+          });
+
+          const finalRisNo = `RIS-${yearMonth}-${String(counterRecord.counter).padStart(4, '0')}`;
+
           const req = await tx.requisition.create({
             data: {
-              risNo: requisitionData.risNo,
+              risNo: finalRisNo,
               requestedByPrintedName: requisitionData.requestedByPrintedName || null,
               purpose: requisitionData.purpose,
               requestedById: requisitionData.requestedById,
