@@ -394,11 +394,80 @@ export async function POST(req) {
 
       case 'updateRequisitionStatus': {
         const [requisitionId, newStatus] = args;
-        result = await prisma.requisition.update({
-          where: { id: requisitionId },
-          data: { status: newStatus },
-          include: { items: true, requestedBy: true, office: true }
+
+        // Update requisition and, if approved, record issuance transactions
+        result = await prisma.$transaction(async (tx) => {
+          const requisition = await tx.requisition.update({
+            where: { id: requisitionId },
+            data: { status: newStatus },
+            include: { items: true, requestedBy: true, office: true }
+          });
+
+          if (newStatus === 'Approved') {
+            const officeId = requisition.officeId || null;
+
+            for (const reqItem of requisition.items) {
+              const inventoryItemId = reqItem.inventoryItemId;
+              const issuanceQty = Number(reqItem.quantity) || 0;
+              if (!inventoryItemId || issuanceQty <= 0) continue;
+
+              // Try to find the batch by stock number first, otherwise pick the first batch
+              let batch = null;
+              if (reqItem.stockNumber) {
+                batch = await tx.inventoryBatch.findFirst({
+                  where: { inventoryItemId, stockNumber: reqItem.stockNumber }
+                });
+              }
+              if (!batch) {
+                batch = await tx.inventoryBatch.findFirst({
+                  where: { inventoryItemId },
+                  orderBy: { id: 'asc' }
+                });
+              }
+
+              // Determine last known balance for the item
+              const lastTx = await tx.inventoryTransaction.findFirst({
+                where: { inventoryItemId },
+                orderBy: { id: 'desc' }
+              });
+              const lastBalance = lastTx ? Number(lastTx.balance) : (batch ? Number(batch.stock) : 0);
+              const newBalance = lastBalance - issuanceQty;
+
+              const costPerUnit = batch && batch.costPerUnit ? Number(batch.costPerUnit) : null;
+
+              // Create issuance transaction (stock card row)
+              await tx.inventoryTransaction.create({
+                data: {
+                  inventoryItemId,
+                  inventoryBatchId: batch ? batch.id : null,
+                  date: new Date(),
+                  reference: requisition.risNo,
+                  receiptQty: 0,
+                  issuanceQty: issuanceQty,
+                  balance: newBalance,
+                  officeId: officeId,
+                  ptr: requisition.risNo,
+                  costPerUnit: costPerUnit,
+                  remarks: `BPDACC - ${requisition.office?.name || ''}`
+                }
+              });
+
+              // Update batch stock and increment transaction count when a batch exists
+              if (batch) {
+                await tx.inventoryBatch.update({
+                  where: { id: batch.id },
+                  data: {
+                    stock: Math.max(0, Number(batch.stock) - issuanceQty),
+                    transactionCount: { increment: 1 }
+                  }
+                });
+              }
+            }
+          }
+
+          return requisition;
         });
+
         break;
       }
       
