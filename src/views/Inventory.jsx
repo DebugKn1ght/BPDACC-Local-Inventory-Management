@@ -10,6 +10,7 @@
 
 import React, { useState, useEffect } from 'react'
 import Icon from '../components/Icon'
+import PrintableStockCard from '../components/PrintableStockCard'
 import { supabaseDb } from '../utils/apiDb'
 import { useUserRole } from '../context/UserRoleContext'
 import { useUI } from '../context/UIContext'
@@ -2347,6 +2348,8 @@ const Inventory = () => {
           }
         }
       `}</style>
+
+      {showMoreInfo && <PrintableStockCard item={showMoreInfo} />}
     </div>
   )
 }
