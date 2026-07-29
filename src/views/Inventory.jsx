@@ -52,7 +52,11 @@ const Inventory = () => {
     remarks: '',
     costPerUnit: '',
     assignedFor: 'Hemodialysis',
-    batchId: ''
+    batchId: '',
+    brand: '',
+    supplier: '',
+    hasExpiry: false,
+    expiryDate: ''
   })
   
   // Form data states
@@ -598,7 +602,11 @@ const Inventory = () => {
       remarks: '',
       costPerUnit: item.batches.length > 0 ? item.batches[0].costPerUnit || '' : '',
       assignedFor: item.batches.length > 0 ? item.batches[0].office || 'Hemodialysis' : 'Hemodialysis',
-      batchId: nextBatchId
+      batchId: nextBatchId,
+      brand: '',
+      supplier: '',
+      hasExpiry: false,
+      expiryDate: ''
     })
   }
 
@@ -609,7 +617,12 @@ const Inventory = () => {
     if (!showRestockModal) return
     const qty = Number(restockForm.restockQty)
     if (!restockForm.restockQty.trim() || isNaN(qty) || qty <= 0) {
-      showToast('Restock quantity must be a number greater than 0!', 'error')
+      showNotification('error', 'Restock quantity must be a number greater than 0!')
+      return
+    }
+
+    if (restockForm.hasExpiry && !restockForm.expiryDate) {
+      showNotification('error', 'Expiry date is required when Has Expiry is checked!')
       return
     }
 
@@ -622,25 +635,28 @@ const Inventory = () => {
           const office = restockForm.assignedFor || 'Hemodialysis'
             
           await supabaseDb.restockItem(showRestockModal.id, {
-        ...restockForm,
-        quantity: qty,
-        office
-      })
+            ...restockForm,
+            quantity: qty,
+            office,
+            brand: restockForm.brand || null,
+            supplier: restockForm.supplier || null,
+            expiryDate: restockForm.hasExpiry ? restockForm.expiryDate : null
+          })
       
-      // Log the restock activity
-      await supabaseDb.addActivity({
-        item: showRestockModal.name,
-        office: office,
-        action: 'Restocked',
-        type: 'restocked'
-      })
-      
-      await loadItems() // Refresh
-      const refreshedItems = await supabaseDb.getItems()
-      const refreshedItem = refreshedItems.find(i => i.id === showRestockModal.id)
-      setShowMoreInfo(refreshedItem)
-      setShowRestockModal(null)
-      showNotification('success', 'Item restocked successfully!')
+          // Log the restock activity
+          await supabaseDb.addActivity({
+            item: showRestockModal.name,
+            office: office,
+            action: 'Restocked',
+            type: 'restocked'
+          })
+          
+          await loadItems() // Refresh
+          const refreshedItems = await supabaseDb.getItems()
+          const refreshedItem = refreshedItems.find(i => i.id === showRestockModal.id)
+          setShowMoreInfo(refreshedItem)
+          setShowRestockModal(null)
+          showNotification('success', 'Item restocked successfully!')
         } catch (e) {
           console.error('Failed to restock:', e)
           showNotification('error', 'Failed to restock: ' + e.message)
@@ -1396,6 +1412,55 @@ const Inventory = () => {
                       placeholder="Enter quantity"
                       value={restockForm.restockQty}
                       onChange={(e) => setRestockForm({ ...restockForm, restockQty: e.target.value })}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Brand</label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      placeholder="Enter brand"
+                      value={restockForm.brand}
+                      onChange={(e) => setRestockForm({ ...restockForm, brand: e.target.value })}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Supplier</label>
+                    <input
+                      type="text"
+                      className="form-input"
+                      placeholder="Enter supplier"
+                      value={restockForm.supplier}
+                      onChange={(e) => setRestockForm({ ...restockForm, supplier: e.target.value })}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Has Expiry</label>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, paddingTop: 8 }}>
+                      <input
+                        type="checkbox"
+                        checked={restockForm.hasExpiry}
+                        onChange={(e) => {
+                          const checked = e.target.checked
+                          setRestockForm({
+                            ...restockForm,
+                            hasExpiry: checked,
+                            expiryDate: checked ? new Date().toISOString().split('T')[0] : ''
+                          })
+                        }}
+                        style={{ width: 16, height: 16, cursor: 'pointer' }}
+                      />
+                      <span style={{ fontSize: 13, fontWeight: 600, color: '#374151' }}>This batch expires</span>
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Expiry Date</label>
+                    <input
+                      type="date"
+                      className="form-input"
+                      value={restockForm.expiryDate || ''}
+                      disabled={!restockForm.hasExpiry}
+                      onChange={(e) => setRestockForm({ ...restockForm, expiryDate: e.target.value })}
                     />
                   </div>
                   <div className="form-group">

@@ -834,8 +834,10 @@ export async function POST(req) {
           data: {
             inventoryItemId: itemId,
             batchId,
+            brand: data.brand || null,
+            supplier: data.supplier || null,
             stockNumber: `SN-${Date.now().toString().slice(-6)}`,
-            expiryDate: null,
+            expiryDate: data.expiryDate ? new Date(data.expiryDate) : null,
             officeId,
             stock: qty,
             transactionCount: 0,
