@@ -13,7 +13,11 @@ const RequisitionRequests = () => {
   const [selectedRequest, setSelectedRequest] = useState(null)
   
   // Releasing items state (admin fills when approving)
-  const [releaseData, setReleaseData] = useState({}) // { [itemId]: { quantityReleased, sourceOfficeId, remarks } }
+  const [releaseData, setReleaseData] = useState({}) // { [itemId]: { quantityReleased, sourceOfficeId, remarks, inventoryItemId } }
+
+  const [unlistedSearchQuery, setUnlistedSearchQuery] = useState({}) // { [itemId]: string }
+  const [unlistedSuggestions, setUnlistedSuggestions] = useState({}) // { [itemId]: InventoryItem[] }
+  const [officeOptionsByItem, setOfficeOptionsByItem] = useState({}) // { [itemId]: Office[] }
   
   // Filtering & search states
   const [searchQuery, setSearchQuery] = useState('')
@@ -62,18 +66,51 @@ const RequisitionRequests = () => {
   const openRequestDetails = (request) => {
     setSelectedRequest(request)
     const initialRelease = {}
+    const initialSearch = {}
+    const initialSuggestions = {}
+    const initialOfficeOptions = {}
     request.items?.forEach(item => {
       initialRelease[item.id] = {
         quantityReleased: item.quantity,
-        sourceOfficeId: null,
-        remarks: ''
+        sourceOfficeId: request.officeId ? String(request.officeId) : '',
+        remarks: '',
+        inventoryItemId: item.inventoryItemId ? String(item.inventoryItemId) : ''
       }
+      initialSearch[item.id] = ''
+      initialSuggestions[item.id] = []
+      initialOfficeOptions[item.id] = null
     })
     setReleaseData(initialRelease)
+    setUnlistedSearchQuery(initialSearch)
+    setUnlistedSuggestions(initialSuggestions)
+    setOfficeOptionsByItem(initialOfficeOptions)
   }
 
   // Handle Approve only
   const handleApprove = async (id) => {
+    const unlistedMissing = selectedRequest?.items?.find(i => i.isUnlisted && !releaseData[i.id]?.inventoryItemId)
+    if (unlistedMissing) {
+      showNotification('error', `Please select the exact item for "${unlistedMissing.itemName}" in the Search Item column`)
+      return
+    }
+
+    const unlistedNoStockOffice = selectedRequest?.items?.find(i =>
+      i.isUnlisted &&
+      releaseData[i.id]?.inventoryItemId &&
+      Array.isArray(officeOptionsByItem[i.id]) &&
+      officeOptionsByItem[i.id].length === 0
+    )
+    if (unlistedNoStockOffice) {
+      showNotification('error', `No offices have stock for the selected item of "${unlistedNoStockOffice.itemName}"`)
+      return
+    }
+
+    const unlistedNoSourceOffice = selectedRequest?.items?.find(i => i.isUnlisted && !releaseData[i.id]?.sourceOfficeId)
+    if (unlistedNoSourceOffice) {
+      showNotification('error', `Please select a Source Office for "${unlistedNoSourceOffice.itemName}"`)
+      return
+    }
+
     setConfirmDialog({
       title: 'Approve Request',
       message: 'Are you sure you want to approve this request?',
@@ -83,7 +120,8 @@ const RequisitionRequests = () => {
             requisitionItemId: parseInt(itemId),
             quantityReleased: parseInt(data.quantityReleased) || 0,
             sourceOfficeId: data.sourceOfficeId ? parseInt(data.sourceOfficeId) : null,
-            remarks: data.remarks || ''
+            remarks: data.remarks || '',
+            inventoryItemId: data.inventoryItemId ? parseInt(data.inventoryItemId) : null
           }))
           await supabaseDb.updateRequisitionStatus(id, 'Approved', itemReleaseArray)
           showNotification('success', 'Request approved successfully')
@@ -148,6 +186,48 @@ const RequisitionRequests = () => {
       ...prev,
       [itemId]: { ...prev[itemId], [field]: value }
     }))
+  }
+
+  const handleUnlistedSearchChange = async (itemId, value) => {
+    setUnlistedSearchQuery(prev => ({ ...prev, [itemId]: value }))
+
+    const q = value.trim()
+    if (q.length < 2) {
+      setUnlistedSuggestions(prev => ({ ...prev, [itemId]: [] }))
+      return
+    }
+
+    try {
+      const results = await supabaseDb.searchInventoryItems(q)
+      setUnlistedSuggestions(prev => ({ ...prev, [itemId]: results || [] }))
+    } catch (err) {
+      console.error('Error searching inventory items:', err)
+      setUnlistedSuggestions(prev => ({ ...prev, [itemId]: [] }))
+    }
+  }
+
+  const selectUnlistedInventoryItem = async (requisitionItemId, inventoryItem) => {
+    updateRelease(requisitionItemId, 'inventoryItemId', String(inventoryItem.id))
+    setUnlistedSearchQuery(prev => ({ ...prev, [requisitionItemId]: inventoryItem.name }))
+    setUnlistedSuggestions(prev => ({ ...prev, [requisitionItemId]: [] }))
+
+    try {
+      const officeOptions = await supabaseDb.getOfficesWithStockForItem(inventoryItem.id)
+      setOfficeOptionsByItem(prev => ({ ...prev, [requisitionItemId]: officeOptions || [] }))
+
+      const requestingOfficeId = selectedRequest?.officeId ? String(selectedRequest.officeId) : ''
+      const hasRequestingOffice = (officeOptions || []).some(o => String(o.id) === requestingOfficeId)
+      if (hasRequestingOffice) {
+        updateRelease(requisitionItemId, 'sourceOfficeId', requestingOfficeId)
+      } else if ((officeOptions || []).length > 0) {
+        updateRelease(requisitionItemId, 'sourceOfficeId', String(officeOptions[0].id))
+      } else {
+        updateRelease(requisitionItemId, 'sourceOfficeId', '')
+      }
+    } catch (err) {
+      console.error('Error fetching offices for item:', err)
+      setOfficeOptionsByItem(prev => ({ ...prev, [requisitionItemId]: [] }))
+    }
   }
 
   return (
@@ -269,7 +349,7 @@ const RequisitionRequests = () => {
                         <td><strong>{request.risNo}</strong></td>
                         <td>{new Date(request.requestDate).toLocaleDateString()}</td>
                         <td>
-                          {request.requestedBy?.name || 'N/A'}<br/>
+                          {request.requestedByPrintedName || request.requestedBy?.name || 'N/A'}<br/>
                           <span className="badge badge-info">{request.role || 'Staff'}</span>
                         </td>
                         <td>{officeName}</td>
@@ -326,7 +406,7 @@ const RequisitionRequests = () => {
                         <td><strong>{request.risNo}</strong></td>
                         <td>{new Date(request.requestDate).toLocaleDateString()}</td>
                         <td>
-                          {request.requestedBy?.name || 'N/A'}<br/>
+                          {request.requestedByPrintedName || request.requestedBy?.name || 'N/A'}<br/>
                           <span className="badge badge-info">{request.role || 'Staff'}</span>
                         </td>
                         <td>{officeName}</td>
@@ -372,10 +452,9 @@ const RequisitionRequests = () => {
                 </div>
                 <div>
                   <h4 style={{ marginBottom: '4px', color: '#6b7280', fontSize: '13px' }}>Requested By</h4>
-                  <p style={{ fontWeight: '600' }}>{selectedRequest.requestedBy?.name || 'N/A'} ({selectedRequest.role || 'Staff'})</p>
-                  {selectedRequest.requestedByPrintedName && (
-                    <p style={{ fontSize: '12px', color: '#6b7280' }}>Printed name: {selectedRequest.requestedByPrintedName}</p>
-                  )}
+                  <p style={{ fontWeight: '600' }}>
+                    {selectedRequest.requestedByPrintedName || selectedRequest.requestedBy?.name || 'N/A'} ({selectedRequest.office?.name || selectedRequest.office || 'N/A'})
+                  </p>
                 </div>
                 <div>
                   <h4 style={{ marginBottom: '4px', color: '#6b7280', fontSize: '13px' }}>Office</h4>
@@ -438,6 +517,7 @@ const RequisitionRequests = () => {
                     <thead>
                       <tr style={{ background: '#eff6ff' }}>
                         <th style={{ border: '1px solid #bfdbfe', padding: '10px' }}>Description</th>
+                        <th style={{ border: '1px solid #bfdbfe', padding: '10px' }}>Search Item</th>
                         <th style={{ border: '1px solid #bfdbfe', padding: '10px', textAlign: 'center' }}>Qty Requested</th>
                         <th style={{ border: '1px solid #bfdbfe', padding: '10px', textAlign: 'center' }}>Qty to Release</th>
                         <th style={{ border: '1px solid #bfdbfe', padding: '10px' }}>Source Office</th>
@@ -450,6 +530,35 @@ const RequisitionRequests = () => {
                           <td style={{ border: '1px solid #bfdbfe', padding: '8px' }}>
                             {item.itemName}
                             {item.isUnlisted && <span style={{ fontSize: 11, color: '#d97706', marginLeft: 6, fontWeight: 600 }}>[Unlisted]</span>}
+                          </td>
+                          <td style={{ border: '1px solid #bfdbfe', padding: '8px' }}>
+                            {item.isUnlisted ? (
+                              <div style={{ position: 'relative' }}>
+                                <input
+                                  type="text"
+                                  value={unlistedSearchQuery[item.id] || ''}
+                                  onChange={e => handleUnlistedSearchChange(item.id, e.target.value)}
+                                  placeholder="Search exact item..."
+                                  autoComplete="off"
+                                  style={{ width: '100%', border: '1px solid #93c5fd', borderRadius: 4, padding: '4px 6px', fontSize: 13 }}
+                                />
+                                {(unlistedSuggestions[item.id] || []).length > 0 && (
+                                  <ul style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: 'white', border: '1px solid #93c5fd', borderRadius: 6, marginTop: 4, maxHeight: 220, overflowY: 'auto', zIndex: 20, listStyle: 'none', padding: 0, boxShadow: '0 4px 6px rgba(0,0,0,0.08)' }}>
+                                    {unlistedSuggestions[item.id].map(invItem => (
+                                      <li
+                                        key={invItem.id}
+                                        onClick={() => selectUnlistedInventoryItem(item.id, invItem)}
+                                        style={{ padding: '8px 10px', cursor: 'pointer', fontSize: 13, borderBottom: '1px solid #eff6ff' }}
+                                      >
+                                        {invItem.name} (Stock: {invItem.totalStock ?? 0})
+                                      </li>
+                                    ))}
+                                  </ul>
+                                )}
+                              </div>
+                            ) : (
+                              <span style={{ color: '#94a3b8' }}>-</span>
+                            )}
                           </td>
                           <td style={{ border: '1px solid #bfdbfe', padding: '8px', textAlign: 'center' }}>{item.quantity}</td>
                           <td style={{ border: '1px solid #bfdbfe', padding: '8px', textAlign: 'center' }}>
@@ -466,12 +575,18 @@ const RequisitionRequests = () => {
                             <select
                               value={releaseData[item.id]?.sourceOfficeId || ''}
                               onChange={e => updateRelease(item.id, 'sourceOfficeId', e.target.value)}
+                              disabled={item.isUnlisted && !releaseData[item.id]?.inventoryItemId}
                               style={{ width: '100%', border: '1px solid #93c5fd', borderRadius: 4, padding: '4px 6px', fontSize: 13 }}
                             >
-                              <option value="">-- Same Office --</option>
-                              {offices.map(o => (
-                                <option key={o.id} value={o.id}>{o.name}</option>
-                              ))}
+                              {item.isUnlisted && releaseData[item.id]?.inventoryItemId ? (
+                                (officeOptionsByItem[item.id] || []).map(o => (
+                                  <option key={o.id} value={o.id}>{o.name} (Stock: {o.stock ?? 0})</option>
+                                ))
+                              ) : (
+                                offices.map(o => (
+                                  <option key={o.id} value={o.id}>{o.name}</option>
+                                ))
+                              )}
                             </select>
                           </td>
                           <td style={{ border: '1px solid #bfdbfe', padding: '8px' }}>
@@ -510,7 +625,7 @@ const RequisitionRequests = () => {
                           <td style={{ border: '1px solid #bfdbfe', padding: '10px' }}>{item.itemName}</td>
                           <td style={{ border: '1px solid #bfdbfe', padding: '10px', textAlign: 'center' }}>{item.quantity}</td>
                           <td style={{ border: '1px solid #bfdbfe', padding: '10px', textAlign: 'center' }}>{item.release?.quantityReleased ?? '-'}</td>
-                          <td style={{ border: '1px solid #bfdbfe', padding: '10px' }}>{item.release?.sourceOffice?.name || 'Same Office'}</td>
+                          <td style={{ border: '1px solid #bfdbfe', padding: '10px' }}>{item.release?.sourceOffice?.name || selectedRequest.office?.name || selectedRequest.office || '-'}</td>
                           <td style={{ border: '1px solid #bfdbfe', padding: '10px' }}>{item.release?.remarks || '-'}</td>
                         </tr>
                       ))}

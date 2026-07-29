@@ -79,6 +79,7 @@ const Inventory = () => {
       assignedFor: 'Hemodialysis',
       brand: '',
       supplier: '',
+      expiryDate: null,
       ptr: '',
       costPerUnit: '',
       remarks: ''
@@ -293,6 +294,7 @@ const Inventory = () => {
         assignedFor: 'Hemodialysis',
         brand: '',
         supplier: '',
+        expiryDate: null,
         ptr: '',
         costPerUnit: '',
         remarks: ''
@@ -331,7 +333,7 @@ const Inventory = () => {
           brand: addFormData.initialBatch.brand,
           supplier: addFormData.initialBatch.supplier,
           stockNumber: `SN-${Date.now().toString().slice(-4)}`,
-          expiryDate: null,
+          expiryDate: addFormData.initialBatch.expiryDate || null,
           office: addFormData.initialBatch.assignedFor,
           stock: qtyVal,
           transactionCount: 0,
@@ -1599,6 +1601,41 @@ const Inventory = () => {
                         ...addFormData, 
                         initialBatch: {...addFormData.initialBatch, supplier: e.target.value}
                       })}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Has Expiry</label>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, paddingTop: 8 }}>
+                      <input
+                        type="checkbox"
+                        checked={!!addFormData.initialBatch.expiryDate}
+                        onChange={e => {
+                          setAddFormData({
+                            ...addFormData,
+                            initialBatch: {
+                              ...addFormData.initialBatch,
+                              expiryDate: e.target.checked ? new Date().toISOString().split('T')[0] : null
+                            }
+                          })
+                        }}
+                        style={{ width: 16, height: 16, cursor: 'pointer' }}
+                      />
+                      <span style={{ fontSize: 13, fontWeight: 600, color: '#374151' }}>This batch expires</span>
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Expiry Date</label>
+                    <input
+                      type="date"
+                      className="form-input"
+                      value={addFormData.initialBatch.expiryDate || ''}
+                      disabled={!addFormData.initialBatch.expiryDate}
+                      onChange={(e) =>
+                        setAddFormData({
+                          ...addFormData,
+                          initialBatch: { ...addFormData.initialBatch, expiryDate: e.target.value }
+                        })
+                      }
                     />
                   </div>
                   <div className="form-group">

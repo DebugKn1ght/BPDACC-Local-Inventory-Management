@@ -141,6 +141,56 @@ export async function POST(req) {
       case 'getItems': {
         const [office, isAdmin, userOfficeId] = args;
         console.log('[API getItems] args:', { office, isAdmin, userOfficeId });
+
+        const todayStart = new Date();
+        todayStart.setHours(0, 0, 0, 0);
+
+        await prisma.$transaction(async (tx) => {
+          const expiredBatches = await tx.inventoryBatch.findMany({
+            where: {
+              expiryDate: { lt: todayStart },
+              stock: { gt: 0 }
+            },
+            orderBy: { id: 'asc' },
+            take: 200
+          });
+
+          for (const batch of expiredBatches) {
+            const expiredQty = Number(batch.stock || 0);
+            if (!expiredQty) continue;
+
+            const lastTx = await tx.inventoryTransaction.findFirst({
+              where: { inventoryItemId: batch.inventoryItemId },
+              orderBy: { id: 'desc' }
+            });
+            const lastBalance = lastTx ? Number(lastTx.balance) : 0;
+            const newBalance = Math.max(0, lastBalance - expiredQty);
+
+            await tx.inventoryTransaction.create({
+              data: {
+                inventoryItemId: batch.inventoryItemId,
+                inventoryBatchId: batch.id,
+                date: batch.expiryDate || new Date(),
+                reference: batch.ptr || batch.batchId,
+                receiptQty: 0,
+                issuanceQty: expiredQty,
+                balance: newBalance,
+                officeId: batch.officeId,
+                ptr: batch.ptr,
+                costPerUnit: batch.costPerUnit,
+                remarks: 'Expired'
+              }
+            });
+
+            await tx.inventoryBatch.update({
+              where: { id: batch.id },
+              data: {
+                stock: 0,
+                transactionCount: { increment: 1 }
+              }
+            });
+          }
+        });
         
         let officeCondition = undefined;
         let batchCondition = undefined;
@@ -325,6 +375,67 @@ export async function POST(req) {
         break;
       }
 
+      case 'searchInventoryItems': {
+        const [query] = args;
+        const q = (query || '').trim();
+        if (!q) {
+          result = [];
+          break;
+        }
+
+        const items = await prisma.inventoryItem.findMany({
+          where: {
+            OR: [
+              { name: { contains: q } },
+              { sku: { contains: q } }
+            ]
+          },
+          orderBy: { name: 'asc' },
+          take: 15,
+          include: { batches: { select: { stock: true } } }
+        });
+
+        result = items.map(i => ({
+          id: i.id,
+          name: i.name,
+          unit: i.unit,
+          totalStock: i.batches.reduce((sum, b) => sum + Number(b.stock || 0), 0)
+        }));
+        break;
+      }
+
+      case 'getOfficesWithStockForItem': {
+        const [inventoryItemId] = args;
+        if (!inventoryItemId) {
+          result = [];
+          break;
+        }
+
+        const grouped = await prisma.inventoryBatch.groupBy({
+          by: ['officeId'],
+          where: { inventoryItemId, stock: { gt: 0 }, officeId: { not: null } },
+          _sum: { stock: true }
+        });
+
+        const officeIds = grouped.map(g => g.officeId).filter(Boolean);
+        const offices = await prisma.office.findMany({
+          where: { id: { in: officeIds } }
+        });
+        const officeMap = offices.reduce((m, o) => {
+          m[o.id] = o;
+          return m;
+        }, {});
+
+        result = grouped
+          .map(g => ({
+            id: g.officeId,
+            name: officeMap[g.officeId]?.name || 'Unknown',
+            stock: Number(g._sum.stock || 0)
+          }))
+          .sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      }
+
       case 'getRequisitions': {
         result = await prisma.requisition.findMany({
           include: {
@@ -474,10 +585,21 @@ export async function POST(req) {
           // Process each item's release data
           for (const reqItem of requisition.items) {
             const releaseInfo = releaseData?.find(r => r.requisitionItemId === reqItem.id);
-            const inventoryItemId = reqItem.inventoryItemId;
+            const effectiveInventoryItemId = releaseInfo?.inventoryItemId || reqItem.inventoryItemId;
             const issuanceQty = releaseInfo?.quantityReleased ?? Number(reqItem.quantity) ?? 0;
             const sourceOfficeId = releaseInfo?.sourceOfficeId || requisition.officeId || null;
             const releaseRemarks = releaseInfo?.remarks || null;
+
+            if (reqItem.isUnlisted && issuanceQty > 0 && !effectiveInventoryItemId) {
+              throw new Error(`Unlisted item "${reqItem.itemName}" requires selecting an inventory item before approval`);
+            }
+
+            if (releaseInfo?.inventoryItemId && releaseInfo.inventoryItemId !== reqItem.inventoryItemId) {
+              await tx.requisitionItem.update({
+                where: { id: reqItem.id },
+                data: { inventoryItemId: releaseInfo.inventoryItemId }
+              });
+            }
 
             // Create the RequisitionItemRelease record
             await tx.requisitionItemRelease.create({
@@ -489,30 +611,33 @@ export async function POST(req) {
               }
             });
 
-            // Only deduct from inventory for listed (non-unlisted) items
-            if (!reqItem.isUnlisted && inventoryItemId && issuanceQty > 0) {
+            if (effectiveInventoryItemId && issuanceQty > 0) {
               // Try to find batch for the source office
               let batch = null;
-              if (reqItem.stockNumber) {
+              if (reqItem.stockNumber && effectiveInventoryItemId === reqItem.inventoryItemId) {
                 batch = await tx.inventoryBatch.findFirst({
-                  where: { inventoryItemId, stockNumber: reqItem.stockNumber }
+                  where: {
+                    inventoryItemId: effectiveInventoryItemId,
+                    stockNumber: reqItem.stockNumber,
+                    ...(sourceOfficeId ? { officeId: sourceOfficeId } : {})
+                  }
                 });
               }
               if (!batch) {
                 batch = await tx.inventoryBatch.findFirst({
-                  where: { inventoryItemId, ...(sourceOfficeId ? { officeId: sourceOfficeId } : {}) },
+                  where: { inventoryItemId: effectiveInventoryItemId, ...(sourceOfficeId ? { officeId: sourceOfficeId } : {}) },
                   orderBy: { id: 'asc' }
                 });
               }
               if (!batch) {
                 batch = await tx.inventoryBatch.findFirst({
-                  where: { inventoryItemId },
+                  where: { inventoryItemId: effectiveInventoryItemId },
                   orderBy: { id: 'asc' }
                 });
               }
 
               const lastTx = await tx.inventoryTransaction.findFirst({
-                where: { inventoryItemId },
+                where: { inventoryItemId: effectiveInventoryItemId, officeId: sourceOfficeId || null },
                 orderBy: { id: 'desc' }
               });
               const lastBalance = lastTx ? Number(lastTx.balance) : (batch ? Number(batch.stock) : 0);
@@ -522,7 +647,7 @@ export async function POST(req) {
 
               await tx.inventoryTransaction.create({
                 data: {
-                  inventoryItemId,
+                  inventoryItemId: effectiveInventoryItemId,
                   inventoryBatchId: batch ? batch.id : null,
                   date: new Date(),
                   reference: requisition.risNo,

@@ -27,6 +27,8 @@ export const supabaseDb = {
   // every single reference in Inventory.jsx and Dashboard.jsx
   login: (email, password) => rpcCall('login', email, password),
   getItems: (office, isAdmin, userOfficeId) => rpcCall('getItems', office, isAdmin, userOfficeId),
+  searchInventoryItems: (query) => rpcCall('searchInventoryItems', query),
+  getOfficesWithStockForItem: (inventoryItemId) => rpcCall('getOfficesWithStockForItem', inventoryItemId),
   addItem: (item) => rpcCall('addItem', item),
   updateItem: (item) => rpcCall('updateItem', item),
   addTransaction: (itemId, data) => rpcCall('addTransaction', itemId, data),
