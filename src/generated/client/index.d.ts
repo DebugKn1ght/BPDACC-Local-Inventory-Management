@@ -4855,6 +4855,7 @@ export namespace Prisma {
     inventoryItemId: number | null
     officeId: number | null
     stock: number | null
+    expiredQty: number | null
     transactionCount: number | null
     costPerUnit: Decimal | null
   }
@@ -4864,6 +4865,7 @@ export namespace Prisma {
     inventoryItemId: number | null
     officeId: number | null
     stock: number | null
+    expiredQty: number | null
     transactionCount: number | null
     costPerUnit: Decimal | null
   }
@@ -4878,6 +4880,7 @@ export namespace Prisma {
     expiryDate: Date | null
     officeId: number | null
     stock: number | null
+    expiredQty: number | null
     transactionCount: number | null
     ptr: string | null
     costPerUnit: Decimal | null
@@ -4896,6 +4899,7 @@ export namespace Prisma {
     expiryDate: Date | null
     officeId: number | null
     stock: number | null
+    expiredQty: number | null
     transactionCount: number | null
     ptr: string | null
     costPerUnit: Decimal | null
@@ -4914,6 +4918,7 @@ export namespace Prisma {
     expiryDate: number
     officeId: number
     stock: number
+    expiredQty: number
     transactionCount: number
     ptr: number
     costPerUnit: number
@@ -4929,6 +4934,7 @@ export namespace Prisma {
     inventoryItemId?: true
     officeId?: true
     stock?: true
+    expiredQty?: true
     transactionCount?: true
     costPerUnit?: true
   }
@@ -4938,6 +4944,7 @@ export namespace Prisma {
     inventoryItemId?: true
     officeId?: true
     stock?: true
+    expiredQty?: true
     transactionCount?: true
     costPerUnit?: true
   }
@@ -4952,6 +4959,7 @@ export namespace Prisma {
     expiryDate?: true
     officeId?: true
     stock?: true
+    expiredQty?: true
     transactionCount?: true
     ptr?: true
     costPerUnit?: true
@@ -4970,6 +4978,7 @@ export namespace Prisma {
     expiryDate?: true
     officeId?: true
     stock?: true
+    expiredQty?: true
     transactionCount?: true
     ptr?: true
     costPerUnit?: true
@@ -4988,6 +4997,7 @@ export namespace Prisma {
     expiryDate?: true
     officeId?: true
     stock?: true
+    expiredQty?: true
     transactionCount?: true
     ptr?: true
     costPerUnit?: true
@@ -5093,6 +5103,7 @@ export namespace Prisma {
     expiryDate: Date | null
     officeId: number | null
     stock: number
+    expiredQty: number
     transactionCount: number
     ptr: string | null
     costPerUnit: Decimal | null
@@ -5130,6 +5141,7 @@ export namespace Prisma {
     expiryDate?: boolean
     officeId?: boolean
     stock?: boolean
+    expiredQty?: boolean
     transactionCount?: boolean
     ptr?: boolean
     costPerUnit?: boolean
@@ -5153,6 +5165,7 @@ export namespace Prisma {
     expiryDate?: boolean
     officeId?: boolean
     stock?: boolean
+    expiredQty?: boolean
     transactionCount?: boolean
     ptr?: boolean
     costPerUnit?: boolean
@@ -5185,6 +5198,7 @@ export namespace Prisma {
       expiryDate: Date | null
       officeId: number | null
       stock: number
+      expiredQty: number
       transactionCount: number
       ptr: string | null
       costPerUnit: Prisma.Decimal | null
@@ -5572,6 +5586,7 @@ export namespace Prisma {
     readonly expiryDate: FieldRef<"InventoryBatch", 'DateTime'>
     readonly officeId: FieldRef<"InventoryBatch", 'Int'>
     readonly stock: FieldRef<"InventoryBatch", 'Int'>
+    readonly expiredQty: FieldRef<"InventoryBatch", 'Int'>
     readonly transactionCount: FieldRef<"InventoryBatch", 'Int'>
     readonly ptr: FieldRef<"InventoryBatch", 'String'>
     readonly costPerUnit: FieldRef<"InventoryBatch", 'Decimal'>
@@ -11835,6 +11850,7 @@ export namespace Prisma {
     expiryDate: 'expiryDate',
     officeId: 'officeId',
     stock: 'stock',
+    expiredQty: 'expiredQty',
     transactionCount: 'transactionCount',
     ptr: 'ptr',
     costPerUnit: 'costPerUnit',
@@ -12240,6 +12256,7 @@ export namespace Prisma {
     expiryDate?: DateTimeNullableFilter<"InventoryBatch"> | Date | string | null
     officeId?: IntNullableFilter<"InventoryBatch"> | number | null
     stock?: IntFilter<"InventoryBatch"> | number
+    expiredQty?: IntFilter<"InventoryBatch"> | number
     transactionCount?: IntFilter<"InventoryBatch"> | number
     ptr?: StringNullableFilter<"InventoryBatch"> | string | null
     costPerUnit?: DecimalNullableFilter<"InventoryBatch"> | Decimal | DecimalJsLike | number | string | null
@@ -12261,6 +12278,7 @@ export namespace Prisma {
     expiryDate?: SortOrderInput | SortOrder
     officeId?: SortOrderInput | SortOrder
     stock?: SortOrder
+    expiredQty?: SortOrder
     transactionCount?: SortOrder
     ptr?: SortOrderInput | SortOrder
     costPerUnit?: SortOrderInput | SortOrder
@@ -12286,6 +12304,7 @@ export namespace Prisma {
     expiryDate?: DateTimeNullableFilter<"InventoryBatch"> | Date | string | null
     officeId?: IntNullableFilter<"InventoryBatch"> | number | null
     stock?: IntFilter<"InventoryBatch"> | number
+    expiredQty?: IntFilter<"InventoryBatch"> | number
     transactionCount?: IntFilter<"InventoryBatch"> | number
     ptr?: StringNullableFilter<"InventoryBatch"> | string | null
     costPerUnit?: DecimalNullableFilter<"InventoryBatch"> | Decimal | DecimalJsLike | number | string | null
@@ -12307,6 +12326,7 @@ export namespace Prisma {
     expiryDate?: SortOrderInput | SortOrder
     officeId?: SortOrderInput | SortOrder
     stock?: SortOrder
+    expiredQty?: SortOrder
     transactionCount?: SortOrder
     ptr?: SortOrderInput | SortOrder
     costPerUnit?: SortOrderInput | SortOrder
@@ -12333,6 +12353,7 @@ export namespace Prisma {
     expiryDate?: DateTimeNullableWithAggregatesFilter<"InventoryBatch"> | Date | string | null
     officeId?: IntNullableWithAggregatesFilter<"InventoryBatch"> | number | null
     stock?: IntWithAggregatesFilter<"InventoryBatch"> | number
+    expiredQty?: IntWithAggregatesFilter<"InventoryBatch"> | number
     transactionCount?: IntWithAggregatesFilter<"InventoryBatch"> | number
     ptr?: StringNullableWithAggregatesFilter<"InventoryBatch"> | string | null
     costPerUnit?: DecimalNullableWithAggregatesFilter<"InventoryBatch"> | Decimal | DecimalJsLike | number | string | null
@@ -13058,6 +13079,7 @@ export namespace Prisma {
     stockNumber?: string | null
     expiryDate?: Date | string | null
     stock?: number
+    expiredQty?: number
     transactionCount?: number
     ptr?: string | null
     costPerUnit?: Decimal | DecimalJsLike | number | string | null
@@ -13079,6 +13101,7 @@ export namespace Prisma {
     expiryDate?: Date | string | null
     officeId?: number | null
     stock?: number
+    expiredQty?: number
     transactionCount?: number
     ptr?: string | null
     costPerUnit?: Decimal | DecimalJsLike | number | string | null
@@ -13095,6 +13118,7 @@ export namespace Prisma {
     stockNumber?: NullableStringFieldUpdateOperationsInput | string | null
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
+    expiredQty?: IntFieldUpdateOperationsInput | number
     transactionCount?: IntFieldUpdateOperationsInput | number
     ptr?: NullableStringFieldUpdateOperationsInput | string | null
     costPerUnit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -13116,6 +13140,7 @@ export namespace Prisma {
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     officeId?: NullableIntFieldUpdateOperationsInput | number | null
     stock?: IntFieldUpdateOperationsInput | number
+    expiredQty?: IntFieldUpdateOperationsInput | number
     transactionCount?: IntFieldUpdateOperationsInput | number
     ptr?: NullableStringFieldUpdateOperationsInput | string | null
     costPerUnit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -13135,6 +13160,7 @@ export namespace Prisma {
     expiryDate?: Date | string | null
     officeId?: number | null
     stock?: number
+    expiredQty?: number
     transactionCount?: number
     ptr?: string | null
     costPerUnit?: Decimal | DecimalJsLike | number | string | null
@@ -13150,6 +13176,7 @@ export namespace Prisma {
     stockNumber?: NullableStringFieldUpdateOperationsInput | string | null
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
+    expiredQty?: IntFieldUpdateOperationsInput | number
     transactionCount?: IntFieldUpdateOperationsInput | number
     ptr?: NullableStringFieldUpdateOperationsInput | string | null
     costPerUnit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -13168,6 +13195,7 @@ export namespace Prisma {
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     officeId?: NullableIntFieldUpdateOperationsInput | number | null
     stock?: IntFieldUpdateOperationsInput | number
+    expiredQty?: IntFieldUpdateOperationsInput | number
     transactionCount?: IntFieldUpdateOperationsInput | number
     ptr?: NullableStringFieldUpdateOperationsInput | string | null
     costPerUnit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -14034,6 +14062,7 @@ export namespace Prisma {
     expiryDate?: SortOrder
     officeId?: SortOrder
     stock?: SortOrder
+    expiredQty?: SortOrder
     transactionCount?: SortOrder
     ptr?: SortOrder
     costPerUnit?: SortOrder
@@ -14047,6 +14076,7 @@ export namespace Prisma {
     inventoryItemId?: SortOrder
     officeId?: SortOrder
     stock?: SortOrder
+    expiredQty?: SortOrder
     transactionCount?: SortOrder
     costPerUnit?: SortOrder
   }
@@ -14061,6 +14091,7 @@ export namespace Prisma {
     expiryDate?: SortOrder
     officeId?: SortOrder
     stock?: SortOrder
+    expiredQty?: SortOrder
     transactionCount?: SortOrder
     ptr?: SortOrder
     costPerUnit?: SortOrder
@@ -14079,6 +14110,7 @@ export namespace Prisma {
     expiryDate?: SortOrder
     officeId?: SortOrder
     stock?: SortOrder
+    expiredQty?: SortOrder
     transactionCount?: SortOrder
     ptr?: SortOrder
     costPerUnit?: SortOrder
@@ -14092,6 +14124,7 @@ export namespace Prisma {
     inventoryItemId?: SortOrder
     officeId?: SortOrder
     stock?: SortOrder
+    expiredQty?: SortOrder
     transactionCount?: SortOrder
     costPerUnit?: SortOrder
   }
@@ -15436,6 +15469,7 @@ export namespace Prisma {
     stockNumber?: string | null
     expiryDate?: Date | string | null
     stock?: number
+    expiredQty?: number
     transactionCount?: number
     ptr?: string | null
     costPerUnit?: Decimal | DecimalJsLike | number | string | null
@@ -15455,6 +15489,7 @@ export namespace Prisma {
     stockNumber?: string | null
     expiryDate?: Date | string | null
     stock?: number
+    expiredQty?: number
     transactionCount?: number
     ptr?: string | null
     costPerUnit?: Decimal | DecimalJsLike | number | string | null
@@ -15639,6 +15674,7 @@ export namespace Prisma {
     expiryDate?: DateTimeNullableFilter<"InventoryBatch"> | Date | string | null
     officeId?: IntNullableFilter<"InventoryBatch"> | number | null
     stock?: IntFilter<"InventoryBatch"> | number
+    expiredQty?: IntFilter<"InventoryBatch"> | number
     transactionCount?: IntFilter<"InventoryBatch"> | number
     ptr?: StringNullableFilter<"InventoryBatch"> | string | null
     costPerUnit?: DecimalNullableFilter<"InventoryBatch"> | Decimal | DecimalJsLike | number | string | null
@@ -15867,6 +15903,7 @@ export namespace Prisma {
     stockNumber?: string | null
     expiryDate?: Date | string | null
     stock?: number
+    expiredQty?: number
     transactionCount?: number
     ptr?: string | null
     costPerUnit?: Decimal | DecimalJsLike | number | string | null
@@ -15886,6 +15923,7 @@ export namespace Prisma {
     expiryDate?: Date | string | null
     officeId?: number | null
     stock?: number
+    expiredQty?: number
     transactionCount?: number
     ptr?: string | null
     costPerUnit?: Decimal | DecimalJsLike | number | string | null
@@ -16267,6 +16305,7 @@ export namespace Prisma {
     stockNumber?: string | null
     expiryDate?: Date | string | null
     stock?: number
+    expiredQty?: number
     transactionCount?: number
     ptr?: string | null
     costPerUnit?: Decimal | DecimalJsLike | number | string | null
@@ -16287,6 +16326,7 @@ export namespace Prisma {
     expiryDate?: Date | string | null
     officeId?: number | null
     stock?: number
+    expiredQty?: number
     transactionCount?: number
     ptr?: string | null
     costPerUnit?: Decimal | DecimalJsLike | number | string | null
@@ -16382,6 +16422,7 @@ export namespace Prisma {
     stockNumber?: NullableStringFieldUpdateOperationsInput | string | null
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
+    expiredQty?: IntFieldUpdateOperationsInput | number
     transactionCount?: IntFieldUpdateOperationsInput | number
     ptr?: NullableStringFieldUpdateOperationsInput | string | null
     costPerUnit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -16402,6 +16443,7 @@ export namespace Prisma {
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     officeId?: NullableIntFieldUpdateOperationsInput | number | null
     stock?: IntFieldUpdateOperationsInput | number
+    expiredQty?: IntFieldUpdateOperationsInput | number
     transactionCount?: IntFieldUpdateOperationsInput | number
     ptr?: NullableStringFieldUpdateOperationsInput | string | null
     costPerUnit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -16953,6 +16995,7 @@ export namespace Prisma {
     stockNumber?: string | null
     expiryDate?: Date | string | null
     stock?: number
+    expiredQty?: number
     transactionCount?: number
     ptr?: string | null
     costPerUnit?: Decimal | DecimalJsLike | number | string | null
@@ -17040,6 +17083,7 @@ export namespace Prisma {
     stockNumber?: NullableStringFieldUpdateOperationsInput | string | null
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
+    expiredQty?: IntFieldUpdateOperationsInput | number
     transactionCount?: IntFieldUpdateOperationsInput | number
     ptr?: NullableStringFieldUpdateOperationsInput | string | null
     costPerUnit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -17059,6 +17103,7 @@ export namespace Prisma {
     stockNumber?: NullableStringFieldUpdateOperationsInput | string | null
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
+    expiredQty?: IntFieldUpdateOperationsInput | number
     transactionCount?: IntFieldUpdateOperationsInput | number
     ptr?: NullableStringFieldUpdateOperationsInput | string | null
     costPerUnit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -17077,6 +17122,7 @@ export namespace Prisma {
     stockNumber?: NullableStringFieldUpdateOperationsInput | string | null
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
+    expiredQty?: IntFieldUpdateOperationsInput | number
     transactionCount?: IntFieldUpdateOperationsInput | number
     ptr?: NullableStringFieldUpdateOperationsInput | string | null
     costPerUnit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -17260,6 +17306,7 @@ export namespace Prisma {
     expiryDate?: Date | string | null
     officeId?: number | null
     stock?: number
+    expiredQty?: number
     transactionCount?: number
     ptr?: string | null
     costPerUnit?: Decimal | DecimalJsLike | number | string | null
@@ -17303,6 +17350,7 @@ export namespace Prisma {
     stockNumber?: NullableStringFieldUpdateOperationsInput | string | null
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     stock?: IntFieldUpdateOperationsInput | number
+    expiredQty?: IntFieldUpdateOperationsInput | number
     transactionCount?: IntFieldUpdateOperationsInput | number
     ptr?: NullableStringFieldUpdateOperationsInput | string | null
     costPerUnit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -17322,6 +17370,7 @@ export namespace Prisma {
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     officeId?: NullableIntFieldUpdateOperationsInput | number | null
     stock?: IntFieldUpdateOperationsInput | number
+    expiredQty?: IntFieldUpdateOperationsInput | number
     transactionCount?: IntFieldUpdateOperationsInput | number
     ptr?: NullableStringFieldUpdateOperationsInput | string | null
     costPerUnit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -17340,6 +17389,7 @@ export namespace Prisma {
     expiryDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     officeId?: NullableIntFieldUpdateOperationsInput | number | null
     stock?: IntFieldUpdateOperationsInput | number
+    expiredQty?: IntFieldUpdateOperationsInput | number
     transactionCount?: IntFieldUpdateOperationsInput | number
     ptr?: NullableStringFieldUpdateOperationsInput | string | null
     costPerUnit?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null

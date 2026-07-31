@@ -106,12 +106,16 @@ const Dashboard = () => {
     icon: act.type === 'expired' ? activityExpiredIcon 
       : act.type === 'warning' ? activityNearExpiryIcon 
       : act.type === 'allocated' ? activityAllocatedIcon 
+      : act.type === 'approved' ? activityAllocatedIcon 
+      : act.type === 'requisitioned' ? activityAddedIcon 
       : act.type === 'added' ? activityAddedIcon 
       : act.type === 'restocked' ? activityAddedIcon
       : activityIssuedIcon,
     bgColor: act.type === 'expired' ? '#ffe6e6' 
       : act.type === 'warning' ? '#fff3cd' 
       : act.type === 'allocated' ? '#eac7ffff' 
+      : act.type === 'approved' ? '#d4f8e8' 
+      : act.type === 'requisitioned' ? '#e0f2ff' 
       : act.type === 'added' ? '#e6f9e6' 
       : act.type === 'restocked' ? '#dbeafe'
       : '#e6fff3ff'

@@ -68,6 +68,7 @@ model InventoryBatch {
   expiryDate       DateTime? @db.Date @map("expiry_date")
   officeId         Int?      @map("office_id")
   stock            Int       @default(0)
+  expiredQty       Int       @default(0) @map("expired_qty")
   transactionCount Int       @default(0) @map("transaction_count")
   ptr              String?   @db.VarChar(100)
   costPerUnit      Decimal?  @db.Decimal(10, 2) @map("cost_per_unit")

@@ -163,6 +163,7 @@ exports.Prisma.InventoryBatchScalarFieldEnum = {
   expiryDate: 'expiryDate',
   officeId: 'officeId',
   stock: 'stock',
+  expiredQty: 'expiredQty',
   transactionCount: 'transactionCount',
   ptr: 'ptr',
   costPerUnit: 'costPerUnit',

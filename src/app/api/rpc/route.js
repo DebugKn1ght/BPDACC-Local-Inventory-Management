@@ -142,17 +142,21 @@ export async function POST(req) {
         const [office, isAdmin, userOfficeId] = args;
         console.log('[API getItems] args:', { office, isAdmin, userOfficeId });
 
-        const todayStart = new Date();
-        todayStart.setHours(0, 0, 0, 0);
+        const todayEnd = new Date();
+        todayEnd.setHours(23, 59, 59, 999);
 
         await prisma.$transaction(async (tx) => {
           const expiredBatches = await tx.inventoryBatch.findMany({
             where: {
-              expiryDate: { lt: todayStart },
+              expiryDate: { lte: todayEnd },
               stock: { gt: 0 }
             },
             orderBy: { id: 'asc' },
-            take: 200
+            take: 200,
+            include: {
+              inventoryItem: true,
+              office: true
+            }
           });
 
           for (const batch of expiredBatches) {
@@ -186,7 +190,18 @@ export async function POST(req) {
               where: { id: batch.id },
               data: {
                 stock: 0,
+                expiredQty: { increment: expiredQty },
                 transactionCount: { increment: 1 }
+              }
+            });
+
+            await tx.activity.create({
+              data: {
+                item: `${batch.inventoryItem?.name || 'Unknown'} (${batch.batchId})`,
+                office: batch.office ? batch.office.name : 'Unallocated',
+                action: `Expired batch ${batch.batchId} (${expiredQty} ${batch.inventoryItem?.unit || ''})`,
+                type: 'expired',
+                time: new Date().toLocaleTimeString()
               }
             });
           }
@@ -508,9 +523,19 @@ export async function POST(req) {
                 }))
               }
             },
-            include: { items: true }
+            include: { items: true, office: true }
           });
           
+          await tx.activity.create({
+            data: {
+              item: `RIS-${yearMonth}-${String(counterRecord.counter).padStart(4, '0')}`,
+              office: req.office ? req.office.name : 'Unallocated',
+              action: `RIS submitted by ${requisitionData.requestedByPrintedName || 'Unknown'}`,
+              type: 'requisitioned',
+              time: new Date().toLocaleTimeString()
+            }
+          });
+
           return req;
         });
         break;
@@ -580,6 +605,16 @@ export async function POST(req) {
             where: { id: requisitionId },
             data: { status: newStatus },
             include: { items: true, requestedBy: true, office: true }
+          });
+
+          await tx.activity.create({
+            data: {
+              item: requisition.risNo,
+              office: requisition.office ? requisition.office.name : 'Unallocated',
+              action: `RIS approved by ${requisition.requestedByPrintedName || 'Unknown'}`,
+              type: 'approved',
+              time: new Date().toLocaleTimeString()
+            }
           });
 
           // Process each item's release data

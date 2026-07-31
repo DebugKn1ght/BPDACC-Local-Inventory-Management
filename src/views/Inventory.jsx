@@ -894,6 +894,7 @@ const Inventory = () => {
                                   <th>Stock #</th>
                                   <th>Office</th>
                                   <th>Stock</th>
+                                  <th>Expired Qty</th>
                                   <th>Expiry Date</th>
                                   <th>Status</th>
                                 </tr>
@@ -917,7 +918,8 @@ const Inventory = () => {
                                       <td>{batch.supplier || '-'}</td>
                                       <td>{batch.stockNumber || '-'}</td>
                                       <td><span className="office-tag">{batch.office}</span></td>
-                                      <td>{batch.stock} {item.unit}</td>
+                                      <td>{batchExpired ? '-' : `${batch.stock} ${item.unit}`}</td>
+                                      <td>{batch.expiredQty ? `${batch.expiredQty} ${item.unit}` : '-'}</td>
                                       <td className={`expiry-cell ${batchNearExpiry ? 'near' : batchExpired ? 'expired' : ''}`}>
                                         {formatExpiryDate(batch.expiryDate)}
                                       </td>
