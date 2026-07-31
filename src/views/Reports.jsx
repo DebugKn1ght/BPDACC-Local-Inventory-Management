@@ -7,12 +7,53 @@
  * - Printable formal reports with signature blocks
  */
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import Icon from '../components/Icon'
+
+import totalSuppliesIcon from '../assets/icons/reports/total-supplies.svg'
+import supplyTypesIcon from '../assets/icons/reports/types.svg'
+import lowStockIcon from '../assets/icons/reports/low-stock.svg'
+import outOfStockIcon from '../assets/icons/reports/out-of-stock.svg'
+import expiringIcon from '../assets/icons/reports/expiring.svg'
+import printerIcon from '../assets/icons/reports/printer.svg'
 
 const Reports = () => {
+  const isWip = false // WIP / cover mode
   const [timePeriod, setTimePeriod] = useState('monthly') // 'weekly', 'monthly', 'yearly'
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().slice(0, 7))
   const [selectedOffice, setSelectedOffice] = useState('all')
+  const [statsPage, setStatsPage] = useState(0)
+  const [statsPerPage, setStatsPerPage] = useState(3)
+  const [graphData, setGraphData] = useState(() => ({
+    supplyRequests: [
+      { department: 'Hemodialysis', submitted: 12, approved: 10, rejected: 1, pending: 1 },
+      { department: 'Clinical Laboratory', submitted: 8, approved: 7, rejected: 0, pending: 1 },
+      { department: 'Radiology', submitted: 6, approved: 5, rejected: 1, pending: 0 },
+      { department: 'Admin Office', submitted: 4, approved: 3, rejected: 0, pending: 1 },
+    ],
+    inventoryStatus: [
+      { name: 'Available', value: 82, color: '#10b981' },
+      { name: 'Low Stock', value: 12, color: '#f59e0b' },
+      { name: 'Critical', value: 4, color: '#ef4444' },
+      { name: 'Out of Stock', value: 2, color: '#6b7280' },
+    ],
+    requestsOverTime: [
+      { label: 'Jan', count: 28 },
+      { label: 'Feb', count: 35 },
+      { label: 'Mar', count: 42 },
+      { label: 'Apr', count: 38 },
+      { label: 'May', count: 45 },
+      { label: 'Jun', count: 52 },
+    ],
+    topItems: [
+      { name: 'Syringes 5ml', count: 45 },
+      { name: 'Gauze Pads (4x4)', count: 32 },
+      { name: 'Alcohol Swabs', count: 28 },
+      { name: 'Bandages (Assorted)', count: 22 },
+      { name: 'Needles 21G', count: 18 },
+    ],
+  }))
+  const [isGraphUpdating, setIsGraphUpdating] = useState(false)
 
   const inventoryItems = [
     {
@@ -75,43 +116,14 @@ const Reports = () => {
     }
   ]
 
-  const supplyRequests = [
-    { department: 'Hemodialysis', submitted: 12, approved: 10, rejected: 1, pending: 1 },
-    { department: 'Clinical Laboratory', submitted: 8, approved: 7, rejected: 0, pending: 1 },
-    { department: 'Radiology', submitted: 6, approved: 5, rejected: 1, pending: 0 },
-    { department: 'Admin Office', submitted: 4, approved: 3, rejected: 0, pending: 1 },
-  ]
-
-  const topItems = [
-    { name: 'Syringes 5ml', count: 45 },
-    { name: 'Gauze Pads (4x4)', count: 32 },
-    { name: 'Alcohol Swabs', count: 28 },
-    { name: 'Bandages (Assorted)', count: 22 },
-    { name: 'Needles 21G', count: 18 },
-  ]
-
-  const inventoryStatus = [
-    { name: 'Available', value: 82, color: '#10b981' },
-    { name: 'Low Stock', value: 12, color: '#f59e0b' },
-    { name: 'Critical', value: 4, color: '#ef4444' },
-    { name: 'Out of Stock', value: 2, color: '#6b7280' },
-  ]
-
-  const monthlyRequests = [
-    { month: 'Jan', count: 28 },
-    { month: 'Feb', count: 35 },
-    { month: 'Mar', count: 42 },
-    { month: 'Apr', count: 38 },
-    { month: 'May', count: 45 },
-    { month: 'Jun', count: 52 },
-  ]
-
   const monthNames = [
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
   ]
-  const [year, month] = selectedDate.split('-')
-  const monthName = monthNames[parseInt(month) - 1]
+  const dateParts = `${selectedDate}`.split('-')
+  const year = dateParts[0] || `${new Date().getFullYear()}`
+  const month = dateParts[1] || '01'
+  const monthName = monthNames[parseInt(month, 10) - 1] || monthNames[0]
 
   const handlePrint = () => {
     window.print()
@@ -155,6 +167,133 @@ const Reports = () => {
     return count + (itemHasExpiring ? 1 : 0)
   }, 0)
 
+  const stats = [
+    { label: 'Total Supplies in Inventory', value: totalSupplies.toLocaleString(), icon: totalSuppliesIcon, bgColor: '#dbeafe' },
+    { label: 'Total Different Supply Types', value: totalSupplyTypes.toString(), icon: supplyTypesIcon, bgColor: '#e0e7ff' },
+    { label: 'Low Stock Items', value: lowStockItems.toString(), icon: lowStockIcon, bgColor: '#fef3c7' },
+    { label: 'Out of Stock Items', value: outOfStockItems.toString(), icon: outOfStockIcon, bgColor: '#fee2e2' },
+    { label: 'Expiring Within 30 Days', value: expiringIn30Days.toString(), icon: expiringIcon, bgColor: '#fce7f3' },
+  ]
+
+  useEffect(() => {
+    const resolve = () => {
+      const width = window.innerWidth
+      const next = width >= 1280 ? 3 : width >= 1024 ? 2 : 1
+      setStatsPerPage(next)
+    }
+    resolve()
+    window.addEventListener('resize', resolve)
+    return () => window.removeEventListener('resize', resolve)
+  }, [])
+
+  const statsTotalPages = Math.ceil(stats.length / statsPerPage)
+
+  useEffect(() => {
+    if (statsPage > statsTotalPages - 1) {
+      setStatsPage(Math.max(0, statsTotalPages - 1))
+    }
+  }, [statsPage, statsTotalPages])
+
+  const statsPages = Array.from({ length: statsTotalPages }, (_, i) => {
+    const start = i * statsPerPage
+    return stats.slice(start, start + statsPerPage)
+  })
+
+  useEffect(() => {
+    const hashSeed = (value) => {
+      let h = 2166136261
+      for (let i = 0; i < value.length; i++) {
+        h ^= value.charCodeAt(i)
+        h = Math.imul(h, 16777619)
+      }
+      return h >>> 0
+    }
+
+    const createRng = (seed) => {
+      let s = seed >>> 0
+      return () => {
+        s = (Math.imul(1664525, s) + 1013904223) >>> 0
+        return s / 4294967296
+      }
+    }
+
+    const selectedOfficeLabel = (() => {
+      if (selectedOffice === 'all') return null
+      if (selectedOffice === 'hemodialysis') return 'Hemodialysis'
+      if (selectedOffice === 'clinical-laboratory') return 'Clinical Laboratory'
+      if (selectedOffice === 'radiology') return 'Radiology'
+      if (selectedOffice === 'admin-office') return 'Admin Office'
+      return null
+    })()
+
+    const seed = hashSeed(`${timePeriod}|${selectedDate}|${selectedOffice}`)
+    const rng = createRng(seed)
+
+    const supplyRequests = ['Hemodialysis', 'Clinical Laboratory', 'Radiology', 'Admin Office'].map((department) => {
+      const officeBoost = selectedOfficeLabel === department ? 1.2 : 1
+      const submitted = Math.max(1, Math.round((6 + rng() * 12) * officeBoost))
+      const rejected = Math.min(submitted, Math.floor(rng() * 3))
+      const approved = Math.max(0, submitted - rejected - Math.floor(rng() * 4))
+      const pending = Math.max(0, submitted - approved - rejected)
+      return { department, submitted, approved, rejected, pending }
+    })
+
+    const inventoryStatusRaw = [
+      { name: 'Available', value: 70 + rng() * 22, color: '#10b981' },
+      { name: 'Low Stock', value: 7 + rng() * 12, color: '#f59e0b' },
+      { name: 'Critical', value: 2 + rng() * 7, color: '#ef4444' },
+      { name: 'Out of Stock', value: 1 + rng() * 5, color: '#6b7280' },
+    ]
+    const rawSum = inventoryStatusRaw.reduce((sum, s) => sum + s.value, 0)
+    const normalized = inventoryStatusRaw.map((s) => ({ ...s, value: Math.max(0, Math.round((s.value / rawSum) * 100)) }))
+    const normalizedSum = normalized.reduce((sum, s) => sum + s.value, 0)
+    normalized[normalized.length - 1] = { ...normalized[normalized.length - 1], value: Math.max(0, normalized[normalized.length - 1].value + (100 - normalizedSum)) }
+
+    const makeLabels = () => {
+      if (timePeriod === 'yearly') {
+        const baseYear = parseInt(year, 10) || new Date().getFullYear()
+        return Array.from({ length: 6 }, (_, i) => `${baseYear - (5 - i)}`)
+      }
+      if (timePeriod === 'weekly') {
+        return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+      }
+      const base = new Date((parseInt(year, 10) || new Date().getFullYear()), (parseInt(month, 10) || 1) - 1, 1)
+      return Array.from({ length: 6 }, (_, i) => {
+        const d = new Date(base)
+        d.setMonth(base.getMonth() - (5 - i))
+        return monthNames[d.getMonth()].slice(0, 3)
+      })
+    }
+
+    const requestLabels = makeLabels()
+    const requestsOverTime = requestLabels.map((label) => ({
+      label,
+      count: Math.round(18 + rng() * 50),
+    }))
+
+    const topItems = [
+      'Syringes 5ml',
+      'Gauze Pads (4x4)',
+      'Alcohol Swabs',
+      'Bandages (Assorted)',
+      'Needles 21G',
+    ].map((name) => ({
+      name,
+      count: Math.round(10 + rng() * 55),
+    })).sort((a, b) => b.count - a.count)
+
+    setGraphData({
+      supplyRequests,
+      inventoryStatus: normalized,
+      requestsOverTime,
+      topItems,
+    })
+
+    setIsGraphUpdating(true)
+    const t = window.setTimeout(() => setIsGraphUpdating(false), 360)
+    return () => window.clearTimeout(t)
+  }, [timePeriod, selectedDate, selectedOffice, year, month])
+
   const getPeriodLabel = () => {
     if (timePeriod === 'weekly') return 'Week of June 24 - June 30, 2026'
     if (timePeriod === 'monthly') return `${monthName} ${year}`
@@ -173,14 +312,43 @@ const Reports = () => {
 
   return (
     <div className="reports">
-      <div className="screen-view no-print">
+      {isWip ? (
+        <div className="reports-wip-overlay">
+          <div className="reports-wip-card">
+            <div className="reports-wip-badge">WIP</div>
+            <div className="reports-wip-title">Reports</div>
+            <div className="reports-wip-subtitle">Under construction</div>
+            <div className="reports-wip-anim-row">
+              <div className="reports-wip-spinner" aria-hidden="true" />
+              <div className="reports-wip-dots" aria-hidden="true">
+                <span />
+                <span />
+                <span />
+              </div>
+            </div>
+            <div className="reports-wip-tape" aria-hidden="true">
+              <div className="reports-wip-tape-inner" />
+            </div>
+            <div className="reports-wip-note">
+              This section is being built. Inventory and Requisition features are ready to use.
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      <div className={`screen-view no-print ${isWip ? 'reports-wip-blur' : ''}`}>
         <div className="page-header">
           <div>
             <h1 className="page-title">{getReportTitle()}</h1>
             <p className="page-subtitle">Purpose: {getPurpose()}</p>
           </div>
           <div className="header-actions">
-            <button className="btn-primary" onClick={handlePrint}>🖨️ Print Report</button>
+            <button className="btn-primary" onClick={handlePrint}>
+              <span className="btn-icon">
+                <Icon src={printerIcon} alt="Print" size={18} />
+              </span>
+              Print Report
+            </button>
           </div>
         </div>
 
@@ -222,42 +390,47 @@ const Reports = () => {
           </div>
         </div>
 
-        <div className="stats-grid">
-          <div className="stat-card">
-            <div className="stat-icon" style={{ background: '#dbeafe', color: '#1e40af' }}>📦</div>
-            <div>
-              <div className="stat-value">{totalSupplies.toLocaleString()}</div>
-              <div className="stat-label">Total Supplies in Inventory</div>
+        <div className="stats-carousel">
+          <div className="stats-viewport">
+            <div
+              className="stats-track"
+              style={{ transform: `translateX(-${statsPage * 100}%)` }}
+            >
+              {statsPages.map((page, pageIndex) => (
+                <div
+                  key={pageIndex}
+                  className="stats-page"
+                  style={{ gridTemplateColumns: `repeat(${statsPerPage}, minmax(0, 1fr))` }}
+                >
+                  {page.map((stat) => (
+                    <div key={stat.label} className="stat-card">
+                      <div className="stat-icon" style={{ background: stat.bgColor }}>
+                        <Icon src={stat.icon} alt={stat.label} size={32} />
+                      </div>
+                      <div className="stat-content">
+                        <div className="stat-value">{stat.value}</div>
+                        <div className="stat-label">{stat.label}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ))}
             </div>
           </div>
-          <div className="stat-card">
-            <div className="stat-icon" style={{ background: '#e0e7ff', color: '#3730a3' }}>📋</div>
-            <div>
-              <div className="stat-value">{totalSupplyTypes}</div>
-              <div className="stat-label">Total Different Supply Types</div>
+
+          {statsTotalPages > 1 ? (
+            <div className="stats-dots">
+              {Array.from({ length: statsTotalPages }, (_, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  className={`stats-dot ${i === statsPage ? 'is-active' : ''}`}
+                  onClick={() => setStatsPage(i)}
+                  aria-label={`Stats page ${i + 1}`}
+                />
+              ))}
             </div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-icon" style={{ background: '#fef3c7', color: '#92400e' }}>⚠️</div>
-            <div>
-              <div className="stat-value">{lowStockItems}</div>
-              <div className="stat-label">Low Stock Items</div>
-            </div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-icon" style={{ background: '#fee2e2', color: '#991b1b' }}>⛔</div>
-            <div>
-              <div className="stat-value">{outOfStockItems}</div>
-              <div className="stat-label">Out of Stock Items</div>
-            </div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-icon" style={{ background: '#fce7f3', color: '#be185d' }}>⏰</div>
-            <div>
-              <div className="stat-value">{expiringIn30Days}</div>
-              <div className="stat-label">Expiring Within 30 Days</div>
-            </div>
-          </div>
+          ) : null}
         </div>
 
         <div className="flex-container" style={{ display: 'flex', gap: '24px', marginBottom: '24px', flexWrap: 'wrap' }}>
@@ -265,11 +438,11 @@ const Reports = () => {
             <div className="card-header">
               <h2 className="card-title">Inventory Status</h2>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '32px', alignItems: 'center', flexWrap: 'wrap' }}>
+            <div className={`reports-graph ${isGraphUpdating ? 'is-updating' : ''}`} style={{ display: 'flex', justifyContent: 'center', gap: '32px', alignItems: 'center', flexWrap: 'wrap' }}>
               <svg width="200" height="200" viewBox="0 0 200 200" style={{ transform: 'rotate(-90deg)' }}>
                 {(() => {
                   let currentAngle = 0
-                  return inventoryStatus.map((status, index) => {
+                  return (graphData?.inventoryStatus || []).map((status, index) => {
                     const angle = (status.value / 100) * 2 * Math.PI
                     const x1 = 100 + 90 * Math.cos(currentAngle)
                     const y1 = 100 + 90 * Math.sin(currentAngle)
@@ -284,7 +457,7 @@ const Reports = () => {
                 <circle cx="100" cy="100" r="50" fill="white" />
               </svg>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', minWidth: '150px' }}>
-                {inventoryStatus.map((status, index) => (
+                {(graphData?.inventoryStatus || []).map((status, index) => (
                   <div key={index} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <div style={{ width: '16px', height: '16px', borderRadius: '4px', background: status.color }} />
@@ -299,17 +472,18 @@ const Reports = () => {
 
           <div className="card" style={{ flex: 1, minWidth: 0 }}>
             <div className="card-header">
-              <h2 className="card-title">Monthly Supply Requests</h2>
+              <h2 className="card-title">{timePeriod === 'weekly' ? 'Weekly Supply Requests' : timePeriod === 'yearly' ? 'Yearly Supply Requests' : 'Monthly Supply Requests'}</h2>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'flex-end', height: '180px', padding: '12px 0' }}>
+            <div className={`reports-graph ${isGraphUpdating ? 'is-updating' : ''}`} style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'flex-end', height: '180px', padding: '12px 0' }}>
               {(() => {
-                const maxCount = Math.max(...monthlyRequests.map(item => item.count))
-                return monthlyRequests.map((item, index) => (
+                const list = graphData?.requestsOverTime || []
+                const maxCount = Math.max(1, ...list.map(item => item.count))
+                return list.map((item, index) => (
                   <div key={index} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
                     <div style={{ width: '40px', background: '#1e40af', borderRadius: '4px 4px 0 0', transition: 'height 0.3s ease', height: `${(item.count / maxCount) * 140}px`, display: 'flex', justifyContent: 'center', alignItems: 'flex-end', paddingBottom: '8px' }}>
                       <span style={{ color: 'white', fontWeight: '600', fontSize: '12px' }}>{item.count}</span>
                     </div>
-                    <span style={{ fontSize: '13px', color: '#4b5563', fontWeight: '500' }}>{item.month}</span>
+                    <span style={{ fontSize: '13px', color: '#4b5563', fontWeight: '500' }}>{item.label}</span>
                   </div>
                 ))
               })()}
@@ -329,17 +503,15 @@ const Reports = () => {
                     <th>Department</th>
                     <th className="number-cell">Request Submitted</th>
                     <th className="number-cell">Approved</th>
-                    <th className="number-cell">Rejected</th>
                     <th className="number-cell">Pending</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {supplyRequests.map((dept, index) => (
+                  {(graphData?.supplyRequests || []).map((dept, index) => (
                     <tr key={index}>
                       <td>{dept.department}</td>
                       <td className="number-cell">{dept.submitted}</td>
                       <td className="number-cell">{dept.approved}</td>
-                      <td className="number-cell">{dept.rejected}</td>
                       <td className="number-cell">{dept.pending}</td>
                     </tr>
                   ))}
@@ -352,14 +524,15 @@ const Reports = () => {
             <div className="card-header">
               <h2 className="card-title">Request Distribution</h2>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
+            <div className={`reports-graph ${isGraphUpdating ? 'is-updating' : ''}`} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
               <svg width="220" height="220" viewBox="0 0 220 220" style={{ transform: 'rotate(-90deg)' }}>
                 <circle cx="110" cy="110" r="100" fill="none" stroke="#dbeafe" strokeWidth="20" />
                 {(() => {
-                  const total = supplyRequests.reduce((sum, d) => sum + d.submitted, 0)
+                  const list = graphData?.supplyRequests || []
+                  const total = list.reduce((sum, d) => sum + d.submitted, 0)
                   let currentAngle = 0
                   const colors = ['#1e40af', '#10b981', '#f59e0b', '#8b5cf6']
-                  return supplyRequests.map((dept, index) => {
+                  return list.map((dept, index) => {
                     const angle = (dept.submitted / total) * 2 * Math.PI
                     const x1 = 110 + 100 * Math.cos(currentAngle)
                     const y1 = 110 + 100 * Math.sin(currentAngle)
@@ -373,9 +546,9 @@ const Reports = () => {
                 })()}
               </svg>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '100%' }}>
-                {supplyRequests.map((dept, index) => {
+                {(graphData?.supplyRequests || []).map((dept, index) => {
                   const colors = ['#1e40af', '#10b981', '#f59e0b', '#8b5cf6']
-                  const total = supplyRequests.reduce((sum, d) => sum + d.submitted, 0)
+                  const total = (graphData?.supplyRequests || []).reduce((sum, d) => sum + d.submitted, 0) || 1
                   const percent = ((dept.submitted / total) * 100).toFixed(0)
                   return (
                     <div key={index} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -396,11 +569,12 @@ const Reports = () => {
           <div className="card-header">
             <h2 className="card-title">Top 5 Most Requested Items</h2>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div className={`reports-graph ${isGraphUpdating ? 'is-updating' : ''}`} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {(() => {
-              const maxCount = Math.max(...topItems.map(item => item.count))
+              const list = graphData?.topItems || []
+              const maxCount = Math.max(1, ...list.map(item => item.count))
               const colors = ['#1e40af', '#3730a3', '#4338ca', '#4f46e5', '#6366f1']
-              return topItems.map((item, index) => (
+              return list.map((item, index) => (
                 <div key={index} className="bar-graph-item" style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                   <div className="bar-graph-label" style={{ width: '180px', minWidth: '180px', fontSize: '14px', color: '#374151', fontWeight: '500' }}>
                     {item.name}
@@ -429,7 +603,7 @@ const Reports = () => {
         </div>
       </div>
 
-      <div className="print-view">
+      <div className={`print-view ${isWip ? 'reports-wip-hidden' : ''}`}>
         <div className="print-container">
           <div className="report">
             <div className="report-header">
@@ -483,7 +657,7 @@ const Reports = () => {
               <svg width="160" height="160" viewBox="0 0 160 160" style={{ transform: 'rotate(-90deg)' }}>
                 {(() => {
                   let currentAngle = 0
-                  return inventoryStatus.map((status, index) => {
+                  return (graphData?.inventoryStatus || []).map((status, index) => {
                     const angle = (status.value / 100) * 2 * Math.PI
                     const x1 = 80 + 70 * Math.cos(currentAngle)
                     const y1 = 80 + 70 * Math.sin(currentAngle)
@@ -498,7 +672,7 @@ const Reports = () => {
                 <circle cx="80" cy="80" r="40" fill="white" />
               </svg>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', minWidth: '130px' }}>
-                {inventoryStatus.map((status, index) => (
+                {(graphData?.inventoryStatus || []).map((status, index) => (
                   <div key={index} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                       <div style={{ width: '12px', height: '12px', borderRadius: '2px', background: status.color }} />
@@ -519,17 +693,15 @@ const Reports = () => {
                       <th>Department</th>
                       <th className="number-cell">Request Submitted</th>
                       <th className="number-cell">Approved</th>
-                      <th className="number-cell">Rejected</th>
                       <th className="number-cell">Pending</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {supplyRequests.map((dept, index) => (
+                    {(graphData?.supplyRequests || []).map((dept, index) => (
                       <tr key={index}>
                         <td>{dept.department}</td>
                         <td className="number-cell">{dept.submitted}</td>
                         <td className="number-cell">{dept.approved}</td>
-                        <td className="number-cell">{dept.rejected}</td>
                         <td className="number-cell">{dept.pending}</td>
                       </tr>
                     ))}
@@ -542,10 +714,11 @@ const Reports = () => {
                 <svg width="180" height="180" viewBox="0 0 180 180" style={{ transform: 'rotate(-90deg)', marginBottom: '16px' }}>
                   <circle cx="90" cy="90" r="80" fill="none" stroke="#dbeafe" strokeWidth="16" />
                   {(() => {
-                    const total = supplyRequests.reduce((sum, d) => sum + d.submitted, 0)
+                    const list = graphData?.supplyRequests || []
+                    const total = list.reduce((sum, d) => sum + d.submitted, 0)
                     let currentAngle = 0
                     const colors = ['#1e40af', '#10b981', '#f59e0b', '#8b5cf6']
-                    return supplyRequests.map((dept, index) => {
+                    return list.map((dept, index) => {
                       const angle = (dept.submitted / total) * 2 * Math.PI
                       const x1 = 90 + 80 * Math.cos(currentAngle)
                       const y1 = 90 + 80 * Math.sin(currentAngle)
@@ -559,9 +732,9 @@ const Reports = () => {
                   })()}
                 </svg>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                  {supplyRequests.map((dept, index) => {
+                  {(graphData?.supplyRequests || []).map((dept, index) => {
                     const colors = ['#1e40af', '#10b981', '#f59e0b', '#8b5cf6']
-                    const total = supplyRequests.reduce((sum, d) => sum + d.submitted, 0)
+                    const total = (graphData?.supplyRequests || []).reduce((sum, d) => sum + d.submitted, 0) || 1
                     const percent = ((dept.submitted / total) * 100).toFixed(0)
                     return (
                       <div key={index} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px' }}>
@@ -580,9 +753,10 @@ const Reports = () => {
             <h3 style={{ marginTop: '32px', marginBottom: '16px', color: '#1f2937' }}>Top 5 Most Requested Items</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '32px' }}>
               {(() => {
-                const maxCount = Math.max(...topItems.map(item => item.count))
+                const list = graphData?.topItems || []
+                const maxCount = Math.max(1, ...list.map(item => item.count))
                 const colors = ['#1e40af', '#3730a3', '#4338ca', '#4f46e5', '#6366f1']
-                return topItems.map((item, index) => (
+                return list.map((item, index) => (
                   <div key={index} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <div style={{ width: '160px', fontSize: '12px', color: '#374151', fontWeight: '500' }}>
                       {item.name}
@@ -632,9 +806,168 @@ const Reports = () => {
       <style>{`
         .reports {
           padding: 0;
+          position: relative;
+          min-height: 420px;
         }
 
         .screen-view {
+        }
+
+        .reports-wip-overlay {
+          position: fixed;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 220px;
+          z-index: 50;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 24px;
+          background: rgba(245, 247, 250, 0.92);
+          backdrop-filter: blur(2px);
+        }
+
+        @media (max-width: 768px) {
+          .reports-wip-overlay {
+            left: 0;
+          }
+        }
+
+        .reports-wip-card {
+          width: min(680px, 100%);
+          background: rgba(255, 255, 255, 0.9);
+          border: 1px solid rgba(229, 231, 235, 0.8);
+          border-radius: 16px;
+          box-shadow: 0 14px 40px rgba(0, 0, 0, 0.12);
+          padding: 22px 24px;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          animation: reportsWipPop 280ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reports-wip-badge {
+          align-self: flex-start;
+          background: #111827;
+          color: #fff;
+          font-weight: 800;
+          font-size: 12px;
+          letter-spacing: 0.14em;
+          padding: 6px 10px;
+          border-radius: 999px;
+        }
+
+        .reports-wip-title {
+          font-size: 22px;
+          font-weight: 800;
+          color: #111827;
+          line-height: 1.1;
+        }
+
+        .reports-wip-subtitle {
+          font-size: 14px;
+          font-weight: 600;
+          color: #4b5563;
+        }
+
+        .reports-wip-anim-row {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding-top: 6px;
+          padding-bottom: 4px;
+        }
+
+        .reports-wip-spinner {
+          width: 20px;
+          height: 20px;
+          border-radius: 999px;
+          border: 3px solid #d1d5db;
+          border-top-color: #1e40af;
+          animation: reportsWipSpin 900ms linear infinite;
+          flex: 0 0 auto;
+        }
+
+        .reports-wip-dots {
+          display: inline-flex;
+          gap: 6px;
+          align-items: center;
+          height: 20px;
+        }
+
+        .reports-wip-dots span {
+          width: 6px;
+          height: 6px;
+          border-radius: 999px;
+          background: #111827;
+          opacity: 0.2;
+          animation: reportsWipDots 1200ms ease-in-out infinite;
+        }
+
+        .reports-wip-dots span:nth-child(2) {
+          animation-delay: 160ms;
+        }
+
+        .reports-wip-dots span:nth-child(3) {
+          animation-delay: 320ms;
+        }
+
+        .reports-wip-tape {
+          height: 14px;
+          border-radius: 10px;
+          overflow: hidden;
+          border: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        .reports-wip-tape-inner {
+          width: 200%;
+          height: 100%;
+          background: repeating-linear-gradient(
+            135deg,
+            #f59e0b 0px,
+            #f59e0b 12px,
+            #111827 12px,
+            #111827 24px
+          );
+          animation: reportsWipTape 900ms linear infinite;
+        }
+
+        .reports-wip-note {
+          color: #374151;
+          font-size: 13px;
+          line-height: 1.35;
+        }
+
+        .reports-wip-blur {
+          filter: blur(4px);
+          opacity: 0.25;
+          pointer-events: none;
+          user-select: none;
+        }
+
+        .reports-wip-hidden {
+          display: none;
+        }
+
+        @keyframes reportsWipSpin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+
+        @keyframes reportsWipDots {
+          0%, 100% { transform: translateY(0); opacity: 0.2; }
+          50% { transform: translateY(-4px); opacity: 0.9; }
+        }
+
+        @keyframes reportsWipTape {
+          from { transform: translateX(0); }
+          to { transform: translateX(-50%); }
+        }
+
+        @keyframes reportsWipPop {
+          from { transform: translateY(6px) scale(0.985); opacity: 0; }
+          to { transform: translateY(0) scale(1); opacity: 1; }
         }
 
         .page-header {
@@ -673,6 +1006,16 @@ const Reports = () => {
           cursor: pointer;
           font-size: 14px;
           white-space: nowrap;
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+        }
+
+        .btn-icon {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          flex: 0 0 auto;
         }
 
         .filters-bar {
@@ -708,45 +1051,103 @@ const Reports = () => {
           border-color: #1e40af;
         }
 
-        .stats-grid {
+        .stats-carousel {
+          margin-bottom: 32px;
+        }
+
+        .stats-viewport {
+          overflow: hidden;
+        }
+
+        .stats-track {
           display: flex;
-          gap: 16px;
-          margin-bottom: 24px;
+          transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
+          will-change: transform;
+        }
+
+        .stats-page {
+          flex: 0 0 100%;
+          display: grid;
+          gap: 20px;
         }
 
         .stat-card {
           background: white;
-          padding: 14px 16px;
-          border-radius: 10px;
+          padding: 24px;
+          border-radius: 12px;
           display: flex;
           align-items: center;
-          gap: 12px;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-          flex: 1;
+          gap: 16px;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
           min-width: 0;
-          max-width: 300px;
         }
 
         .stat-icon {
-          width: 36px;
-          height: 36px;
-          border-radius: 8px;
+          width: 56px;
+          height: 56px;
+          border-radius: 12px;
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: 18px;
           flex-shrink: 0;
         }
 
+        .stat-content {
+          min-width: 0;
+        }
+
         .stat-value {
-          font-size: 20px;
+          font-size: 28px;
           font-weight: 700;
           color: #1f2937;
         }
 
         .stat-label {
-          font-size: 12px;
+          font-size: 14px;
           color: #6b7280;
+          line-height: 1.2;
+        }
+
+        .stats-dots {
+          display: flex;
+          justify-content: center;
+          gap: 8px;
+          margin-top: 12px;
+        }
+
+        .stats-dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 999px;
+          border: none;
+          padding: 0;
+          background: #cbd5e1;
+          cursor: pointer;
+          transition: all 180ms ease;
+        }
+
+        .stats-dot.is-active {
+          width: 20px;
+          background: #1e40af;
+        }
+
+        .reports-graph {
+          transform-origin: center;
+        }
+
+        .reports-graph.is-updating {
+          animation: reportsGraphRefresh 360ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes reportsGraphRefresh {
+          from {
+            opacity: 0.7;
+            transform: translateY(2px) scale(0.99);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
         }
 
         .card {
@@ -922,18 +1323,6 @@ const Reports = () => {
           color: #6b7280;
         }
 
-        /* Responsive for smaller screens */
-        @media (max-width: 1200px) {
-          .stats-grid {
-            flex-wrap: wrap;
-          }
-
-          .stat-card {
-            flex: 0 0 calc(33.333% - 8px);
-            max-width: calc(33.333% - 8px);
-          }
-        }
-
         @media (max-width: 900px) {
           .flex-container {
             flex-direction: column;
@@ -941,11 +1330,6 @@ const Reports = () => {
         }
 
         @media (max-width: 1024px) {
-          .stat-card {
-            flex: 0 0 calc(50% - 6px);
-            max-width: calc(50% - 6px);
-          }
-
           .report-signatures {
             grid-template-columns: repeat(2, 1fr);
           }
@@ -973,25 +1357,18 @@ const Reports = () => {
           .form-input {
             width: 100%;
           }
-            
+
           .stat-card {
-            flex: 0 0 100%;
-            max-width: 100%;
-            padding: 14px 16px;
+            padding: 20px;
           }
 
           .stat-icon {
-            width: 36px;
-            height: 36px;
-            font-size: 18px;
+            width: 48px;
+            height: 48px;
           }
 
           .stat-value {
-            font-size: 20px;
-          }
-
-          .stat-label {
-            font-size: 12px;
+            font-size: 24px;
           }
 
           .bar-graph-item {
@@ -1010,12 +1387,20 @@ const Reports = () => {
         }
 
         @media print {
+          .reports-wip-overlay {
+            position: static !important;
+            inset: auto !important;
+            background: white !important;
+            backdrop-filter: none !important;
+            padding: 0 !important;
+          }
+
           .no-print {
             display: none !important;
           }
 
           .print-view {
-            display: block !important;
+            display: none !important;
           }
 
           .print-container {
