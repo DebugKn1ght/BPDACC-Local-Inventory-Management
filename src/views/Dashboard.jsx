@@ -15,6 +15,8 @@ import activityNearExpiryIcon from '../assets/icons/dashboard/dashboard-activity
 import activityAllocatedIcon from '../assets/icons/dashboard/dashboard-activityallocated-icon.svg'
 import activityAddedIcon from '../assets/icons/dashboard/dashboard-activityadded-icon.svg'
 import searchIcon from '../assets/icons/inventory/search-icon.svg'
+import lowStockAlertIcon from '../assets/icons/dashboard/low-stock-alert-icon.svg'
+import nearExpiryAlertIcon from '../assets/icons/dashboard/near-expiry-alert-icon.svg'
 
 /**
  * Dashboard page - Home page showing overview of inventory system
@@ -32,6 +34,9 @@ const Dashboard = () => {
   const [searchQuery, setSearchQuery] = useState('')
   const [sortOrder, setSortOrder] = useState('newest') // 'newest' or 'oldest'
   const [selectedOffice, setSelectedOffice] = useState(isAdmin ? 'All' : userOffice)
+  const [showExpiredDetails, setShowExpiredDetails] = useState(true)
+  const [showNearExpiryDetails, setShowNearExpiryDetails] = useState(true)
+  const [showLowStockDetails, setShowLowStockDetails] = useState(true)
 
   const loadData = async () => {
     setLoading(true)
@@ -77,6 +82,25 @@ const Dashboard = () => {
   const acts = activities
   const reqs = requisitions
 
+  // Helper functions for expiry checks in Dashboard.jsx
+  const isNearExpiry = (expiryDate) => {
+    if (!expiryDate) return false
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    const expiry = new Date(expiryDate)
+    const twoMonthsBefore = new Date(expiry)
+    twoMonthsBefore.setMonth(twoMonthsBefore.getMonth() - 2)
+    return today >= twoMonthsBefore && today <= expiry
+  }
+
+  const isExpired = (expiryDate) => {
+    if (!expiryDate) return false
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    const expiry = new Date(expiryDate)
+    return expiry < today
+  }
+
   // Calculate statistics
   const totalStock = items.reduce((sum, item) => 
     sum + item.batches.reduce((batchSum, batch) => batchSum + batch.stock, 0)
@@ -85,15 +109,69 @@ const Dashboard = () => {
     const total = item.batches.reduce((sum, b) => sum + b.stock, 0)
     return total < item.minStock
   }).length
-  const pendingCount = reqs.filter(r => r.status === 'Pending').length
+
+  const officeFilter = isAdmin ? selectedOffice : userOffice
+
+  const pendingCount = reqs.filter(r => {
+    const matchesOffice = officeFilter === 'All' || (r.office && r.office.name === officeFilter)
+    return r.status === 'Pending' && matchesOffice
+  }).length
+
+  const todayStr = new Date().toDateString()
+  const issuedTodayCount = reqs.filter(r => {
+    const matchesOffice = officeFilter === 'All' || (r.office && r.office.name === officeFilter)
+    return r.status === 'Approved' && 
+           matchesOffice && 
+           r.updatedAt && 
+           new Date(r.updatedAt).toDateString() === todayStr
+  }).length
 
   // Statistics cards data
   const stats = [
     { label: 'Total Stock', value: totalStock.toLocaleString(), icon: totalItemsIcon, bgColor: '#e8f0fe' },
     { label: 'Low Stock', value: lowStockCount.toString(), icon: lowStockIcon, bgColor: '#fff799ff' },
     { label: 'Pending Requisitions', value: pendingCount.toString(), icon: pendingIcon, bgColor: '#f9e49eff' },
-    { label: 'Issued Today', value: '0', icon: issuedIcon, bgColor: '#e6f9e6' },
+    { label: 'Issued Today', value: issuedTodayCount.toString(), icon: issuedIcon, bgColor: '#e6f9e6' },
   ]
+
+  // Calculate expired, nearing expiry, and low stock items list for notifications
+  const expiredItemsList = []
+  const nearExpiryItemsList = []
+
+  items.forEach(item => {
+    item.batches.forEach(batch => {
+      if (batch.stock > 0) {
+        if (isExpired(batch.expiryDate)) {
+          expiredItemsList.push({
+            id: `${item.id}-${batch.id}`,
+            sku: item.sku,
+            name: item.name,
+            batchId: batch.batchId,
+            stock: batch.stock,
+            unit: item.unit,
+            expiryDate: batch.expiryDate,
+            office: batch.office || 'Unallocated'
+          })
+        } else if (isNearExpiry(batch.expiryDate)) {
+          nearExpiryItemsList.push({
+            id: `${item.id}-${batch.id}`,
+            sku: item.sku,
+            name: item.name,
+            batchId: batch.batchId,
+            stock: batch.stock,
+            unit: item.unit,
+            expiryDate: batch.expiryDate,
+            office: batch.office || 'Unallocated'
+          })
+        }
+      }
+    })
+  })
+
+  const lowStockItemsList = items.filter(item => {
+    const total = item.batches.reduce((sum, b) => sum + b.stock, 0)
+    return total < item.minStock
+  })
 
   // Recent activity feed data
   const recentActivity = processedActivities.map(act => ({
@@ -253,6 +331,122 @@ const Dashboard = () => {
           </div>
         )}
       </div>
+
+      {/* Alert Notifications */}
+      {(expiredItemsList.length > 0 || nearExpiryItemsList.length > 0 || lowStockItemsList.length > 0) && (
+        <div className="alerts-container">
+          {expiredItemsList.length > 0 && (
+            <div className="alert-card alert-danger">
+              <div className="alert-header">
+                <div className="alert-header-left">
+                  <span className="alert-icon">
+                    <Icon src={activityExpiredIcon} alt="Expired Alert" size={24} />
+                  </span>
+                  <div className="alert-title-group">
+                    <span className="alert-title">Expired Inventory Detected</span>
+                    <span className="alert-subtitle">{expiredItemsList.length} batch(es) have expired and should be removed.</span>
+                  </div>
+                </div>
+                <button 
+                  onClick={() => setShowExpiredDetails(!showExpiredDetails)} 
+                  className="alert-toggle-btn"
+                >
+                  {showExpiredDetails ? 'Hide Details' : 'Show Details'}
+                </button>
+              </div>
+              {showExpiredDetails && (
+                <div className="alert-body">
+                  <div className="alert-item-grid">
+                    {expiredItemsList.map(item => (
+                      <div key={item.id} className="alert-item-row">
+                        <span className="alert-item-name">{item.name}</span>
+                        <span className="alert-item-meta">
+                          Batch: <strong>{item.batchId}</strong> • Qty: <strong>{item.stock} {item.unit}</strong> • Expired: <strong style={{ color: '#ef4444' }}>{new Date(item.expiryDate).toLocaleDateString()}</strong> • Office: <strong>{item.office}</strong>
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {nearExpiryItemsList.length > 0 && (
+            <div className="alert-card alert-warning">
+              <div className="alert-header">
+                <div className="alert-header-left">
+                  <span className="alert-icon">
+                    <Icon src={nearExpiryAlertIcon} alt="Near Expiry Alert" size={24} />
+                  </span>
+                  <div className="alert-title-group">
+                    <span className="alert-title">Nearing Expiry Warning</span>
+                    <span className="alert-subtitle">{nearExpiryItemsList.length} batch(es) will expire soon (within 2 months).</span>
+                  </div>
+                </div>
+                <button 
+                  onClick={() => setShowNearExpiryDetails(!showNearExpiryDetails)} 
+                  className="alert-toggle-btn"
+                >
+                  {showNearExpiryDetails ? 'Hide Details' : 'Show Details'}
+                </button>
+              </div>
+              {showNearExpiryDetails && (
+                <div className="alert-body">
+                  <div className="alert-item-grid">
+                    {nearExpiryItemsList.map(item => (
+                      <div key={item.id} className="alert-item-row">
+                        <span className="alert-item-name">{item.name}</span>
+                        <span className="alert-item-meta">
+                          Batch: <strong>{item.batchId}</strong> • Qty: <strong>{item.stock} {item.unit}</strong> • Expires: <strong style={{ color: '#d97706' }}>{new Date(item.expiryDate).toLocaleDateString()}</strong> • Office: <strong>{item.office}</strong>
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {lowStockItemsList.length > 0 && (
+            <div className="alert-card alert-info">
+              <div className="alert-header">
+                <div className="alert-header-left">
+                  <span className="alert-icon">
+                    <Icon src={lowStockAlertIcon} alt="Low Stock Alert" size={24} />
+                  </span>
+                  <div className="alert-title-group">
+                    <span className="alert-title">Low Stock Alert</span>
+                    <span className="alert-subtitle">{lowStockItemsList.length} item(s) are running below minimum stock level.</span>
+                  </div>
+                </div>
+                <button 
+                  onClick={() => setShowLowStockDetails(!showLowStockDetails)} 
+                  className="alert-toggle-btn"
+                >
+                  {showLowStockDetails ? 'Hide Details' : 'Show Details'}
+                </button>
+              </div>
+              {showLowStockDetails && (
+                <div className="alert-body">
+                  <div className="alert-item-grid">
+                    {lowStockItemsList.map(item => {
+                      const currentStock = item.batches.reduce((sum, b) => sum + b.stock, 0)
+                      return (
+                        <div key={item.id} className="alert-item-row">
+                          <span className="alert-item-name">{item.name}</span>
+                          <span className="alert-item-meta">
+                            SKU: <strong>{item.sku}</strong> • Current Stock: <strong style={{ color: '#ef4444' }}>{currentStock}</strong> / {item.minStock} {item.unit}
+                          </span>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="stats-grid">
         {stats.map((stat, index) => (
@@ -515,6 +709,161 @@ const Dashboard = () => {
           display: flex;
           flex-direction: column;
           gap: 16px;
+          max-height: 400px;
+          overflow-y: auto;
+          padding-right: 8px;
+        }
+
+        /* Custom scrollbar styling for activity list */
+        .activity-list::-webkit-scrollbar {
+          width: 6px;
+        }
+        .activity-list::-webkit-scrollbar-track {
+          background: #f3f4f6;
+          border-radius: 4px;
+        }
+        .activity-list::-webkit-scrollbar-thumb {
+          background: #cbd5e1;
+          border-radius: 4px;
+        }
+        .activity-list::-webkit-scrollbar-thumb:hover {
+          background: #94a3b8;
+        }
+
+        /* Alerts Container & Card styles */
+        .alerts-container {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+          margin-bottom: 32px;
+        }
+
+        .alert-card {
+          border-radius: 12px;
+          border-left: 6px solid;
+          padding: 16px;
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+          transition: all 0.2s ease;
+        }
+
+        .alert-danger {
+          background: #fef2f2;
+          border-left-color: #ef4444;
+          border-top: 1px solid #fee2e2;
+          border-right: 1px solid #fee2e2;
+          border-bottom: 1px solid #fee2e2;
+        }
+
+        .alert-warning {
+          background: #fffbeb;
+          border-left-color: #f59e0b;
+          border-top: 1px solid #fef3c7;
+          border-right: 1px solid #fef3c7;
+          border-bottom: 1px solid #fef3c7;
+        }
+
+        .alert-info {
+          background: #eff6ff;
+          border-left-color: #3b82f6;
+          border-top: 1px solid #dbeafe;
+          border-right: 1px solid #dbeafe;
+          border-bottom: 1px solid #dbeafe;
+        }
+
+        .alert-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
+        }
+
+        .alert-header-left {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .alert-icon {
+          font-size: 24px;
+        }
+
+        .alert-title-group {
+          display: flex;
+          flex-direction: column;
+        }
+
+        .alert-title {
+          font-weight: 700;
+          font-size: 15px;
+          color: #1f2937;
+        }
+
+        .alert-subtitle {
+          font-size: 13px;
+          color: #4b5563;
+          margin-top: 2px;
+        }
+
+        .alert-toggle-btn {
+          background: transparent;
+          border: none;
+          color: #4b5563;
+          font-size: 13px;
+          font-weight: 600;
+          cursor: pointer;
+          padding: 4px 8px;
+          border-radius: 4px;
+          transition: background 0.2s;
+        }
+
+        .alert-toggle-btn:hover {
+          background: rgba(0, 0, 0, 0.05);
+        }
+
+        .alert-body {
+          margin-top: 12px;
+          border-top: 1px dashed rgba(0, 0, 0, 0.08);
+          padding-top: 12px;
+        }
+
+        .alert-item-grid {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          max-height: 160px;
+          overflow-y: auto;
+          padding-right: 6px;
+        }
+
+        .alert-item-grid::-webkit-scrollbar {
+          width: 4px;
+        }
+
+        .alert-item-grid::-webkit-scrollbar-thumb {
+          background: rgba(0, 0, 0, 0.15);
+          border-radius: 2px;
+        }
+
+        .alert-item-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          font-size: 13px;
+          padding: 6px 10px;
+          background: rgba(255, 255, 255, 0.6);
+          border-radius: 6px;
+          gap: 12px;
+        }
+
+        .alert-item-name {
+          font-weight: 600;
+          color: #1f2937;
+        }
+
+        .alert-item-meta {
+          color: #4b5563;
+          text-align: right;
+          font-size: 12px;
         }
 
         .activity-item {
