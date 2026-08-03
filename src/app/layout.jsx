@@ -3,6 +3,9 @@ import '../index.css'
 export const metadata = {
   title: 'BPDACC Inventory Management',
   description: 'Manage and track medical supplies',
+  icons: {
+    icon: '/bpdacc-logo.svg',
+  },
 }
 
 export default function RootLayout({ children }) {
@@ -10,7 +13,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-        <link rel="icon" href="assets/icons/bpdacc-logo.svg " />
+        <link rel="icon" href="/bpdacc-logo.svg" type="image/svg+xml" />
       </head>
       <body>
         <div id="root">{children}</div>

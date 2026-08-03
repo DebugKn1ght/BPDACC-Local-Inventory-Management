@@ -734,6 +734,106 @@ export async function POST(req) {
         break;
       }
 
+      case 'getRsmiReportData': {
+        const [yearArg, monthArg] = args;
+        const year = parseInt(yearArg, 10) || new Date().getFullYear();
+        const month = parseInt(monthArg, 10) || (new Date().getMonth() + 1);
+
+        const startDate = new Date(year, month - 1, 1, 0, 0, 0, 0);
+        const endDate = new Date(year, month, 0, 23, 59, 59, 999);
+
+        const requisitions = await prisma.requisition.findMany({
+          where: {
+            status: 'Approved',
+            OR: [
+              { requestDate: { gte: startDate, lte: endDate } },
+              { createdAt: { gte: startDate, lte: endDate } },
+              { updatedAt: { gte: startDate, lte: endDate } }
+            ]
+          },
+          include: {
+            items: {
+              include: {
+                inventoryItem: {
+                  include: {
+                    batches: {
+                      orderBy: { id: 'asc' }
+                    }
+                  }
+                },
+                release: {
+                  include: { sourceOffice: true }
+                }
+              }
+            },
+            requestedBy: true,
+            office: true
+          },
+          orderBy: { risNo: 'asc' }
+        });
+
+        const transactions = await prisma.inventoryTransaction.findMany({
+          where: {
+            issuanceQty: { gt: 0 },
+            date: { gte: startDate, lte: endDate }
+          },
+          include: {
+            inventoryItem: true,
+            inventoryBatch: true
+          }
+        });
+
+        const txByRis = {};
+        for (const tx of transactions) {
+          if (tx.reference) {
+            const key = `${tx.reference}_${tx.inventoryItemId}`;
+            txByRis[key] = tx;
+          }
+        }
+
+        const reportItems = [];
+        for (const req of requisitions) {
+          for (const item of req.items) {
+            const qtyIssued = item.release?.quantityReleased ?? item.quantity ?? 0;
+            const invItem = item.inventoryItem;
+
+            const txKey = `${req.risNo}_${item.inventoryItemId}`;
+            const matchingTx = txByRis[txKey];
+
+            let batchId = '-';
+            let unitCost = 0;
+            let currentBatchBalance = 0;
+
+            if (matchingTx?.inventoryBatch) {
+              batchId = matchingTx.inventoryBatch.batchId || '-';
+              unitCost = matchingTx.inventoryBatch.costPerUnit ? Number(matchingTx.inventoryBatch.costPerUnit) : (matchingTx.costPerUnit ? Number(matchingTx.costPerUnit) : 0);
+              currentBatchBalance = Number(matchingTx.inventoryBatch.stock || 0);
+            } else if (invItem?.batches && invItem.batches.length > 0) {
+              const matchedBatch = invItem.batches.find(b => b.stockNumber === item.stockNumber) || invItem.batches[0];
+              batchId = matchedBatch.batchId || '-';
+              unitCost = matchedBatch.costPerUnit ? Number(matchedBatch.costPerUnit) : 0;
+              currentBatchBalance = Number(matchedBatch.stock || 0);
+            }
+
+            reportItems.push({
+              id: `${req.id}-${item.id}`,
+              risNo: req.risNo,
+              batchId: batchId,
+              sku: invItem?.sku || item.stockNumber || '-',
+              itemName: item.itemName || invItem?.name || 'Unlisted Item',
+              unit: item.unit || invItem?.unit || 'Pieces',
+              quantityIssued: qtyIssued,
+              unitCost: unitCost,
+              amount: currentBatchBalance,
+              requestDate: req.requestDate
+            });
+          }
+        }
+
+        result = reportItems;
+        break;
+      }
+
       case 'addTransaction': {
         const [itemId, data] = args;
         const allOffices = await prisma.office.findMany();

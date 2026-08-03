@@ -2,7 +2,7 @@
 BPDACC LOCAL INVENTORY MANAGEMENT - SETUP GUIDE
 ================================================================================
 
-This system has been upgraded to use Next.js, Prisma, and MySQL.
+This system uses Next.js, Prisma, and MySQL (via XAMPP).
 
 --------------------------------------------------------------------------------
 [1] PREREQUISITES INSTALLATION
@@ -12,21 +12,27 @@ This system has been upgraded to use Next.js, Prisma, and MySQL.
    - Download Node.js (v18 or higher recommended) from: https://nodejs.org/
    - Run the installer with default settings
 
-2. INSTALL MYSQL
-   - Download MySQL Community Server from: 
-     https://dev.mysql.com/downloads/installer/
-   - Run the installer. Choose the "Server only" or "Developer Default" setup.
-   - During configuration:
-     * Set a strong "Root Password" (you will need this!)
-     * Keep the default port as 3306.
-     * Configure MySQL to start at system startup.
-   - (Optional but recommended) Install MySQL Workbench to manage your database visually.
+2. INSTALL XAMPP
+   - Download XAMPP from: https://www.apachefriends.org/
+   - Run the installer (default settings are fine).
+   - After installation, open the XAMPP Control Panel.
+   - Click "Start" next to MySQL to start the MySQL server.
+   - (Tip: You can also start Apache if you want to use phpMyAdmin
+     for visual database management at http://localhost/phpmyadmin)
 
 3. CREATE THE DATABASE
-   - Open MySQL Workbench (or MySQL Command Line Client).
-   - Login with your root user and password.
-   - Run the following SQL command to create the database:
-     CREATE DATABASE bpdacc_inventory;
+   Option A - Using phpMyAdmin (recommended for beginners):
+   - Start both Apache and MySQL in XAMPP Control Panel.
+   - Open your browser and go to: http://localhost/phpmyadmin
+   - Click "New" in the left sidebar.
+   - Enter "bpdacc_inventory" as the database name.
+   - Click "Create".
+
+   Option B - Using MySQL Command Line:
+   - In XAMPP Control Panel, click "Shell" to open a terminal.
+   - Type: mysql -u root
+   - Then run: CREATE DATABASE bpdacc_inventory;
+   - Type: exit
 
 --------------------------------------------------------------------------------
 [2] SYSTEM CONFIGURATION
@@ -35,7 +41,10 @@ This system has been upgraded to use Next.js, Prisma, and MySQL.
 1. SET UP ENVIRONMENT VARIABLES
    - Create a new file in this folder named EXACTLY `.env` (with the dot at the beginning).
    - Open the `.env` file in Notepad.
-   - Add this line, replacing `your_password` with the Root Password you set earlier:
+   - Add this line (XAMPP uses root with no password by default):
+     DATABASE_URL="mysql://root:@localhost:3306/bpdacc_inventory"
+
+   - If you set a custom password for root, include it after the colon:
      DATABASE_URL="mysql://root:your_password@localhost:3306/bpdacc_inventory"
 
 2. INSTALL PROJECT DEPENDENCIES
@@ -52,11 +61,33 @@ This system has been upgraded to use Next.js, Prisma, and MySQL.
 [3] STARTING THE APPLICATION
 --------------------------------------------------------------------------------
 
-1. START THE DEVELOPMENT SERVER
+1. MAKE SURE MYSQL IS RUNNING
+   - Open XAMPP Control Panel and ensure MySQL shows "Running" (green).
+
+2. START THE DEVELOPMENT SERVER
    - In Command Prompt/PowerShell (in this folder), run:
      npm run dev
-2. Wait until you see "Ready in ... ms"
-3. Open your web browser and go to:
+3. Wait until you see "Ready in ... ms"
+4. Open your web browser and go to:
      http://localhost:3000
 
-(Note: You can view and edit your database contents visually anytime by running `npm run db:studio` in a new terminal window!)
+(Note: You can view and edit your database contents visually anytime by
+ running `npm run db:studio` in a new terminal window, or by visiting
+ http://localhost/phpmyadmin in your browser while XAMPP's Apache is running!)
+
+--------------------------------------------------------------------------------
+[4] TROUBLESHOOTING
+--------------------------------------------------------------------------------
+
+- "Can't connect to MySQL server"
+  -> Make sure MySQL is running in XAMPP Control Panel.
+  -> Check that port 3306 is not blocked by another application.
+
+- "Access denied for user 'root'"
+  -> XAMPP default is root with NO password. If you set a password,
+     update the .env file accordingly.
+
+- Port conflict (another MySQL instance on 3306)
+  -> Stop any standalone MySQL services: Open Services (services.msc),
+     find "MySQL", and stop it.
+  -> Or change XAMPP's MySQL port in XAMPP Control Panel > Config.
