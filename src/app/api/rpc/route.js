@@ -332,6 +332,7 @@ export async function POST(req) {
                     brand: b.brand,
                     supplier: b.supplier,
                     stockNumber: b.stockNumber,
+                    stock: Number(b.stock) || 0,
                     expiryDate: b.expiryDate ? new Date(b.expiryDate) : null,
                     officeId: officeMap[b.office] || null,
                     ptr: b.ptr,
@@ -448,6 +449,41 @@ export async function POST(req) {
             stock: Number(g._sum.stock || 0)
           }))
           .sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      }
+
+      case 'getBatchesWithStockForItem': {
+        const [inventoryItemId] = args;
+        if (!inventoryItemId) {
+          result = [];
+          break;
+        }
+
+        const batches = await prisma.inventoryBatch.findMany({
+          where: {
+            inventoryItemId: Number(inventoryItemId),
+            stock: { gt: 0 },
+            officeId: { not: null }
+          },
+          include: {
+            office: true
+          },
+          orderBy: [
+            { office: { name: 'asc' } },
+            { id: 'asc' }
+          ]
+        });
+
+        result = batches.map(b => ({
+          id: b.id,
+          batchId: b.batchId,
+          stock: Number(b.stock),
+          officeId: b.officeId,
+          officeName: b.office?.name || 'Unknown',
+          brand: b.brand,
+          expiryDate: b.expiryDate,
+          stockNumber: b.stockNumber
+        }));
         break;
       }
 
@@ -623,6 +659,7 @@ export async function POST(req) {
             const effectiveInventoryItemId = releaseInfo?.inventoryItemId || reqItem.inventoryItemId;
             const issuanceQty = releaseInfo?.quantityReleased ?? Number(reqItem.quantity) ?? 0;
             const sourceOfficeId = releaseInfo?.sourceOfficeId || requisition.officeId || null;
+            const inventoryBatchId = releaseInfo?.inventoryBatchId || null;
             const releaseRemarks = releaseInfo?.remarks || null;
 
             if (reqItem.isUnlisted && issuanceQty > 0 && !effectiveInventoryItemId) {
@@ -649,14 +686,21 @@ export async function POST(req) {
             if (effectiveInventoryItemId && issuanceQty > 0) {
               // Try to find batch for the source office
               let batch = null;
-              if (reqItem.stockNumber && effectiveInventoryItemId === reqItem.inventoryItemId) {
-                batch = await tx.inventoryBatch.findFirst({
-                  where: {
-                    inventoryItemId: effectiveInventoryItemId,
-                    stockNumber: reqItem.stockNumber,
-                    ...(sourceOfficeId ? { officeId: sourceOfficeId } : {})
-                  }
+              if (inventoryBatchId) {
+                batch = await tx.inventoryBatch.findUnique({
+                  where: { id: inventoryBatchId }
                 });
+              }
+              if (!batch) {
+                if (reqItem.stockNumber && effectiveInventoryItemId === reqItem.inventoryItemId) {
+                  batch = await tx.inventoryBatch.findFirst({
+                    where: {
+                      inventoryItemId: effectiveInventoryItemId,
+                      stockNumber: reqItem.stockNumber,
+                      ...(sourceOfficeId ? { officeId: sourceOfficeId } : {})
+                    }
+                  });
+                }
               }
               if (!batch) {
                 batch = await tx.inventoryBatch.findFirst({

@@ -17,7 +17,7 @@ const RequisitionRequests = () => {
 
   const [unlistedSearchQuery, setUnlistedSearchQuery] = useState({}) // { [itemId]: string }
   const [unlistedSuggestions, setUnlistedSuggestions] = useState({}) // { [itemId]: InventoryItem[] }
-  const [officeOptionsByItem, setOfficeOptionsByItem] = useState({}) // { [itemId]: Office[] }
+  const [batchesByItem, setBatchesByItem] = useState({}) // { [itemId]: Batch[] }
   
   // Filtering & search states
   const [searchQuery, setSearchQuery] = useState('')
@@ -63,27 +63,79 @@ const RequisitionRequests = () => {
   }, [])
 
   // Open request details modal — reset releaseData
-  const openRequestDetails = (request) => {
+  const openRequestDetails = async (request) => {
     setSelectedRequest(request)
     const initialRelease = {}
     const initialSearch = {}
     const initialSuggestions = {}
-    const initialOfficeOptions = {}
+    const initialBatches = {}
     request.items?.forEach(item => {
       initialRelease[item.id] = {
         quantityReleased: item.quantity,
-        sourceOfficeId: request.officeId ? String(request.officeId) : '',
+        inventoryBatchId: '',
+        sourceOfficeId: '',
         remarks: '',
         inventoryItemId: item.inventoryItemId ? String(item.inventoryItemId) : ''
       }
       initialSearch[item.id] = ''
       initialSuggestions[item.id] = []
-      initialOfficeOptions[item.id] = null
+      initialBatches[item.id] = []
     })
     setReleaseData(initialRelease)
     setUnlistedSearchQuery(initialSearch)
     setUnlistedSuggestions(initialSuggestions)
-    setOfficeOptionsByItem(initialOfficeOptions)
+    setBatchesByItem(initialBatches)
+
+    // Fetch batches for listed items
+    const batchPromises = (request.items || []).map(async (item) => {
+      if (!item.isUnlisted && item.inventoryItemId) {
+        try {
+          const batches = await supabaseDb.getBatchesWithStockForItem(item.inventoryItemId)
+          return { itemId: item.id, batches }
+        } catch (err) {
+          console.error('Error fetching batches for item:', item.id, err)
+          return { itemId: item.id, batches: [] }
+        }
+      }
+      return null
+    })
+
+    const results = await Promise.all(batchPromises)
+
+    // Update batchesByItem
+    setBatchesByItem(prev => {
+      const updated = { ...prev }
+      results.forEach(res => {
+        if (res) {
+          updated[res.itemId] = res.batches || []
+        }
+      })
+      return updated
+    })
+
+    // Set initial selected batch and source office
+    setReleaseData(prev => {
+      const updatedRelease = { ...prev }
+      results.forEach(res => {
+        if (res) {
+          const batches = res.batches || []
+          const requestingOfficeId = request.officeId ? String(request.officeId) : ''
+          const matchingBatch = batches.find(b => String(b.officeId) === requestingOfficeId)
+
+          if (matchingBatch) {
+            updatedRelease[res.itemId].inventoryBatchId = String(matchingBatch.id)
+            updatedRelease[res.itemId].sourceOfficeId = String(matchingBatch.officeId)
+          } else if (batches.length > 0) {
+            updatedRelease[res.itemId].inventoryBatchId = String(batches[0].id)
+            updatedRelease[res.itemId].sourceOfficeId = String(batches[0].officeId)
+          } else {
+            updatedRelease[res.itemId].inventoryBatchId = ''
+            updatedRelease[res.itemId].sourceOfficeId = ''
+          }
+        }
+      })
+      return updatedRelease
+    })
   }
 
   // Handle Approve only
@@ -94,20 +146,21 @@ const RequisitionRequests = () => {
       return
     }
 
-    const unlistedNoStockOffice = selectedRequest?.items?.find(i =>
-      i.isUnlisted &&
-      releaseData[i.id]?.inventoryItemId &&
-      Array.isArray(officeOptionsByItem[i.id]) &&
-      officeOptionsByItem[i.id].length === 0
-    )
-    if (unlistedNoStockOffice) {
-      showNotification('error', `No offices have stock for the selected item of "${unlistedNoStockOffice.itemName}"`)
+    const noStockBatch = selectedRequest?.items?.find(i => {
+      const hasItem = i.isUnlisted ? releaseData[i.id]?.inventoryItemId : true
+      return hasItem && Array.isArray(batchesByItem[i.id]) && batchesByItem[i.id].length === 0
+    })
+    if (noStockBatch) {
+      showNotification('error', `No active batches with stock exist for the item "${noStockBatch.itemName}"`)
       return
     }
 
-    const unlistedNoSourceOffice = selectedRequest?.items?.find(i => i.isUnlisted && !releaseData[i.id]?.sourceOfficeId)
-    if (unlistedNoSourceOffice) {
-      showNotification('error', `Please select a Source Office for "${unlistedNoSourceOffice.itemName}"`)
+    const missingBatchSelection = selectedRequest?.items?.find(i => {
+      const hasItem = i.isUnlisted ? releaseData[i.id]?.inventoryItemId : true
+      return hasItem && !releaseData[i.id]?.inventoryBatchId
+    })
+    if (missingBatchSelection) {
+      showNotification('error', `Please select a batch/office for "${missingBatchSelection.itemName}"`)
       return
     }
 
@@ -120,6 +173,7 @@ const RequisitionRequests = () => {
             requisitionItemId: parseInt(itemId),
             quantityReleased: parseInt(data.quantityReleased) || 0,
             sourceOfficeId: data.sourceOfficeId ? parseInt(data.sourceOfficeId) : null,
+            inventoryBatchId: data.inventoryBatchId ? parseInt(data.inventoryBatchId) : null,
             remarks: data.remarks || '',
             inventoryItemId: data.inventoryItemId ? parseInt(data.inventoryItemId) : null
           }))
@@ -212,21 +266,24 @@ const RequisitionRequests = () => {
     setUnlistedSuggestions(prev => ({ ...prev, [requisitionItemId]: [] }))
 
     try {
-      const officeOptions = await supabaseDb.getOfficesWithStockForItem(inventoryItem.id)
-      setOfficeOptionsByItem(prev => ({ ...prev, [requisitionItemId]: officeOptions || [] }))
+      const batches = await supabaseDb.getBatchesWithStockForItem(inventoryItem.id)
+      setBatchesByItem(prev => ({ ...prev, [requisitionItemId]: batches || [] }))
 
       const requestingOfficeId = selectedRequest?.officeId ? String(selectedRequest.officeId) : ''
-      const hasRequestingOffice = (officeOptions || []).some(o => String(o.id) === requestingOfficeId)
-      if (hasRequestingOffice) {
-        updateRelease(requisitionItemId, 'sourceOfficeId', requestingOfficeId)
-      } else if ((officeOptions || []).length > 0) {
-        updateRelease(requisitionItemId, 'sourceOfficeId', String(officeOptions[0].id))
+      const matchingBatch = (batches || []).find(b => String(b.officeId) === requestingOfficeId)
+      if (matchingBatch) {
+        updateRelease(requisitionItemId, 'inventoryBatchId', String(matchingBatch.id))
+        updateRelease(requisitionItemId, 'sourceOfficeId', String(matchingBatch.officeId))
+      } else if ((batches || []).length > 0) {
+        updateRelease(requisitionItemId, 'inventoryBatchId', String(batches[0].id))
+        updateRelease(requisitionItemId, 'sourceOfficeId', String(batches[0].officeId))
       } else {
+        updateRelease(requisitionItemId, 'inventoryBatchId', '')
         updateRelease(requisitionItemId, 'sourceOfficeId', '')
       }
     } catch (err) {
-      console.error('Error fetching offices for item:', err)
-      setOfficeOptionsByItem(prev => ({ ...prev, [requisitionItemId]: [] }))
+      console.error('Error fetching batches for item:', err)
+      setBatchesByItem(prev => ({ ...prev, [requisitionItemId]: [] }))
     }
   }
 
@@ -572,23 +629,25 @@ const RequisitionRequests = () => {
                           </td>
                           <td style={{ border: '1px solid #bfdbfe', padding: '8px' }}>
                             {/* Always show source office dropdown for unlisted; show for all for flexibility */}
-                            <select
-                              value={releaseData[item.id]?.sourceOfficeId || ''}
-                              onChange={e => updateRelease(item.id, 'sourceOfficeId', e.target.value)}
-                              disabled={item.isUnlisted && !releaseData[item.id]?.inventoryItemId}
-                              style={{ width: '100%', border: '1px solid #93c5fd', borderRadius: 4, padding: '4px 6px', fontSize: 13 }}
-                            >
-                              {item.isUnlisted && releaseData[item.id]?.inventoryItemId ? (
-                                (officeOptionsByItem[item.id] || []).map(o => (
-                                  <option key={o.id} value={o.id}>{o.name} (Stock: {o.stock ?? 0})</option>
-                                ))
-                              ) : (
-                                offices.map(o => (
-                                  <option key={o.id} value={o.id}>{o.name}</option>
-                                ))
-                              )}
-                            </select>
-                          </td>
+                             <select
+                               value={releaseData[item.id]?.inventoryBatchId || ''}
+                               onChange={e => {
+                                 const selectedBatchId = e.target.value;
+                                 const selectedBatch = (batchesByItem[item.id] || []).find(b => String(b.id) === selectedBatchId);
+                                 updateRelease(item.id, 'inventoryBatchId', selectedBatchId);
+                                 updateRelease(item.id, 'sourceOfficeId', selectedBatch ? String(selectedBatch.officeId) : '');
+                               }}
+                               disabled={item.isUnlisted && !releaseData[item.id]?.inventoryItemId}
+                               style={{ width: '100%', border: '1px solid #93c5fd', borderRadius: 4, padding: '4px 6px', fontSize: 13 }}
+                             >
+                               <option value="">-- Select Batch/Office --</option>
+                               {(batchesByItem[item.id] || []).map(b => (
+                                 <option key={b.id} value={b.id}>
+                                   {b.officeName} - Batch: {b.batchId} (Stock: {b.stock})
+                                 </option>
+                               ))}
+                             </select>
+                           </td>
                           <td style={{ border: '1px solid #bfdbfe', padding: '8px' }}>
                             <input
                               type="text"

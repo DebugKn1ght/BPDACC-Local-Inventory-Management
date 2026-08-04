@@ -29,6 +29,7 @@ export const supabaseDb = {
   getItems: (office, isAdmin, userOfficeId) => rpcCall('getItems', office, isAdmin, userOfficeId),
   searchInventoryItems: (query) => rpcCall('searchInventoryItems', query),
   getOfficesWithStockForItem: (inventoryItemId) => rpcCall('getOfficesWithStockForItem', inventoryItemId),
+  getBatchesWithStockForItem: (inventoryItemId) => rpcCall('getBatchesWithStockForItem', inventoryItemId),
   addItem: (item) => rpcCall('addItem', item),
   updateItem: (item) => rpcCall('updateItem', item),
   addTransaction: (itemId, data) => rpcCall('addTransaction', itemId, data),
