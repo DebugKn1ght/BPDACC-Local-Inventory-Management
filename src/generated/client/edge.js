@@ -244,7 +244,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\OJ\\Codess\\BPDACC Inv collab ed\\BPDACC-Local-Inventory-Management\\src\\generated\\client",
+      "value": "C:\\Users\\joshu\\Documents\\GitHub\\BPDACC-Local-Inventory-Management\\src\\generated\\client",
       "fromEnvVar": null
     },
     "config": {
@@ -258,12 +258,11 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\OJ\\Codess\\BPDACC Inv collab ed\\BPDACC-Local-Inventory-Management\\prisma\\schema.prisma",
+    "sourceFilePath": "C:\\Users\\joshu\\Documents\\GitHub\\BPDACC-Local-Inventory-Management\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null,
-    "schemaEnvPath": "../../../.env"
+    "rootEnvPath": null
   },
   "relativePath": "../../../prisma",
   "clientVersion": "5.22.0",
@@ -272,7 +271,7 @@ const config = {
     "db"
   ],
   "activeProvider": "mysql",
-  "postinstall": false,
+  "postinstall": true,
   "inlineDatasources": {
     "db": {
       "url": {
