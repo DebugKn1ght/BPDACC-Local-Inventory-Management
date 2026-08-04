@@ -79,7 +79,12 @@ const Login = () => {
           justify-content: center;
           height: 100vh;
           width: 100vw;
-          background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+          background: 
+            linear-gradient(135deg, rgba(135, 206, 250, 0.85) 0%, rgba(70, 130, 180, 0.85) 100%),
+            url('/background.png');
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
         }
         
         .login-card {
