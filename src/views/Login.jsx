@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabaseDb } from '../utils/apiDb';
 import { useUserRole } from '../context/UserRoleContext';
+import phoLogo from '../assets/PHO Logo.png';
+import bpdaccLogo from '../assets/bpdacc-logo.svg';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -31,7 +33,10 @@ const Login = () => {
     <div className="login-container">
       <div className="login-card">
         <div className="login-header">
-          <img src="/bpdacc-logo.png" alt="BPDACC Logo" className="login-logo" onError={(e) => e.target.style.display = 'none'} />
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginBottom: '15px' }}>
+            <img src={phoLogo?.src || phoLogo} alt="PHO Logo" className="login-logo" style={{ marginBottom: 0 }} onError={(e) => e.target.style.display = 'none'} />
+            <img src={bpdaccLogo?.src || bpdaccLogo} alt="BPDACC Logo" className="login-logo" style={{ marginBottom: 0 }} onError={(e) => e.target.style.display = 'none'} />
+          </div>
           <h2>BPDACC Inventory</h2>
           <p>Please sign in to your account</p>
         </div>
