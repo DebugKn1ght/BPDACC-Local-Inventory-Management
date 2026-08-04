@@ -1,16 +1,21 @@
-# React + Vite
+# BPDACC Local Inventory Management
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+## About the System
+The **BPDACC Local Inventory Management** system is a modern web application designed to effectively track, organize, and manage local inventory. It provides a reliable interface to monitor stock levels, manage items, and maintain an organized database tailored for operational efficiency.
 
-Currently, two official plugins are available:
+## Tech Stack
+- **Framework:** Next.js / React
+- **Database ORM:** Prisma
+- **Database:** MySQL
+- **Styling:** CSS / styled-jsx
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Setup and Installation
+For full instructions on how to set up the database and run this system locally, please refer to the **`SETUP_GUIDE.txt`** file included in the root folder of this project.
 
-## React Compiler
+## Credits & Developers
+This system was proudly designed and developed by:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **On'l Jopseph Bigno** - Fullstack Developer
+- **Joshua Turtoga** - Fullstack Developer
 
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+*University of Bohol*
