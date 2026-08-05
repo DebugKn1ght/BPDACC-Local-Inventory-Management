@@ -28,21 +28,45 @@ export async function POST(req) {
         if (!isMatch) {
           throw new Error('Invalid email or password');
         }
-        if (user.status !== 'Active') {
+        if (user.status === 'Inactive' || user.status === 'Disabled') {
           throw new Error('User account is inactive');
         }
+
+        let currentStatus = user.status;
+        if (!user.isAdmin) {
+          currentStatus = 'In Use';
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { status: 'In Use', updatedAt: new Date() }
+          });
+        }
+
         result = {
           id: user.id,
           name: user.name,
           email: user.email,
           isAdmin: user.isAdmin,
           office: user.office ? user.office.name : 'N/A',
-          officeId: user.officeId
+          officeId: user.officeId,
+          status: currentStatus
         };
         break;
       }
 
       case 'getUsers': {
+        // Auto-update non-admin users whose status is 'In Use' but haven't updated/pinged in > 45 seconds
+        const cutoffTime = new Date(Date.now() - 45000);
+        await prisma.user.updateMany({
+          where: {
+            isAdmin: false,
+            status: 'In Use',
+            updatedAt: { lt: cutoffTime }
+          },
+          data: {
+            status: 'Not In Use'
+          }
+        });
+
         const users = await prisma.user.findMany({
           include: { office: true },
           orderBy: { name: 'asc' }
@@ -54,6 +78,36 @@ export async function POST(req) {
             officeName: u.office ? u.office.name : 'N/A'
           };
         });
+        break;
+      }
+
+      case 'updateUserStatus': {
+        const [userId, newStatus] = args;
+        if (userId) {
+          const targetUser = await prisma.user.findUnique({ where: { id: userId } });
+          if (targetUser && !targetUser.isAdmin) {
+            await prisma.user.update({
+              where: { id: userId },
+              data: { status: newStatus, updatedAt: new Date() }
+            });
+          }
+        }
+        result = { success: true };
+        break;
+      }
+
+      case 'heartbeat': {
+        const [userId] = args;
+        if (userId) {
+          const targetUser = await prisma.user.findUnique({ where: { id: userId } });
+          if (targetUser && !targetUser.isAdmin) {
+            await prisma.user.update({
+              where: { id: userId },
+              data: { status: 'In Use', updatedAt: new Date() }
+            });
+          }
+        }
+        result = { success: true };
         break;
       }
 
@@ -107,9 +161,11 @@ export async function POST(req) {
         const dataToUpdate = {
           name: userData.name,
           email: userData.email,
-          officeId: officeId,
-          status: userData.status
+          officeId: officeId
         };
+        if (userData.status) {
+          dataToUpdate.status = userData.status;
+        }
 
         if (userData.password && userData.password.trim() !== '') {
           const salt = await bcrypt.genSalt(10);

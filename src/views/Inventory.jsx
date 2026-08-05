@@ -1002,8 +1002,8 @@ const Inventory = () => {
                               <Icon src={isExpanded ? collapseIcon : expandIcon} alt={isExpanded ? "Collapse" : "Expand"} size={20} />
                             </span>
                           </td>
-                          <td className="sku-cell">{item.sku}</td>
-                          <td className="item-name-cell">{item.name}</td>
+                          <td className="sku-cell" style={{ fontWeight: 600 }}>{item.sku}</td>
+                          <td className="item-name-cell" style={{ fontWeight: 600 }}>{item.name}</td>
                           <td className="stock-cell font-semibold">{totalStock} {item.unit}</td>
                           <td>{item.location || '-'}</td>
                           <td>
@@ -2183,11 +2183,14 @@ const Inventory = () => {
           background: #f9fafb;
         }
 
+        .sku-cell,
         .sku {
           font-family: monospace;
-          color: #6b7280;
+          font-weight: 600;
+          color: #1f2937;
         }
 
+        .item-name-cell,
         .item-name {
           font-weight: 600;
           color: #1f2937;
