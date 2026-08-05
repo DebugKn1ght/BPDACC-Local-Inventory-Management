@@ -60,6 +60,7 @@ export const supabaseDb = {
   updateRequisitionStatus: (requisitionId, newStatus, releaseData) => rpcCall('updateRequisitionStatus', requisitionId, newStatus, releaseData),
   getItemStockForOffice: (inventoryItemId, officeId) => rpcCall('getItemStockForOffice', inventoryItemId, officeId),
   getRsmiReportData: (year, month) => rpcCall('getRsmiReportData', year, month),
+  getRpciReportData: (year) => rpcCall('getRpciReportData', year),
   getUsers: () => rpcCall('getUsers'),
   addUser: (userData) => rpcCall('addUser', userData),
   updateUser: (userData) => rpcCall('updateUser', userData),

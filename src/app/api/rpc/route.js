@@ -1050,6 +1050,59 @@ export async function POST(req) {
         break;
       }
 
+      case 'getRpciReportData': {
+        const [yearArg] = args;
+        const year = parseInt(yearArg, 10) || new Date().getFullYear();
+
+        // End of selected year
+        const endOfYear = new Date(year, 11, 31, 23, 59, 59, 999);
+
+        // Get all inventory items with their batches
+        const allItems = await prisma.inventoryItem.findMany({
+          include: {
+            batches: {
+              orderBy: { id: 'asc' }
+            }
+          },
+          orderBy: { name: 'asc' }
+        });
+
+        // For each item, find the last transaction balance as of end of year
+        const rpciItems = [];
+        for (const item of allItems) {
+          const lastTx = await prisma.inventoryTransaction.findFirst({
+            where: {
+              inventoryItemId: item.id,
+              date: { lte: endOfYear }
+            },
+            orderBy: { id: 'desc' }
+          });
+
+          const balancePerCard = lastTx ? Number(lastTx.balance) : 0;
+
+          // Use costPerUnit from the first batch that has one, or 0
+          let unitValue = 0;
+          for (const batch of item.batches) {
+            if (batch.costPerUnit) {
+              unitValue = Number(batch.costPerUnit);
+              break;
+            }
+          }
+
+          rpciItems.push({
+            id: item.id,
+            itemName: item.name,
+            sku: item.sku,
+            unit: item.unit,
+            unitValue: unitValue,
+            balancePerCard: balancePerCard
+          });
+        }
+
+        result = rpciItems;
+        break;
+      }
+
       default:
         return NextResponse.json({ error: 'Method not found: ' + method }, { status: 404 });
     }
