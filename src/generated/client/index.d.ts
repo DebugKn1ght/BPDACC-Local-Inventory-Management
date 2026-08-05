@@ -63,6 +63,11 @@ export type RisCounter = $Result.DefaultSelection<Prisma.$RisCounterPayload>
  * 
  */
 export type Activity = $Result.DefaultSelection<Prisma.$ActivityPayload>
+/**
+ * Model EditLog
+ * 
+ */
+export type EditLog = $Result.DefaultSelection<Prisma.$EditLogPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -286,6 +291,16 @@ export class PrismaClient<
     * ```
     */
   get activity(): Prisma.ActivityDelegate<ExtArgs>;
+
+  /**
+   * `prisma.editLog`: Exposes CRUD operations for the **EditLog** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more EditLogs
+    * const editLogs = await prisma.editLog.findMany()
+    * ```
+    */
+  get editLog(): Prisma.EditLogDelegate<ExtArgs>;
 }
 
 export namespace Prisma {
@@ -736,7 +751,8 @@ export namespace Prisma {
     RequisitionItem: 'RequisitionItem',
     RequisitionItemRelease: 'RequisitionItemRelease',
     RisCounter: 'RisCounter',
-    Activity: 'Activity'
+    Activity: 'Activity',
+    EditLog: 'EditLog'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -752,7 +768,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "office" | "user" | "inventoryItem" | "inventoryBatch" | "inventoryTransaction" | "requisition" | "requisitionItem" | "requisitionItemRelease" | "risCounter" | "activity"
+      modelProps: "office" | "user" | "inventoryItem" | "inventoryBatch" | "inventoryTransaction" | "requisition" | "requisitionItem" | "requisitionItemRelease" | "risCounter" | "activity" | "editLog"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1413,6 +1429,72 @@ export namespace Prisma {
           count: {
             args: Prisma.ActivityCountArgs<ExtArgs>
             result: $Utils.Optional<ActivityCountAggregateOutputType> | number
+          }
+        }
+      }
+      EditLog: {
+        payload: Prisma.$EditLogPayload<ExtArgs>
+        fields: Prisma.EditLogFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.EditLogFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EditLogPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.EditLogFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EditLogPayload>
+          }
+          findFirst: {
+            args: Prisma.EditLogFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EditLogPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.EditLogFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EditLogPayload>
+          }
+          findMany: {
+            args: Prisma.EditLogFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EditLogPayload>[]
+          }
+          create: {
+            args: Prisma.EditLogCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EditLogPayload>
+          }
+          createMany: {
+            args: Prisma.EditLogCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.EditLogDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EditLogPayload>
+          }
+          update: {
+            args: Prisma.EditLogUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EditLogPayload>
+          }
+          deleteMany: {
+            args: Prisma.EditLogDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.EditLogUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.EditLogUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EditLogPayload>
+          }
+          aggregate: {
+            args: Prisma.EditLogAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateEditLog>
+          }
+          groupBy: {
+            args: Prisma.EditLogGroupByArgs<ExtArgs>
+            result: $Utils.Optional<EditLogGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.EditLogCountArgs<ExtArgs>
+            result: $Utils.Optional<EditLogCountAggregateOutputType> | number
           }
         }
       }
@@ -11787,6 +11869,894 @@ export namespace Prisma {
 
 
   /**
+   * Model EditLog
+   */
+
+  export type AggregateEditLog = {
+    _count: EditLogCountAggregateOutputType | null
+    _avg: EditLogAvgAggregateOutputType | null
+    _sum: EditLogSumAggregateOutputType | null
+    _min: EditLogMinAggregateOutputType | null
+    _max: EditLogMaxAggregateOutputType | null
+  }
+
+  export type EditLogAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type EditLogSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type EditLogMinAggregateOutputType = {
+    id: number | null
+    itemSku: string | null
+    itemName: string | null
+    editedBy: string | null
+    office: string | null
+    changes: string | null
+    createdAt: Date | null
+  }
+
+  export type EditLogMaxAggregateOutputType = {
+    id: number | null
+    itemSku: string | null
+    itemName: string | null
+    editedBy: string | null
+    office: string | null
+    changes: string | null
+    createdAt: Date | null
+  }
+
+  export type EditLogCountAggregateOutputType = {
+    id: number
+    itemSku: number
+    itemName: number
+    editedBy: number
+    office: number
+    changes: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type EditLogAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type EditLogSumAggregateInputType = {
+    id?: true
+  }
+
+  export type EditLogMinAggregateInputType = {
+    id?: true
+    itemSku?: true
+    itemName?: true
+    editedBy?: true
+    office?: true
+    changes?: true
+    createdAt?: true
+  }
+
+  export type EditLogMaxAggregateInputType = {
+    id?: true
+    itemSku?: true
+    itemName?: true
+    editedBy?: true
+    office?: true
+    changes?: true
+    createdAt?: true
+  }
+
+  export type EditLogCountAggregateInputType = {
+    id?: true
+    itemSku?: true
+    itemName?: true
+    editedBy?: true
+    office?: true
+    changes?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type EditLogAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which EditLog to aggregate.
+     */
+    where?: EditLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EditLogs to fetch.
+     */
+    orderBy?: EditLogOrderByWithRelationInput | EditLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: EditLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EditLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EditLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned EditLogs
+    **/
+    _count?: true | EditLogCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: EditLogAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: EditLogSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: EditLogMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: EditLogMaxAggregateInputType
+  }
+
+  export type GetEditLogAggregateType<T extends EditLogAggregateArgs> = {
+        [P in keyof T & keyof AggregateEditLog]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateEditLog[P]>
+      : GetScalarType<T[P], AggregateEditLog[P]>
+  }
+
+
+
+
+  export type EditLogGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: EditLogWhereInput
+    orderBy?: EditLogOrderByWithAggregationInput | EditLogOrderByWithAggregationInput[]
+    by: EditLogScalarFieldEnum[] | EditLogScalarFieldEnum
+    having?: EditLogScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: EditLogCountAggregateInputType | true
+    _avg?: EditLogAvgAggregateInputType
+    _sum?: EditLogSumAggregateInputType
+    _min?: EditLogMinAggregateInputType
+    _max?: EditLogMaxAggregateInputType
+  }
+
+  export type EditLogGroupByOutputType = {
+    id: number
+    itemSku: string | null
+    itemName: string
+    editedBy: string
+    office: string | null
+    changes: string
+    createdAt: Date
+    _count: EditLogCountAggregateOutputType | null
+    _avg: EditLogAvgAggregateOutputType | null
+    _sum: EditLogSumAggregateOutputType | null
+    _min: EditLogMinAggregateOutputType | null
+    _max: EditLogMaxAggregateOutputType | null
+  }
+
+  type GetEditLogGroupByPayload<T extends EditLogGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<EditLogGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof EditLogGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], EditLogGroupByOutputType[P]>
+            : GetScalarType<T[P], EditLogGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type EditLogSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    itemSku?: boolean
+    itemName?: boolean
+    editedBy?: boolean
+    office?: boolean
+    changes?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["editLog"]>
+
+
+  export type EditLogSelectScalar = {
+    id?: boolean
+    itemSku?: boolean
+    itemName?: boolean
+    editedBy?: boolean
+    office?: boolean
+    changes?: boolean
+    createdAt?: boolean
+  }
+
+
+  export type $EditLogPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "EditLog"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      itemSku: string | null
+      itemName: string
+      editedBy: string
+      office: string | null
+      changes: string
+      createdAt: Date
+    }, ExtArgs["result"]["editLog"]>
+    composites: {}
+  }
+
+  type EditLogGetPayload<S extends boolean | null | undefined | EditLogDefaultArgs> = $Result.GetResult<Prisma.$EditLogPayload, S>
+
+  type EditLogCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<EditLogFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: EditLogCountAggregateInputType | true
+    }
+
+  export interface EditLogDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['EditLog'], meta: { name: 'EditLog' } }
+    /**
+     * Find zero or one EditLog that matches the filter.
+     * @param {EditLogFindUniqueArgs} args - Arguments to find a EditLog
+     * @example
+     * // Get one EditLog
+     * const editLog = await prisma.editLog.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends EditLogFindUniqueArgs>(args: SelectSubset<T, EditLogFindUniqueArgs<ExtArgs>>): Prisma__EditLogClient<$Result.GetResult<Prisma.$EditLogPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one EditLog that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {EditLogFindUniqueOrThrowArgs} args - Arguments to find a EditLog
+     * @example
+     * // Get one EditLog
+     * const editLog = await prisma.editLog.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends EditLogFindUniqueOrThrowArgs>(args: SelectSubset<T, EditLogFindUniqueOrThrowArgs<ExtArgs>>): Prisma__EditLogClient<$Result.GetResult<Prisma.$EditLogPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first EditLog that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EditLogFindFirstArgs} args - Arguments to find a EditLog
+     * @example
+     * // Get one EditLog
+     * const editLog = await prisma.editLog.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends EditLogFindFirstArgs>(args?: SelectSubset<T, EditLogFindFirstArgs<ExtArgs>>): Prisma__EditLogClient<$Result.GetResult<Prisma.$EditLogPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first EditLog that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EditLogFindFirstOrThrowArgs} args - Arguments to find a EditLog
+     * @example
+     * // Get one EditLog
+     * const editLog = await prisma.editLog.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends EditLogFindFirstOrThrowArgs>(args?: SelectSubset<T, EditLogFindFirstOrThrowArgs<ExtArgs>>): Prisma__EditLogClient<$Result.GetResult<Prisma.$EditLogPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more EditLogs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EditLogFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all EditLogs
+     * const editLogs = await prisma.editLog.findMany()
+     * 
+     * // Get first 10 EditLogs
+     * const editLogs = await prisma.editLog.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const editLogWithIdOnly = await prisma.editLog.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends EditLogFindManyArgs>(args?: SelectSubset<T, EditLogFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EditLogPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a EditLog.
+     * @param {EditLogCreateArgs} args - Arguments to create a EditLog.
+     * @example
+     * // Create one EditLog
+     * const EditLog = await prisma.editLog.create({
+     *   data: {
+     *     // ... data to create a EditLog
+     *   }
+     * })
+     * 
+     */
+    create<T extends EditLogCreateArgs>(args: SelectSubset<T, EditLogCreateArgs<ExtArgs>>): Prisma__EditLogClient<$Result.GetResult<Prisma.$EditLogPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many EditLogs.
+     * @param {EditLogCreateManyArgs} args - Arguments to create many EditLogs.
+     * @example
+     * // Create many EditLogs
+     * const editLog = await prisma.editLog.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends EditLogCreateManyArgs>(args?: SelectSubset<T, EditLogCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a EditLog.
+     * @param {EditLogDeleteArgs} args - Arguments to delete one EditLog.
+     * @example
+     * // Delete one EditLog
+     * const EditLog = await prisma.editLog.delete({
+     *   where: {
+     *     // ... filter to delete one EditLog
+     *   }
+     * })
+     * 
+     */
+    delete<T extends EditLogDeleteArgs>(args: SelectSubset<T, EditLogDeleteArgs<ExtArgs>>): Prisma__EditLogClient<$Result.GetResult<Prisma.$EditLogPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one EditLog.
+     * @param {EditLogUpdateArgs} args - Arguments to update one EditLog.
+     * @example
+     * // Update one EditLog
+     * const editLog = await prisma.editLog.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends EditLogUpdateArgs>(args: SelectSubset<T, EditLogUpdateArgs<ExtArgs>>): Prisma__EditLogClient<$Result.GetResult<Prisma.$EditLogPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more EditLogs.
+     * @param {EditLogDeleteManyArgs} args - Arguments to filter EditLogs to delete.
+     * @example
+     * // Delete a few EditLogs
+     * const { count } = await prisma.editLog.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends EditLogDeleteManyArgs>(args?: SelectSubset<T, EditLogDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more EditLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EditLogUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many EditLogs
+     * const editLog = await prisma.editLog.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends EditLogUpdateManyArgs>(args: SelectSubset<T, EditLogUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one EditLog.
+     * @param {EditLogUpsertArgs} args - Arguments to update or create a EditLog.
+     * @example
+     * // Update or create a EditLog
+     * const editLog = await prisma.editLog.upsert({
+     *   create: {
+     *     // ... data to create a EditLog
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the EditLog we want to update
+     *   }
+     * })
+     */
+    upsert<T extends EditLogUpsertArgs>(args: SelectSubset<T, EditLogUpsertArgs<ExtArgs>>): Prisma__EditLogClient<$Result.GetResult<Prisma.$EditLogPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of EditLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EditLogCountArgs} args - Arguments to filter EditLogs to count.
+     * @example
+     * // Count the number of EditLogs
+     * const count = await prisma.editLog.count({
+     *   where: {
+     *     // ... the filter for the EditLogs we want to count
+     *   }
+     * })
+    **/
+    count<T extends EditLogCountArgs>(
+      args?: Subset<T, EditLogCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], EditLogCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a EditLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EditLogAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends EditLogAggregateArgs>(args: Subset<T, EditLogAggregateArgs>): Prisma.PrismaPromise<GetEditLogAggregateType<T>>
+
+    /**
+     * Group by EditLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EditLogGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends EditLogGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: EditLogGroupByArgs['orderBy'] }
+        : { orderBy?: EditLogGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, EditLogGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetEditLogGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the EditLog model
+   */
+  readonly fields: EditLogFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for EditLog.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__EditLogClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the EditLog model
+   */ 
+  interface EditLogFieldRefs {
+    readonly id: FieldRef<"EditLog", 'Int'>
+    readonly itemSku: FieldRef<"EditLog", 'String'>
+    readonly itemName: FieldRef<"EditLog", 'String'>
+    readonly editedBy: FieldRef<"EditLog", 'String'>
+    readonly office: FieldRef<"EditLog", 'String'>
+    readonly changes: FieldRef<"EditLog", 'String'>
+    readonly createdAt: FieldRef<"EditLog", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * EditLog findUnique
+   */
+  export type EditLogFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EditLog
+     */
+    select?: EditLogSelect<ExtArgs> | null
+    /**
+     * Filter, which EditLog to fetch.
+     */
+    where: EditLogWhereUniqueInput
+  }
+
+  /**
+   * EditLog findUniqueOrThrow
+   */
+  export type EditLogFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EditLog
+     */
+    select?: EditLogSelect<ExtArgs> | null
+    /**
+     * Filter, which EditLog to fetch.
+     */
+    where: EditLogWhereUniqueInput
+  }
+
+  /**
+   * EditLog findFirst
+   */
+  export type EditLogFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EditLog
+     */
+    select?: EditLogSelect<ExtArgs> | null
+    /**
+     * Filter, which EditLog to fetch.
+     */
+    where?: EditLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EditLogs to fetch.
+     */
+    orderBy?: EditLogOrderByWithRelationInput | EditLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for EditLogs.
+     */
+    cursor?: EditLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EditLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EditLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of EditLogs.
+     */
+    distinct?: EditLogScalarFieldEnum | EditLogScalarFieldEnum[]
+  }
+
+  /**
+   * EditLog findFirstOrThrow
+   */
+  export type EditLogFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EditLog
+     */
+    select?: EditLogSelect<ExtArgs> | null
+    /**
+     * Filter, which EditLog to fetch.
+     */
+    where?: EditLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EditLogs to fetch.
+     */
+    orderBy?: EditLogOrderByWithRelationInput | EditLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for EditLogs.
+     */
+    cursor?: EditLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EditLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EditLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of EditLogs.
+     */
+    distinct?: EditLogScalarFieldEnum | EditLogScalarFieldEnum[]
+  }
+
+  /**
+   * EditLog findMany
+   */
+  export type EditLogFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EditLog
+     */
+    select?: EditLogSelect<ExtArgs> | null
+    /**
+     * Filter, which EditLogs to fetch.
+     */
+    where?: EditLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EditLogs to fetch.
+     */
+    orderBy?: EditLogOrderByWithRelationInput | EditLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing EditLogs.
+     */
+    cursor?: EditLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EditLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EditLogs.
+     */
+    skip?: number
+    distinct?: EditLogScalarFieldEnum | EditLogScalarFieldEnum[]
+  }
+
+  /**
+   * EditLog create
+   */
+  export type EditLogCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EditLog
+     */
+    select?: EditLogSelect<ExtArgs> | null
+    /**
+     * The data needed to create a EditLog.
+     */
+    data: XOR<EditLogCreateInput, EditLogUncheckedCreateInput>
+  }
+
+  /**
+   * EditLog createMany
+   */
+  export type EditLogCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many EditLogs.
+     */
+    data: EditLogCreateManyInput | EditLogCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * EditLog update
+   */
+  export type EditLogUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EditLog
+     */
+    select?: EditLogSelect<ExtArgs> | null
+    /**
+     * The data needed to update a EditLog.
+     */
+    data: XOR<EditLogUpdateInput, EditLogUncheckedUpdateInput>
+    /**
+     * Choose, which EditLog to update.
+     */
+    where: EditLogWhereUniqueInput
+  }
+
+  /**
+   * EditLog updateMany
+   */
+  export type EditLogUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update EditLogs.
+     */
+    data: XOR<EditLogUpdateManyMutationInput, EditLogUncheckedUpdateManyInput>
+    /**
+     * Filter which EditLogs to update
+     */
+    where?: EditLogWhereInput
+  }
+
+  /**
+   * EditLog upsert
+   */
+  export type EditLogUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EditLog
+     */
+    select?: EditLogSelect<ExtArgs> | null
+    /**
+     * The filter to search for the EditLog to update in case it exists.
+     */
+    where: EditLogWhereUniqueInput
+    /**
+     * In case the EditLog found by the `where` argument doesn't exist, create a new EditLog with this data.
+     */
+    create: XOR<EditLogCreateInput, EditLogUncheckedCreateInput>
+    /**
+     * In case the EditLog was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<EditLogUpdateInput, EditLogUncheckedUpdateInput>
+  }
+
+  /**
+   * EditLog delete
+   */
+  export type EditLogDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EditLog
+     */
+    select?: EditLogSelect<ExtArgs> | null
+    /**
+     * Filter which EditLog to delete.
+     */
+    where: EditLogWhereUniqueInput
+  }
+
+  /**
+   * EditLog deleteMany
+   */
+  export type EditLogDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which EditLogs to delete
+     */
+    where?: EditLogWhereInput
+  }
+
+  /**
+   * EditLog without action
+   */
+  export type EditLogDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EditLog
+     */
+    select?: EditLogSelect<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -11948,6 +12918,19 @@ export namespace Prisma {
   };
 
   export type ActivityScalarFieldEnum = (typeof ActivityScalarFieldEnum)[keyof typeof ActivityScalarFieldEnum]
+
+
+  export const EditLogScalarFieldEnum: {
+    id: 'id',
+    itemSku: 'itemSku',
+    itemName: 'itemName',
+    editedBy: 'editedBy',
+    office: 'office',
+    changes: 'changes',
+    createdAt: 'createdAt'
+  };
+
+  export type EditLogScalarFieldEnum = (typeof EditLogScalarFieldEnum)[keyof typeof EditLogScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -12829,6 +13812,70 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"Activity"> | Date | string
   }
 
+  export type EditLogWhereInput = {
+    AND?: EditLogWhereInput | EditLogWhereInput[]
+    OR?: EditLogWhereInput[]
+    NOT?: EditLogWhereInput | EditLogWhereInput[]
+    id?: IntFilter<"EditLog"> | number
+    itemSku?: StringNullableFilter<"EditLog"> | string | null
+    itemName?: StringFilter<"EditLog"> | string
+    editedBy?: StringFilter<"EditLog"> | string
+    office?: StringNullableFilter<"EditLog"> | string | null
+    changes?: StringFilter<"EditLog"> | string
+    createdAt?: DateTimeFilter<"EditLog"> | Date | string
+  }
+
+  export type EditLogOrderByWithRelationInput = {
+    id?: SortOrder
+    itemSku?: SortOrderInput | SortOrder
+    itemName?: SortOrder
+    editedBy?: SortOrder
+    office?: SortOrderInput | SortOrder
+    changes?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type EditLogWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: EditLogWhereInput | EditLogWhereInput[]
+    OR?: EditLogWhereInput[]
+    NOT?: EditLogWhereInput | EditLogWhereInput[]
+    itemSku?: StringNullableFilter<"EditLog"> | string | null
+    itemName?: StringFilter<"EditLog"> | string
+    editedBy?: StringFilter<"EditLog"> | string
+    office?: StringNullableFilter<"EditLog"> | string | null
+    changes?: StringFilter<"EditLog"> | string
+    createdAt?: DateTimeFilter<"EditLog"> | Date | string
+  }, "id">
+
+  export type EditLogOrderByWithAggregationInput = {
+    id?: SortOrder
+    itemSku?: SortOrderInput | SortOrder
+    itemName?: SortOrder
+    editedBy?: SortOrder
+    office?: SortOrderInput | SortOrder
+    changes?: SortOrder
+    createdAt?: SortOrder
+    _count?: EditLogCountOrderByAggregateInput
+    _avg?: EditLogAvgOrderByAggregateInput
+    _max?: EditLogMaxOrderByAggregateInput
+    _min?: EditLogMinOrderByAggregateInput
+    _sum?: EditLogSumOrderByAggregateInput
+  }
+
+  export type EditLogScalarWhereWithAggregatesInput = {
+    AND?: EditLogScalarWhereWithAggregatesInput | EditLogScalarWhereWithAggregatesInput[]
+    OR?: EditLogScalarWhereWithAggregatesInput[]
+    NOT?: EditLogScalarWhereWithAggregatesInput | EditLogScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"EditLog"> | number
+    itemSku?: StringNullableWithAggregatesFilter<"EditLog"> | string | null
+    itemName?: StringWithAggregatesFilter<"EditLog"> | string
+    editedBy?: StringWithAggregatesFilter<"EditLog"> | string
+    office?: StringNullableWithAggregatesFilter<"EditLog"> | string | null
+    changes?: StringWithAggregatesFilter<"EditLog"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"EditLog"> | Date | string
+  }
+
   export type OfficeCreateInput = {
     name: string
     description?: string | null
@@ -13675,6 +14722,73 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type EditLogCreateInput = {
+    itemSku?: string | null
+    itemName: string
+    editedBy: string
+    office?: string | null
+    changes: string
+    createdAt?: Date | string
+  }
+
+  export type EditLogUncheckedCreateInput = {
+    id?: number
+    itemSku?: string | null
+    itemName: string
+    editedBy: string
+    office?: string | null
+    changes: string
+    createdAt?: Date | string
+  }
+
+  export type EditLogUpdateInput = {
+    itemSku?: NullableStringFieldUpdateOperationsInput | string | null
+    itemName?: StringFieldUpdateOperationsInput | string
+    editedBy?: StringFieldUpdateOperationsInput | string
+    office?: NullableStringFieldUpdateOperationsInput | string | null
+    changes?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EditLogUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    itemSku?: NullableStringFieldUpdateOperationsInput | string | null
+    itemName?: StringFieldUpdateOperationsInput | string
+    editedBy?: StringFieldUpdateOperationsInput | string
+    office?: NullableStringFieldUpdateOperationsInput | string | null
+    changes?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EditLogCreateManyInput = {
+    id?: number
+    itemSku?: string | null
+    itemName: string
+    editedBy: string
+    office?: string | null
+    changes: string
+    createdAt?: Date | string
+  }
+
+  export type EditLogUpdateManyMutationInput = {
+    itemSku?: NullableStringFieldUpdateOperationsInput | string | null
+    itemName?: StringFieldUpdateOperationsInput | string
+    editedBy?: StringFieldUpdateOperationsInput | string
+    office?: NullableStringFieldUpdateOperationsInput | string | null
+    changes?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EditLogUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    itemSku?: NullableStringFieldUpdateOperationsInput | string | null
+    itemName?: StringFieldUpdateOperationsInput | string
+    editedBy?: StringFieldUpdateOperationsInput | string
+    office?: NullableStringFieldUpdateOperationsInput | string | null
+    changes?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[]
@@ -14476,6 +15590,44 @@ export namespace Prisma {
   }
 
   export type ActivitySumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type EditLogCountOrderByAggregateInput = {
+    id?: SortOrder
+    itemSku?: SortOrder
+    itemName?: SortOrder
+    editedBy?: SortOrder
+    office?: SortOrder
+    changes?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type EditLogAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type EditLogMaxOrderByAggregateInput = {
+    id?: SortOrder
+    itemSku?: SortOrder
+    itemName?: SortOrder
+    editedBy?: SortOrder
+    office?: SortOrder
+    changes?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type EditLogMinOrderByAggregateInput = {
+    id?: SortOrder
+    itemSku?: SortOrder
+    itemName?: SortOrder
+    editedBy?: SortOrder
+    office?: SortOrder
+    changes?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type EditLogSumOrderByAggregateInput = {
     id?: SortOrder
   }
 
@@ -17659,6 +18811,10 @@ export namespace Prisma {
      * @deprecated Use ActivityDefaultArgs instead
      */
     export type ActivityArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ActivityDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use EditLogDefaultArgs instead
+     */
+    export type EditLogArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = EditLogDefaultArgs<ExtArgs>
 
   /**
    * Batch Payload for updateMany & deleteMany & createMany

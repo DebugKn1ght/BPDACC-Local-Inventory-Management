@@ -94,6 +94,12 @@ const Inventory = () => {
   const [notification, setNotification] = useState(null) // { type: 'success' | 'error', message: string }
   const [confirmation, setConfirmation] = useState(null) // { title: string, message: string, onConfirm: function, onCancel: function }
 
+  // Super Admin Edit Logs State
+  const [activeTab, setActiveTab] = useState('inventory') // 'inventory' or 'edit-logs'
+  const [editLogs, setEditLogs] = useState([])
+  const [editLogsLoading, setEditLogsLoading] = useState(false)
+  const [editLogsSearch, setEditLogsSearch] = useState('')
+
   // ==========================================
   // DATA (Loaded from Supabase)
   // ==========================================
@@ -130,6 +136,36 @@ const Inventory = () => {
   useEffect(() => {
     loadItems()
   }, [selectedOffice, isAdmin, userOfficeId])
+
+  const loadEditLogs = async () => {
+    setEditLogsLoading(true)
+    try {
+      const logs = await supabaseDb.getEditLogs()
+      setEditLogs(logs || [])
+    } catch (e) {
+      console.error('Failed to load edit logs:', e)
+      setEditLogs([])
+    } finally {
+      setEditLogsLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    if (isAdmin && activeTab === 'edit-logs') {
+      loadEditLogs()
+    }
+  }, [activeTab, isAdmin])
+
+  const filteredEditLogs = editLogs.filter(log => {
+    if (!editLogsSearch) return true
+    const q = editLogsSearch.toLowerCase()
+    const itemMatch = log.itemName?.toLowerCase().includes(q)
+    const skuMatch = log.itemSku?.toLowerCase().includes(q)
+    const userMatch = log.editedBy?.toLowerCase().includes(q)
+    const officeMatch = log.office?.toLowerCase().includes(q)
+    const changesMatch = typeof log.changes === 'string' ? log.changes.toLowerCase().includes(q) : false
+    return itemMatch || skuMatch || userMatch || officeMatch || changesMatch
+  })
 
   /**
    * Check if a date is near expiry (within 30 days)
@@ -387,6 +423,91 @@ const Inventory = () => {
     setShowEditModal(item)
   }
 
+  const generateEditDiffs = (originalItem, updatedItem) => {
+    const diffs = []
+    if (!originalItem || !updatedItem) return diffs
+
+    // Item-level fields
+    if (originalItem.name !== updatedItem.name) {
+      diffs.push({ field: 'Item Name', old: originalItem.name || '', new: updatedItem.name || '' })
+    }
+    if ((originalItem.location || '') !== (updatedItem.location || '')) {
+      diffs.push({ field: 'Location', old: originalItem.location || 'None', new: updatedItem.location || 'None' })
+    }
+    if ((originalItem.unit || '') !== (updatedItem.unit || '')) {
+      diffs.push({ field: 'Unit of Measure', old: originalItem.unit || '', new: updatedItem.unit || '' })
+    }
+    if (Number(originalItem.minStock) !== Number(updatedItem.minStock)) {
+      diffs.push({ field: 'Minimum Stock Level', old: originalItem.minStock, new: updatedItem.minStock })
+    }
+
+    // Batch-level comparisons
+    const oldBatches = originalItem.batches || []
+    const newBatches = updatedItem.batches || []
+
+    const oldBatchMap = new Map()
+    oldBatches.forEach(b => {
+      const key = b.id || b.batchId
+      if (key) oldBatchMap.set(key, b)
+    })
+
+    const newBatchMap = new Map()
+    newBatches.forEach(b => {
+      const key = b.id || b.batchId
+      if (key) newBatchMap.set(key, b)
+    })
+
+    // Compare existing batches
+    oldBatches.forEach(oldB => {
+      const key = oldB.id || oldB.batchId
+      const newB = newBatchMap.get(key)
+
+      if (!newB) {
+        diffs.push({ field: `Batch (${oldB.batchId})`, old: 'Active Batch', new: 'Removed' })
+      } else {
+        const bLabel = `Batch (${newB.batchId})`
+        if (Number(oldB.stock) !== Number(newB.stock)) {
+          diffs.push({ field: `${bLabel} Stock`, old: oldB.stock, new: newB.stock })
+        }
+        if ((oldB.brand || '') !== (newB.brand || '')) {
+          diffs.push({ field: `${bLabel} Brand`, old: oldB.brand || 'None', new: newB.brand || 'None' })
+        }
+        if ((oldB.supplier || '') !== (newB.supplier || '')) {
+          diffs.push({ field: `${bLabel} Supplier`, old: oldB.supplier || 'None', new: newB.supplier || 'None' })
+        }
+        if ((oldB.office || '') !== (newB.office || '')) {
+          diffs.push({ field: `${bLabel} Office`, old: oldB.office || 'Unallocated', new: newB.office || 'Unallocated' })
+        }
+        
+        const oldExp = oldB.expiryDate ? new Date(oldB.expiryDate).toISOString().split('T')[0] : ''
+        const newExp = newB.expiryDate ? new Date(newB.expiryDate).toISOString().split('T')[0] : ''
+        if (oldExp !== newExp) {
+          diffs.push({ field: `${bLabel} Expiry Date`, old: oldExp || 'None', new: newExp || 'None' })
+        }
+
+        if ((oldB.ptr || '') !== (newB.ptr || '')) {
+          diffs.push({ field: `${bLabel} PTR`, old: oldB.ptr || 'None', new: newB.ptr || 'None' })
+        }
+        if (String(oldB.costPerUnit || '') !== String(newB.costPerUnit || '')) {
+          diffs.push({ field: `${bLabel} Unit Cost`, old: oldB.costPerUnit || '0', new: newB.costPerUnit || '0' })
+        }
+        if ((oldB.remarks || '') !== (newB.remarks || '')) {
+          diffs.push({ field: `${bLabel} Remarks`, old: oldB.remarks || 'None', new: newB.remarks || 'None' })
+        }
+      }
+    })
+
+    // Newly added batches
+    newBatches.forEach(newB => {
+      const key = newB.id || newB.batchId
+      if (!oldBatchMap.has(key)) {
+        diffs.push({ field: `New Batch (${newB.batchId})`, old: 'None', new: `Added (Stock: ${newB.stock})` })
+      }
+    })
+
+    return diffs
+  }
+
   const handleSaveItemEdit = async () => {
     if (!editFormData) return
     const minStockVal = parseInt(editFormData.minStock)
@@ -405,10 +526,27 @@ const Inventory = () => {
       'Are you sure you want to save changes to this item?',
       async () => { // On confirm
         try {
-          await supabaseDb.updateItem({
+          const updatedItemData = {
             ...editFormData,
             minStock: minStockVal
-          })
+          }
+
+          // Compute edit diffs
+          const diffs = generateEditDiffs(showEditModal, updatedItemData)
+
+          await supabaseDb.updateItem(updatedItemData)
+
+          // Save edit audit log if diffs detected
+          if (diffs.length > 0) {
+            await supabaseDb.addEditLog({
+              itemSku: updatedItemData.sku,
+              itemName: updatedItemData.name,
+              editedBy: currentUser?.name || currentUser?.email || 'Admin',
+              office: userOffice || 'Super Admin',
+              changes: JSON.stringify(diffs)
+            })
+          }
+
           await loadItems() // Refresh from DB
           setShowEditModal(null)
           setEditFormData(null)
@@ -773,177 +911,306 @@ const Inventory = () => {
       </div>
 
       {/* ==========================================
-          FILTERS BAR (Search + Office Filter)
+          SUPER ADMIN NAVIGATION TABS
           ========================================== */}
-      <div className="filters-bar">
-        <div className="search-box">
-          <span className="search-icon">
-            <Icon src={searchIcon} alt="Search" size={20} />
-          </span>
-          <input
-            type="text"
-            placeholder="Search items by name or SKU..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-        {isAdmin && (
-          <select
-            className="select-input"
-            value={selectedOffice}
-            onChange={(e) => setSelectedOffice(e.target.value)}
+      {isAdmin && (
+        <div className="inventory-tabs-container">
+          <button 
+            className={`inventory-tab-btn ${activeTab === 'inventory' ? 'active' : ''}`}
+            onClick={() => setActiveTab('inventory')}
           >
-            <option value="All">All Offices</option>
-            <option value="Hemodialysis">Hemodialysis</option>
-            <option value="Clinical Laboratory">Clinical Laboratory</option>
-            <option value="Radiology">Radiology</option>
-            <option value="Admin Office">Admin Office</option>
-            <option value="Unallocated">Unallocated</option>
-          </select>
-        )}
-      </div>
+            Inventory List
+          </button>
+          <button 
+            className={`inventory-tab-btn ${activeTab === 'edit-logs' ? 'active' : ''}`}
+            onClick={() => setActiveTab('edit-logs')}
+          >
+            Edit Audit Logs
+          </button>
+        </div>
+      )}
 
       {/* ==========================================
-          INVENTORY TABLE
+          INVENTORY LIST TAB VIEW
           ========================================== */}
-      <div className="card">
-        <div className="table-container">
-          <table className="inventory-table">
-            <thead>
-              <tr>
-                <th style={{width: '40px'}}></th>
-                <th>SKU</th>
-                <th>Item Name</th>
-                <th>Total Stock</th>
-                <th>Location</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredItems.map((item) => {
-                const totalStock = getTotalStock(item)
-                const status = getItemStatus(item)
-                const isLowStock = totalStock < item.minStock
-                const isExpanded = expandedItems.has(item.id)
-                
-                return (
-                  <React.Fragment key={item.id}>
-                    {/* MAIN ITEM ROW */}
-                    <tr className="item-row" onClick={() => toggleItemExpansion(item.id)}>
-                      <td>
-                        <span className="expand-icon">
-                          <Icon src={isExpanded ? collapseIcon : expandIcon} alt={isExpanded ? "Collapse" : "Expand"} size={20} />
-                        </span>
-                      </td>
-                      <td className="sku">{item.sku}</td>
-                      <td>
-                        <div className="item-name">{item.name}</div>
-                      </td>
-                      <td>
-                        <div className={`stock-cell ${isLowStock ? 'low' : ''}`}>
-                          {totalStock} {item.unit}
-                        </div>
-                      </td>
-                      <td>{item.location}</td>
-                      <td>
-                        <span className={`status-badge ${status.type}`}>{status.label}</span>
-                      </td>
-                      <td onClick={(e) => e.stopPropagation()}> {/* Prevent row expansion when clicking action buttons */}
-                        <div className="actions">
-                          {isAdmin && (
-                            <>
-                              <button 
-                                className="btn-icon" 
-                                title="Restock Item"
-                                onClick={() => handleOpenRestockModal(item)}
-                              >
-                                <Icon src={restockIcon} alt="Restock" size={20} />
-                              </button>
-                              <button 
-                                className="btn-icon" 
-                                title="Edit Item"
-                                onClick={() => handleOpenEditModal(item)}
-                              >
-                                <Icon src={editIcon} alt="Edit" size={20} />
-                              </button>
-                            </>
-                          )}
-                          <button 
-                            className="btn-icon" 
-                            title="View Stock Card"
-                            onClick={() => setShowMoreInfo(item)}
-                          >
-                            <Icon src={stockCardIcon} alt="Stock Card" size={20} />
-                          </button>
-                        </div>
-                      </td>
+      {(!isAdmin || activeTab === 'inventory') && (
+        <>
+          {/* FILTERS BAR (Search + Office Filter) */}
+          <div className="filters-bar">
+            <div className="search-box">
+              <span className="search-icon">
+                <Icon src={searchIcon} alt="Search" size={20} />
+              </span>
+              <input
+                type="text"
+                placeholder="Search items by name or SKU..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            {isAdmin && (
+              <select
+                className="select-input"
+                value={selectedOffice}
+                onChange={(e) => setSelectedOffice(e.target.value)}
+              >
+                <option value="All">All Offices</option>
+                <option value="Hemodialysis">Hemodialysis</option>
+                <option value="Clinical Laboratory">Clinical Laboratory</option>
+                <option value="Radiology">Radiology</option>
+                <option value="Admin Office">Admin Office</option>
+                <option value="Unallocated">Unallocated</option>
+              </select>
+            )}
+          </div>
+
+          {/* INVENTORY TABLE */}
+          <div className="card">
+            <div className="table-container">
+              <table className="inventory-table">
+                <thead>
+                  <tr>
+                    <th style={{width: '40px'}}></th>
+                    <th>SKU</th>
+                    <th>Item Name</th>
+                    <th>Total Stock</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {loading ? (
+                    <tr>
+                      <td colSpan="7" className="loading-cell">Loading items...</td>
                     </tr>
+                  ) : filteredItems.length === 0 ? (
+                    <tr>
+                      <td colSpan="7" className="empty-cell">No items found</td>
+                    </tr>
+                  ) : filteredItems.map((item) => {
+                    const status = getItemStatus(item)
+                    const isExpanded = expandedItems.has(item.id)
+                    const totalStock = getTotalStock(item)
 
-                    {/* BATCHES ROW (Expanded) */}
-                    {isExpanded && (
-                      <tr className="batches-row">
-                        <td colSpan={7}>
-                          <div className="batches-container">
-                            <table className="batches-table">
-                              <thead>
-                                <tr>
-                                  <th>Batch ID</th>
-                                  <th>Brand</th>
-                                  <th>Supplier</th>
-                                  <th>Stock #</th>
-                                  <th>Office</th>
-                                  <th>Stock</th>
-                                  <th>Expired Qty</th>
-                                  <th>Expiry Date</th>
-                                  <th>Status</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {item.batches.map((batch, idx) => {
-                                  const batchExpired = isExpired(batch.expiryDate)
-                                  const batchNearExpiry = isNearExpiry(batch.expiryDate)
-                                  let batchStatus = { label: 'OK', type: 'ok' }
-                                  
-                                  if (batchExpired) {
-                                    batchStatus = { label: 'Expired', type: 'expired' }
-                                  } else if (batchNearExpiry) {
-                                    batchStatus = { label: 'Near Expiry', type: 'near-expiry' }
-                                  }
+                    return (
+                      <React.Fragment key={item.id}>
+                        {/* Parent Row - Item High Level Summary */}
+                        <tr className="item-row" onClick={() => toggleItemExpansion(item.id)}>
+                          <td>
+                            <span className="expand-icon">
+                              <Icon src={isExpanded ? collapseIcon : expandIcon} alt={isExpanded ? "Collapse" : "Expand"} size={20} />
+                            </span>
+                          </td>
+                          <td className="sku-cell">{item.sku}</td>
+                          <td className="item-name-cell">{item.name}</td>
+                          <td className="stock-cell font-semibold">{totalStock} {item.unit}</td>
+                          <td>{item.location || '-'}</td>
+                          <td>
+                            <span className={`status-badge ${status.type}`}>
+                              {status.label}
+                            </span>
+                          </td>
+                          <td onClick={(e) => e.stopPropagation()}>
+                            <div className="actions">
+                              {isAdmin && (
+                                <>
+                                  <button 
+                                    className="btn-icon" 
+                                    title="Restock Item"
+                                    onClick={() => handleOpenRestockModal(item)}
+                                  >
+                                    <Icon src={restockIcon} alt="Restock" size={20} />
+                                  </button>
+                                  <button 
+                                    className="btn-icon" 
+                                    title="Edit Item"
+                                    onClick={() => handleOpenEditModal(item)}
+                                  >
+                                    <Icon src={editIcon} alt="Edit" size={20} />
+                                  </button>
+                                </>
+                              )}
+                              <button 
+                                className="btn-icon" 
+                                title="View Stock Card"
+                                onClick={() => setShowMoreInfo(item)}
+                              >
+                                <Icon src={stockCardIcon} alt="Stock Card" size={20} />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
 
-                                  return (
-                                    <tr key={idx}>
-                                      <td className="batch-id">{batch.batchId}</td>
-                                      <td>{batch.brand || '-'}</td>
-                                      <td>{batch.supplier || '-'}</td>
-                                      <td>{batch.stockNumber || '-'}</td>
-                                      <td><span className="office-tag">{batch.office}</span></td>
-                                      <td>{batchExpired ? '-' : `${batch.stock} ${item.unit}`}</td>
-                                      <td>{batch.expiredQty ? `${batch.expiredQty} ${item.unit}` : '-'}</td>
-                                      <td className={`expiry-cell ${batchNearExpiry ? 'near' : batchExpired ? 'expired' : ''}`}>
-                                        {formatExpiryDate(batch.expiryDate)}
-                                      </td>
-                                      <td>
-                                        <span className={`status-badge ${batchStatus.type}`}>
-                                          {batchStatus.label}
-                                        </span>
-                                      </td>
+                        {/* Child Row - Batches Breakdown (Shown when expanded) */}
+                        {isExpanded && (
+                          <tr className="child-row">
+                            <td colSpan="7">
+                              <div className="batches-container">
+                                <h4 className="batches-title">Batches ({item.batches.length})</h4>
+                                <table className="batches-table">
+                                  <thead>
+                                    <tr>
+                                      <th>Batch ID</th>
+                                      <th>Brand</th>
+                                      <th>Supplier</th>
+                                      <th>Stock Number</th>
+                                      <th>Assigned Office</th>
+                                      <th>Available Stock</th>
+                                      <th>Expired Stock</th>
+                                      <th>Expiry Date</th>
+                                      <th>Status</th>
                                     </tr>
-                                  )
-                                })}
-                              </tbody>
-                            </table>
+                                  </thead>
+                                  <tbody>
+                                    {item.batches.map((batch, idx) => {
+                                      const batchExpired = isExpired(batch.expiryDate)
+                                      const batchNearExpiry = isNearExpiry(batch.expiryDate)
+                                      let batchStatus = { label: 'OK', type: 'ok' }
+                                      
+                                      if (batchExpired) {
+                                        batchStatus = { label: 'Expired', type: 'expired' }
+                                      } else if (batchNearExpiry) {
+                                        batchStatus = { label: 'Near Expiry', type: 'near-expiry' }
+                                      }
+
+                                      return (
+                                        <tr key={idx}>
+                                          <td className="batch-id">{batch.batchId}</td>
+                                          <td>{batch.brand || '-'}</td>
+                                          <td>{batch.supplier || '-'}</td>
+                                          <td>{batch.stockNumber || '-'}</td>
+                                          <td><span className="office-tag">{batch.office}</span></td>
+                                          <td>{batchExpired ? '-' : `${batch.stock} ${item.unit}`}</td>
+                                          <td>{batch.expiredQty ? `${batch.expiredQty} ${item.unit}` : '-'}</td>
+                                          <td className={`expiry-cell ${batchNearExpiry ? 'near' : batchExpired ? 'expired' : ''}`}>
+                                            {formatExpiryDate(batch.expiryDate)}
+                                          </td>
+                                          <td>
+                                            <span className={`status-badge ${batchStatus.type}`}>
+                                              {batchStatus.label}
+                                            </span>
+                                          </td>
+                                        </tr>
+                                      )
+                                    })}
+                                  </tbody>
+                                </table>
+                              </div>
+                            </td>
+                          </tr>
+                        )}
+                      </React.Fragment>
+                    )
+                  })}
+                  </tbody>
+                </table>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* ==========================================
+          EDIT AUDIT LOGS TAB VIEW (Super Admin Only)
+          ========================================== */}
+      {isAdmin && activeTab === 'edit-logs' && (
+        <div className="card edit-logs-card">
+          <div className="edit-logs-header">
+            <div className="search-box" style={{ flex: 1, maxWidth: '400px' }}>
+              <span className="search-icon">
+                <Icon src={searchIcon} alt="Search" size={20} />
+              </span>
+              <input
+                type="text"
+                placeholder="Search edit logs by item, SKU, user, or changes..."
+                value={editLogsSearch}
+                onChange={(e) => setEditLogsSearch(e.target.value)}
+              />
+            </div>
+            <button className="btn-secondary" onClick={loadEditLogs} disabled={editLogsLoading}>
+              {editLogsLoading ? 'Loading...' : 'Refresh Logs'}
+            </button>
+          </div>
+
+          <div className="table-container">
+            <table className="inventory-table">
+              <thead>
+                <tr>
+                  <th style={{ width: '16%' }}>Date &amp; Time</th>
+                  <th style={{ width: '22%' }}>Item Details</th>
+                  <th style={{ width: '18%' }}>Edited By</th>
+                  <th style={{ width: '44%' }}>What Was Edited</th>
+                </tr>
+              </thead>
+              <tbody>
+                {editLogsLoading ? (
+                  <tr>
+                    <td colSpan={4} className="text-center py-4">Loading audit logs...</td>
+                  </tr>
+                ) : filteredEditLogs.length === 0 ? (
+                  <tr>
+                    <td colSpan={4} className="text-center py-4 text-muted">
+                      No edit logs recorded yet.
+                    </td>
+                  </tr>
+                ) : (
+                  filteredEditLogs.map(log => {
+                    let parsedChanges = []
+                    try {
+                      parsedChanges = typeof log.changes === 'string' ? JSON.parse(log.changes) : log.changes
+                    } catch (e) {
+                      parsedChanges = [{ field: 'Changes', old: '', new: String(log.changes) }]
+                    }
+
+                    return (
+                      <tr key={log.id}>
+                        <td style={{ verticalAlign: 'top' }}>
+                          <div className="log-date font-semibold">
+                            {new Date(log.createdAt || Date.now()).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                          </div>
+                          <div className="log-time text-muted" style={{ fontSize: '12px' }}>
+                            {new Date(log.createdAt || Date.now()).toLocaleTimeString()}
                           </div>
                         </td>
+                        <td style={{ verticalAlign: 'top' }}>
+                          <div className="font-semibold">{log.itemName}</div>
+                          {log.itemSku && (
+                            <div className="text-muted font-mono" style={{ fontSize: '12px' }}>
+                              SKU: {log.itemSku}
+                            </div>
+                          )}
+                        </td>
+                        <td style={{ verticalAlign: 'top' }}>
+                          <div className="font-semibold">{log.editedBy}</div>
+                          <div className="text-muted" style={{ fontSize: '12px' }}>
+                            Office: {log.office || 'N/A'}
+                          </div>
+                        </td>
+                        <td style={{ verticalAlign: 'top' }}>
+                          {Array.isArray(parsedChanges) && parsedChanges.length > 0 ? (
+                            <div className="changes-list">
+                              {parsedChanges.map((change, cIdx) => (
+                                <div key={cIdx} className="change-tag-row">
+                                  <span className="change-field">{change.field}:</span>
+                                  <span className="change-old">{String(change.old || 'None')}</span>
+                                  <span className="change-arrow">&rarr;</span>
+                                  <span className="change-new">{String(change.new || 'None')}</span>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <div>{String(log.changes)}</div>
+                          )}
+                        </td>
                       </tr>
-                    )}
-                  </React.Fragment>
-                )
-              })}
-            </tbody>
-          </table>
+                    )
+                  })
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* ==========================================
           MODALS
@@ -2409,6 +2676,87 @@ const Inventory = () => {
           .form-group.mini {
             width: 100%;
           }
+        }
+
+        /* Inventory Tabs for Super Admin */
+        .inventory-tabs-container {
+          display: flex;
+          gap: 8px;
+          border-bottom: 2px solid #e2e8f0;
+          margin-bottom: 24px;
+        }
+
+        .inventory-tab-btn {
+          padding: 10px 20px;
+          font-size: 14px;
+          font-weight: 600;
+          color: #64748b;
+          background: transparent;
+          border: none;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          border-bottom: 2px solid transparent;
+          margin-bottom: -2px;
+        }
+
+        .inventory-tab-btn:hover {
+          color: #2563eb;
+        }
+
+        .inventory-tab-btn.active {
+          color: #2563eb;
+          border-bottom-color: #2563eb;
+        }
+
+        .edit-logs-card {
+          background: white;
+          border-radius: 12px;
+          padding: 20px;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .edit-logs-header {
+          display: flex;
+          gap: 16px;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 20px;
+        }
+
+        .change-tag-row {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 12px;
+          margin-bottom: 6px;
+          flex-wrap: wrap;
+        }
+
+        .change-field {
+          font-weight: 700;
+          color: #1e293b;
+          min-width: 110px;
+        }
+
+        .change-old {
+          background: #fee2e2;
+          color: #991b1b;
+          padding: 2px 6px;
+          border-radius: 4px;
+          text-decoration: line-through;
+        }
+
+        .change-arrow {
+          color: #64748b;
+          font-weight: bold;
+        }
+
+        .change-new {
+          background: #dcfce7;
+          color: #166534;
+          padding: 2px 6px;
+          border-radius: 4px;
+          font-weight: 600;
         }
 
         @media (max-width: 768px) {

@@ -1115,6 +1115,54 @@ export async function POST(req) {
         break;
       }
 
+      case 'addEditLog': {
+        const [logData] = args;
+        try {
+          if (prisma.editLog) {
+            result = await prisma.editLog.create({
+              data: {
+                itemSku: logData.itemSku || null,
+                itemName: logData.itemName || 'Unknown Item',
+                editedBy: logData.editedBy || 'Admin',
+                office: logData.office || 'N/A',
+                changes: typeof logData.changes === 'string' ? logData.changes : JSON.stringify(logData.changes)
+              }
+            });
+          } else {
+            await prisma.$executeRawUnsafe(
+              `INSERT INTO edit_logs (item_sku, item_name, edited_by, office, changes, created_at) VALUES (?, ?, ?, ?, ?, NOW())`,
+              logData.itemSku || null,
+              logData.itemName || 'Unknown Item',
+              logData.editedBy || 'Admin',
+              logData.office || 'N/A',
+              typeof logData.changes === 'string' ? logData.changes : JSON.stringify(logData.changes)
+            );
+            result = { success: true };
+          }
+        } catch (err) {
+          console.error('Error adding edit log:', err);
+          throw err;
+        }
+        break;
+      }
+
+      case 'getEditLogs': {
+        try {
+          if (prisma.editLog) {
+            result = await prisma.editLog.findMany({
+              orderBy: { id: 'desc' }
+            });
+          } else {
+            const rows = await prisma.$queryRawUnsafe(`SELECT id, item_sku as itemSku, item_name as itemName, edited_by as editedBy, office, changes, created_at as createdAt FROM edit_logs ORDER BY id DESC`);
+            result = rows;
+          }
+        } catch (err) {
+          console.error('Error getting edit logs:', err);
+          result = [];
+        }
+        break;
+      }
+
       default:
         return NextResponse.json({ error: 'Method not found: ' + method }, { status: 404 });
     }

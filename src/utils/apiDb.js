@@ -64,5 +64,7 @@ export const supabaseDb = {
   getUsers: () => rpcCall('getUsers'),
   addUser: (userData) => rpcCall('addUser', userData),
   updateUser: (userData) => rpcCall('updateUser', userData),
-  deleteUser: (userId) => rpcCall('deleteUser', userId)
+  deleteUser: (userId) => rpcCall('deleteUser', userId),
+  addEditLog: (logData) => rpcCall('addEditLog', logData),
+  getEditLogs: () => rpcCall('getEditLogs')
 };
