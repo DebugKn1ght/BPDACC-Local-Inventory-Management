@@ -382,7 +382,19 @@ export async function POST(req) {
 
       case 'getActivities': {
         const [role, office] = args;
-        result = await prisma.activity.findMany({ orderBy: { id: 'desc' } });
+        const isAdmin = role === true;
+        
+        let whereCondition = {};
+        if (!isAdmin) {
+          whereCondition = { office: office || '' };
+        } else if (office && office !== 'All') {
+          whereCondition = { office: office };
+        }
+
+        result = await prisma.activity.findMany({
+          where: whereCondition,
+          orderBy: { id: 'desc' }
+        });
         break;
       }
       
