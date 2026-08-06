@@ -424,6 +424,9 @@ const Users = () => {
         .user-avatar-small {
           width: 40px;
           height: 40px;
+          min-width: 40px;
+          min-height: 40px;
+          aspect-ratio: 1 / 1;
           border-radius: 50%;
           background: linear-gradient(135deg, #3b82f6, #1e40af);
           display: flex;

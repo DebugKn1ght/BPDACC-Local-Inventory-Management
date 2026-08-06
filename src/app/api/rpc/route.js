@@ -34,10 +34,10 @@ export async function POST(req) {
 
         let currentStatus = user.status;
         if (!user.isAdmin) {
-          currentStatus = 'In Use';
+          currentStatus = 'Online';
           await prisma.user.update({
             where: { id: user.id },
-            data: { status: 'In Use', updatedAt: new Date() }
+            data: { status: 'Online', updatedAt: new Date() }
           });
         }
 
@@ -54,16 +54,16 @@ export async function POST(req) {
       }
 
       case 'getUsers': {
-        // Auto-update non-admin users whose status is 'In Use' but haven't updated/pinged in > 45 seconds
+        // Auto-update non-admin users whose status is 'Online' but haven't updated/pinged in > 45 seconds
         const cutoffTime = new Date(Date.now() - 45000);
         await prisma.user.updateMany({
           where: {
             isAdmin: false,
-            status: 'In Use',
+            status: 'Online',
             updatedAt: { lt: cutoffTime }
           },
           data: {
-            status: 'Not In Use'
+            status: 'Offline'
           }
         });
 
@@ -103,7 +103,7 @@ export async function POST(req) {
           if (targetUser && !targetUser.isAdmin) {
             await prisma.user.update({
               where: { id: userId },
-              data: { status: 'In Use', updatedAt: new Date() }
+              data: { status: 'Online', updatedAt: new Date() }
             });
           }
         }

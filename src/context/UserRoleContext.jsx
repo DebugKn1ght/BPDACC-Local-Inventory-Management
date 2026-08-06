@@ -35,7 +35,7 @@ export const UserRoleProvider = ({ children }) => {
     // Immediately send a heartbeat on mount / log in
     supabaseDb.heartbeat(currentUser.id).catch(() => {})
 
-    // Send heartbeat every 20 seconds to maintain 'In Use' status
+    // Send heartbeat every 20 seconds to maintain 'Online' status
     const intervalId = setInterval(() => {
       supabaseDb.heartbeat(currentUser.id).catch(() => {})
     }, 20000)
@@ -43,7 +43,7 @@ export const UserRoleProvider = ({ children }) => {
     // Handle tab / browser window close
     const handleUnload = () => {
       try {
-        const data = JSON.stringify({ method: 'updateUserStatus', args: [currentUser.id, 'Not In Use'] })
+        const data = JSON.stringify({ method: 'updateUserStatus', args: [currentUser.id, 'Offline'] })
         const blob = new Blob([data], { type: 'application/json' })
         navigator.sendBeacon('/api/rpc', blob)
       } catch (e) {
@@ -62,13 +62,13 @@ export const UserRoleProvider = ({ children }) => {
   const login = (userData) => {
     setCurrentUser(userData)
     if (!userData.isAdmin) {
-      supabaseDb.updateUserStatus(userData.id, 'In Use').catch(() => {})
+      supabaseDb.updateUserStatus(userData.id, 'Online').catch(() => {})
     }
   }
 
   const logout = () => {
     if (currentUser && !currentUser.isAdmin) {
-      supabaseDb.updateUserStatus(currentUser.id, 'Not In Use').catch(() => {})
+      supabaseDb.updateUserStatus(currentUser.id, 'Offline').catch(() => {})
     }
     setCurrentUser(null)
   }

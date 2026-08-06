@@ -118,7 +118,7 @@ const Sidebar = () => {
         <div className="sidebar-footer">
           <div className="user-info">
             <div className="user-avatar">{currentUser?.name?.charAt(0) || 'U'}</div>
-            <div>
+            <div style={{ minWidth: 0, overflow: 'hidden' }}>
               <div className="user-name">{currentUser?.name || 'User'}</div>
               <div className="user-role">{isAdmin ? 'Super Admin' : 'Office User'}</div>
             </div>
@@ -233,11 +233,16 @@ const Sidebar = () => {
             display: flex;
             align-items: center;
             gap: 12px;
+            min-width: 0;
           }
 
           .user-avatar {
             width: 40px;
             height: 40px;
+            min-width: 40px;
+            min-height: 40px;
+            aspect-ratio: 1 / 1;
+            flex-shrink: 0;
             border-radius: 50%;
             background: linear-gradient(135deg, #3b82f6, #1e40af);
             display: flex;
@@ -251,11 +256,17 @@ const Sidebar = () => {
             font-size: 14px;
             font-weight: 600;
             color: #1f2937;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
           }
 
           .user-role {
             font-size: 12px;
             color: #9ca3af;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
           }
 
           /* Mobile Menu Toggle */
