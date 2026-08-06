@@ -14,7 +14,8 @@ import { useUserRole } from '../context/UserRoleContext'
 import Icon from './Icon'
 
 // Import sidebar icons from assets
-import bpdaccLogo from '../assets/icons/sidebar/bpdacc-logo.jpg'
+import phoLogo from '../assets/PHO Logo.png'
+import bpdaccLogo from '../assets/bpdacc-logo.svg'
 import dashboardIcon from '../assets/icons/sidebar/dashboard-icon.svg'
 import inventoryIcon from '../assets/icons/sidebar/inventory-icon.svg'
 import reportsIcon from '../assets/icons/sidebar/reports-icon.svg'
@@ -93,8 +94,11 @@ const Sidebar = () => {
       {/* Main Sidebar Container */}
       <div className={`sidebar no-print ${isMobileMenuOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
-          <h1 className="logo">
-            <Icon src={bpdaccLogo} alt="BPDACC Logo" size={40} className="logo-icon" />
+          <h1 className="logo" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '10px 0' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginBottom: '10px' }}>
+              <Icon src={phoLogo} alt="PHO Logo" size={40} className="logo-icon" />
+              <Icon src={bpdaccLogo} alt="BPDACC Logo" size={40} className="logo-icon" />
+            </div>
             <span className="logo-text">BPDACC Inv</span>
           </h1>
         </div>
