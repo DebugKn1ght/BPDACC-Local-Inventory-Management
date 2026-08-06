@@ -250,6 +250,143 @@ const Reports = () => {
     }
   })
 
+  // ========== RSMI XLS Export ==========
+  const handleExportRsmiXls = () => {
+    let html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">'
+    html += '<head><meta charset="utf-8"><style>td, th { border: 1px solid #000; padding: 4px 6px; font-family: Arial; font-size: 11px; } th { background: #f2f2f2; font-weight: bold; } .text-center { text-align: center; } .text-right { text-align: right; }</style></head>'
+    html += '<body>'
+
+    // Header info rows
+    html += '<table>'
+    html += '<tr><td colspan="8" style="text-align:center;font-size:11px;border:none;">Republic of the Philippines</td></tr>'
+    html += '<tr><td colspan="8" style="text-align:center;font-weight:bold;font-size:12px;border:none;">PROVINCE OF BOHOL</td></tr>'
+    html += '<tr><td colspan="8" style="text-align:center;font-size:11px;border:none;">City of Tagbilaran</td></tr>'
+    html += '<tr><td colspan="8" style="text-align:center;font-weight:bold;color:#1e3a8a;font-size:12px;border:none;">Provincial Health Office</td></tr>'
+    html += '<tr><td colspan="8" style="text-align:center;font-weight:bold;font-size:11px;border:none;">BOHOL PROVINCIAL DIAGNOSTIC &amp; AMBULATORY CARE CENTER</td></tr>'
+    html += '<tr><td colspan="8" style="border:none;"></td></tr>'
+
+    // Title banner
+    html += '<tr><td colspan="8" style="text-align:center;font-weight:bold;font-size:14px;background:#f8fafc;border:1px solid #000;">REPORT OF SUPPLIES AND MATERIALS ISSUED</td></tr>'
+    html += `<tr><td colspan="8" style="text-align:center;font-size:11px;background:#f8fafc;border:1px solid #000;border-top:none;">For the Month of ${selectedMonthName} ${selectedYear}</td></tr>`
+    html += '<tr><td colspan="8" style="border:none;"></td></tr>'
+
+    // Meta Fields
+    html += '<tr>'
+    html += `<td colspan="4" style="border:none;"><strong>Entity Name:</strong> <u>${entityName || ''}</u></td>`
+    html += `<td colspan="4" style="border:none;"><strong>Serial No.:</strong> <u>${serialNo || ''}</u></td>`
+    html += '</tr>'
+    html += '<tr>'
+    html += `<td colspan="4" style="border:none;"><strong>Fund Cluster:</strong> <u>${fundCluster || ''}</u></td>`
+    html += `<td colspan="4" style="border:none;"><strong>Date:</strong> <u>${autoDate}</u></td>`
+    html += '</tr>'
+    html += '<tr><td colspan="8" style="border:none;"></td></tr>'
+
+    // Table Division Headers
+    html += '<tr>'
+    html += '<th colspan="6" style="background:#eff6ff;color:#1e40af;text-align:center;">To be filled up by the Supply and/or Property Division/Unit</th>'
+    html += '<th colspan="2" style="background:#f0fdf4;color:#166534;text-align:center;">To be filled up by the Accounting Division/Unit</th>'
+    html += '</tr>'
+
+    // Table Column Headers
+    html += '<tr>'
+    html += '<th>RIS No.</th>'
+    html += '<th>Responsibility Center Code</th>'
+    html += '<th>Stock No.</th>'
+    html += '<th>Item</th>'
+    html += '<th>Unit</th>'
+    html += '<th>Quantity Issued</th>'
+    html += '<th>Unit Cost</th>'
+    html += '<th>Amount</th>'
+    html += '</tr>'
+
+    // Table Body Items
+    if (items.length === 0) {
+      html += `<tr><td colspan="8" style="text-align:center;color:#666;font-style:italic;">No supplies and materials issued for ${selectedMonthName} ${selectedYear}.</td></tr>`
+    } else {
+      for (const item of items) {
+        const unitCostVal = parseFloat(item.unitCost)
+        const amountVal = parseFloat(item.amount)
+        const formattedCost = !isNaN(unitCostVal) && unitCostVal > 0 ? unitCostVal.toFixed(2) : (item.unitCost || '')
+        const formattedAmount = !isNaN(amountVal) ? amountVal.toFixed(2) : (item.amount || '')
+
+        html += '<tr>'
+        html += `<td style="text-align:center;">${item.risNo || '-'}</td>`
+        html += `<td style="text-align:center;">${item.batchId || '-'}</td>`
+        html += `<td style="text-align:center;">${item.sku || '-'}</td>`
+        html += `<td>${item.itemName || ''}</td>`
+        html += `<td style="text-align:center;">${item.unit || ''}</td>`
+        html += `<td style="text-align:center;">${item.quantityIssued || ''}</td>`
+        html += `<td style="text-align:right;">${formattedCost}</td>`
+        html += `<td style="text-align:right;">${formattedAmount}</td>`
+        html += '</tr>'
+      }
+
+      // Recapitulation section
+      html += '<tr><td colspan="8" style="height:15px;background:#f8fafc;"></td></tr>'
+
+      html += '<tr>'
+      html += '<td style="background:#fff;"></td>'
+      html += '<th colspan="2" style="text-align:center;background:#e2e8f0;">Recapitulation:</th>'
+      html += '<td colspan="2" style="background:#fff;"></td>'
+      html += '<th colspan="3" style="text-align:center;background:#e2e8f0;">Recapitulation:</th>'
+      html += '</tr>'
+
+      html += '<tr>'
+      html += '<td style="background:#fff;"></td>'
+      html += '<th style="text-align:center;background:#f1f5f9;">Stock No.</th>'
+      html += '<th style="text-align:center;background:#f1f5f9;">Quantity</th>'
+      html += '<td colspan="2" style="background:#fff;"></td>'
+      html += '<th style="text-align:right;background:#f1f5f9;">Unit Cost</th>'
+      html += '<th style="text-align:right;background:#f1f5f9;">Total Cost</th>'
+      html += '<th style="text-align:center;background:#f1f5f9;">UACS Object Code</th>'
+      html += '</tr>'
+
+      for (const recap of recapItems) {
+        const formattedRecapCost = recap.unitCost !== null && recap.unitCost > 0 ? recap.unitCost.toFixed(2) : '-'
+        const formattedRecapTotal = recap.totalCost !== null && recap.totalCost > 0 ? recap.totalCost.toFixed(2) : '-'
+
+        html += '<tr>'
+        html += '<td style="background:#fff;"></td>'
+        html += `<td style="text-align:center;">${recap.sku}</td>`
+        html += `<td style="text-align:center;">${recap.totalQuantity}</td>`
+        html += '<td colspan="2" style="background:#fff;"></td>'
+        html += `<td style="text-align:right;">${formattedRecapCost}</td>`
+        html += `<td style="text-align:right;">${formattedRecapTotal}</td>`
+        html += '<td style="text-align:center;"></td>'
+        html += '</tr>'
+      }
+    }
+
+    // Spacer
+    html += '<tr><td colspan="8" style="border:none;"></td></tr>'
+
+    // Signatures
+    html += '<tr>'
+    html += '<td colspan="4" style="border:1px solid #000;vertical-align:top;">'
+    html += '<p style="font-style:italic;font-size:11px;margin-bottom:20px;">I hereby certify to the correctness of the above information.</p><br/><br/>'
+    html += '<center>____________________________________________________<br/><span style="font-size:10px;color:#333;">Signature over Printed Name of Supply and/or Property Custodian</span></center>'
+    html += '</td>'
+    html += '<td colspan="4" style="border:1px solid #000;vertical-align:top;">'
+    html += '<p style="font-size:11px;margin-bottom:20px;"><strong>Posted By:</strong></p><br/><br/>'
+    html += '<center>____________________________________________________<br/><span style="font-size:10px;color:#333;">Signature over Printed Name of Designated Accounting Staff</span></center><br/>'
+    html += '<span style="font-size:10px;">Date: ________________________</span>'
+    html += '</td>'
+    html += '</tr>'
+
+    html += '</table></body></html>'
+
+    // Create blob and trigger download
+    const blob = new Blob([html], { type: 'application/vnd.ms-excel' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `RSMI_Report_${selectedMonthName}_${selectedYear}.xls`
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }
+
   return (
     <div className="reports-page">
       <div className="page-header">
@@ -261,6 +398,9 @@ const Reports = () => {
           <div className="header-actions">
             <button className="btn btn-secondary" onClick={fetchReportData} disabled={loading}>
               {loading ? 'Loading...' : 'Refresh Data'}
+            </button>
+            <button className="btn btn-export" onClick={handleExportRsmiXls}>
+              Export as XLS
             </button>
             <button className="btn btn-primary" onClick={handlePrint}>
               Print RSMI Report
