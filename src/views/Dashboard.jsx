@@ -17,6 +17,7 @@ import activityAddedIcon from '../assets/icons/dashboard/dashboard-activityadded
 import searchIcon from '../assets/icons/inventory/search-icon.svg'
 import lowStockAlertIcon from '../assets/icons/dashboard/low-stock-alert-icon.svg'
 import nearExpiryAlertIcon from '../assets/icons/dashboard/near-expiry-alert-icon.svg'
+import expiredBatchAlertIcon from '../assets/icons/dashboard/expired-batch-alert-icon.svg'
 
 /**
  * Dashboard page - Home page showing overview of inventory system
@@ -88,6 +89,7 @@ const Dashboard = () => {
     const today = new Date()
     today.setHours(0, 0, 0, 0)
     const expiry = new Date(expiryDate)
+    expiry.setHours(0, 0, 0, 0)
     const twoMonthsBefore = new Date(expiry)
     twoMonthsBefore.setMonth(twoMonthsBefore.getMonth() - 2)
     return today >= twoMonthsBefore && today <= expiry
@@ -98,6 +100,7 @@ const Dashboard = () => {
     const today = new Date()
     today.setHours(0, 0, 0, 0)
     const expiry = new Date(expiryDate)
+    expiry.setHours(0, 0, 0, 0)
     return expiry < today
   }
 
@@ -126,44 +129,40 @@ const Dashboard = () => {
            new Date(r.updatedAt).toDateString() === todayStr
   }).length
 
-  // Statistics cards data
-  const stats = [
-    { label: 'Total Stock', value: totalStock.toLocaleString(), icon: totalItemsIcon, bgColor: '#e8f0fe' },
-    { label: 'Low Stock', value: lowStockCount.toString(), icon: lowStockIcon, bgColor: '#fff799ff' },
-    { label: 'Pending Requisitions', value: pendingCount.toString(), icon: pendingIcon, bgColor: '#f9e49eff' },
-    { label: 'Issued Today', value: issuedTodayCount.toString(), icon: issuedIcon, bgColor: '#e6f9e6' },
-  ]
-
   // Calculate expired, nearing expiry, and low stock items list for notifications
   const expiredItemsList = []
   const nearExpiryItemsList = []
 
   items.forEach(item => {
     item.batches.forEach(batch => {
-      if (batch.stock > 0) {
-        if (isExpired(batch.expiryDate)) {
-          expiredItemsList.push({
-            id: `${item.id}-${batch.id}`,
-            sku: item.sku,
-            name: item.name,
-            batchId: batch.batchId,
-            stock: batch.stock,
-            unit: item.unit,
-            expiryDate: batch.expiryDate,
-            office: batch.office || 'Unallocated'
-          })
-        } else if (isNearExpiry(batch.expiryDate)) {
-          nearExpiryItemsList.push({
-            id: `${item.id}-${batch.id}`,
-            sku: item.sku,
-            name: item.name,
-            batchId: batch.batchId,
-            stock: batch.stock,
-            unit: item.unit,
-            expiryDate: batch.expiryDate,
-            office: batch.office || 'Unallocated'
-          })
-        }
+      // Expired batches: detect via expiredQty (server auto-expired) or expiry date check
+      // Office filtering is handled by the API: non-admin users only get their office's batches,
+      // admins see all batches (or filtered by selected office dropdown)
+      const batchExpiredQty = batch.expiredQty || 0
+      if (batchExpiredQty > 0 || isExpired(batch.expiryDate)) {
+        expiredItemsList.push({
+          id: `${item.id}-${batch.id}`,
+          sku: item.sku,
+          name: item.name,
+          batchId: batch.batchId,
+          stock: batch.stock,
+          expiredQty: batchExpiredQty > 0 ? batchExpiredQty : batch.stock,
+          unit: item.unit,
+          expiryDate: batch.expiryDate,
+          office: batch.office || 'Unallocated'
+        })
+      } else if (batch.stock > 0 && isNearExpiry(batch.expiryDate)) {
+        // Near-expiry: only flag if stock > 0 (nothing to worry about if depleted)
+        nearExpiryItemsList.push({
+          id: `${item.id}-${batch.id}`,
+          sku: item.sku,
+          name: item.name,
+          batchId: batch.batchId,
+          stock: batch.stock,
+          unit: item.unit,
+          expiryDate: batch.expiryDate,
+          office: batch.office || 'Unallocated'
+        })
       }
     })
   })
@@ -172,6 +171,14 @@ const Dashboard = () => {
     const total = item.batches.reduce((sum, b) => sum + b.stock, 0)
     return total < item.minStock
   })
+
+  // Statistics cards data
+  const stats = [
+    { label: 'Total Stock', value: totalStock.toLocaleString(), icon: totalItemsIcon, bgColor: '#e8f0fe' },
+    { label: 'Low Stock', value: lowStockCount.toString(), icon: lowStockIcon, bgColor: '#fff799ff' },
+    { label: 'Pending Requisitions', value: pendingCount.toString(), icon: pendingIcon, bgColor: '#f9e49eff' },
+    { label: 'Issued Today', value: issuedTodayCount.toString(), icon: issuedIcon, bgColor: '#e6f9e6' },
+  ]
 
   // Recent activity feed data
   const recentActivity = processedActivities.map(act => ({
@@ -340,10 +347,10 @@ const Dashboard = () => {
               <div className="alert-header">
                 <div className="alert-header-left">
                   <span className="alert-icon">
-                    <Icon src={activityExpiredIcon} alt="Expired Alert" size={24} />
+                    <Icon src={expiredBatchAlertIcon} alt="Expired Alert" size={24} />
                   </span>
                   <div className="alert-title-group">
-                    <span className="alert-title">Expired Inventory Detected</span>
+                    <span className="alert-title">Expired Batches Alert</span>
                     <span className="alert-subtitle">{expiredItemsList.length} batch(es) have expired and should be removed.</span>
                   </div>
                 </div>
@@ -361,7 +368,7 @@ const Dashboard = () => {
                       <div key={item.id} className="alert-item-row">
                         <span className="alert-item-name">{item.name}</span>
                         <span className="alert-item-meta">
-                          Batch: <strong>{item.batchId}</strong> • Qty: <strong>{item.stock} {item.unit}</strong> • Expired: <strong style={{ color: '#ef4444' }}>{new Date(item.expiryDate).toLocaleDateString()}</strong> • Office: <strong>{item.office}</strong>
+                          Batch: <strong>{item.batchId}</strong> • Expired Qty: <strong>{item.expiredQty} {item.unit}</strong> • Expired: <strong style={{ color: '#ef4444' }}>{new Date(item.expiryDate).toLocaleDateString()}</strong> • Office: <strong>{item.office}</strong>
                         </span>
                       </div>
                     ))}
