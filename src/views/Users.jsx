@@ -473,7 +473,8 @@ const Users = () => {
         }
 
         .status-badge.active,
-        .status-badge.in-use {
+        .status-badge.in-use,
+        .status-badge.online {
           background: #dcfce7;
           color: #166534;
         }
@@ -483,6 +484,7 @@ const Users = () => {
           color: #4b5563;
         }
 
+        .status-badge.offline,
         .status-badge.inactive {
           background: #fee2e2;
           color: #991b1b;

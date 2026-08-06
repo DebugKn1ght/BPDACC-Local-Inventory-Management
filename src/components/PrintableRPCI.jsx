@@ -318,7 +318,7 @@ const PrintableRPCI = ({ reportData, headerInfo }) => {
         @media print {
           @page {
             size: landscape;
-            margin: 0;
+            margin: 12mm 10mm;
           }
 
           html, body {
@@ -340,15 +340,34 @@ const PrintableRPCI = ({ reportData, headerInfo }) => {
 
           .rpci-print-container {
             display: block !important;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100vw !important;
-            padding: 10mm !important;
+            position: relative !important;
+            top: auto !important;
+            left: auto !important;
+            width: 100% !important;
+            padding: 0 !important;
             box-sizing: border-box !important;
             border: none;
             margin: 0 !important;
             max-width: none !important;
+          }
+
+          .items-print-table {
+            page-break-inside: auto;
+          }
+
+          .items-print-table thead {
+            display: table-header-group;
+          }
+
+          .items-print-table tr {
+            page-break-inside: avoid;
+            break-inside: avoid;
+          }
+
+          .signatures-print-table {
+            page-break-inside: avoid;
+            break-inside: avoid;
+            margin-top: 15px;
           }
         }
       `}</style>

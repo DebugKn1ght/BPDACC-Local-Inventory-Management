@@ -14,6 +14,46 @@ const PrintableRSMI = ({ reportData, headerInfo }) => {
 
   const items = reportData.items || []
 
+  // Compute recapitulation summary (group by SKU/item)
+  const recapMap = {}
+  items.forEach(item => {
+    const rawSku = item.sku ? String(item.sku).trim() : ''
+    const rawName = item.itemName ? String(item.itemName).trim() : ''
+    const key = (rawSku && rawSku !== '-') ? rawSku : (rawName || 'Unlisted')
+
+    const qty = parseFloat(item.quantityIssued) || 0
+    const cost = parseFloat(item.unitCost) || 0
+
+    if (!recapMap[key]) {
+      recapMap[key] = {
+        sku: (rawSku && rawSku !== '-') ? rawSku : (rawName || '-'),
+        totalQuantity: 0,
+        highestUnitCost: 0,
+        hasCost: false
+      }
+    }
+
+    recapMap[key].totalQuantity += qty
+
+    if (!isNaN(cost) && cost > 0) {
+      if (!recapMap[key].hasCost || cost > recapMap[key].highestUnitCost) {
+        recapMap[key].highestUnitCost = cost
+        recapMap[key].hasCost = true
+      }
+    }
+  })
+
+  const recapItems = Object.values(recapMap).map(entry => {
+    const totalCost = entry.hasCost ? entry.totalQuantity * entry.highestUnitCost : 0
+    return {
+      sku: entry.sku,
+      totalQuantity: entry.totalQuantity,
+      unitCost: entry.hasCost ? entry.highestUnitCost : null,
+      totalCost: entry.hasCost ? totalCost : null,
+      uacsCode: ''
+    }
+  })
+
   // Compute total amount if unit costs and amounts are provided
   const totalAmount = items.reduce((sum, item) => {
     const cost = parseFloat(item.unitCost) || 0
@@ -113,15 +153,53 @@ const PrintableRSMI = ({ reportData, headerInfo }) => {
               )
             })
           )}
+
+          {/* Recapitulation Section */}
+          {items.length > 0 && (
+            <>
+              {/* Spacer Row */}
+              <tr className="recap-spacer-row">
+                <td colSpan={8} style={{ height: '15px', border: '1px solid #000' }}></td>
+              </tr>
+
+              {/* Recapitulation Header Row */}
+              <tr className="recap-header-row">
+                <td className="recap-blank-cell"></td>
+                <th colSpan={2} className="text-center group-header">Recapitulation:</th>
+                <td colSpan={2} className="recap-blank-cell"></td>
+                <th colSpan={3} className="text-center group-header">Recapitulation:</th>
+              </tr>
+
+              {/* Recapitulation Column Header Row */}
+              <tr className="recap-col-header-row">
+                <td className="recap-blank-cell"></td>
+                <th className="text-center">Stock No.</th>
+                <th className="text-center">Quantity</th>
+                <td colSpan={2} className="recap-blank-cell"></td>
+                <th className="text-right">Unit Cost</th>
+                <th className="text-right">Total Cost</th>
+                <th className="text-center">UACS Object Code</th>
+              </tr>
+
+              {/* Recapitulation Data Rows */}
+              {recapItems.map((recap, idx) => (
+                <tr key={`recap-${idx}`}>
+                  <td className="recap-blank-cell"></td>
+                  <td className="text-center font-mono">{recap.sku}</td>
+                  <td className="text-center font-semibold">{recap.totalQuantity}</td>
+                  <td colSpan={2} className="recap-blank-cell"></td>
+                  <td className="text-right">
+                    {recap.unitCost !== null && recap.unitCost > 0 ? recap.unitCost.toFixed(2) : '-'}
+                  </td>
+                  <td className="text-right font-semibold">
+                    {recap.totalCost !== null && recap.totalCost > 0 ? recap.totalCost.toFixed(2) : '-'}
+                  </td>
+                  <td className="text-center"></td>
+                </tr>
+              ))}
+            </>
+          )}
         </tbody>
-        {items.length > 0 && (
-          <tfoot>
-            <tr>
-              <td colSpan={7} className="text-right"><strong>Total:</strong></td>
-              <td className="text-right"><strong>{totalAmount > 0 ? totalAmount.toFixed(2) : '-'}</strong></td>
-            </tr>
-          </tfoot>
-        )}
       </table>
 
       {/* Signatures & Certification Table */}
@@ -260,6 +338,9 @@ const PrintableRSMI = ({ reportData, headerInfo }) => {
         .text-left { text-align: left; }
         .text-right { text-align: right; }
         .empty-cell { padding: 20px; color: #666; font-style: italic; }
+        .recap-blank-cell { border: 1px solid #000; background: #fff; }
+        .font-mono { font-family: monospace, Courier, sans-serif; }
+        .font-semibold { font-weight: bold; }
 
         .signatures-print-table {
           width: 100%;
@@ -311,7 +392,7 @@ const PrintableRSMI = ({ reportData, headerInfo }) => {
         @media print {
           @page {
             size: portrait;
-            margin: 0;
+            margin: 15mm 12mm;
           }
 
           html, body {
@@ -333,15 +414,34 @@ const PrintableRSMI = ({ reportData, headerInfo }) => {
 
           .rsmi-print-container {
             display: block !important;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100vw !important;
-            padding: 15mm !important;
+            position: relative !important;
+            top: auto !important;
+            left: auto !important;
+            width: 100% !important;
+            padding: 0 !important;
             box-sizing: border-box !important;
             border: none;
             margin: 0 !important;
             max-width: none !important;
+          }
+
+          .items-print-table {
+            page-break-inside: auto;
+          }
+
+          .items-print-table thead {
+            display: table-header-group;
+          }
+
+          .items-print-table tr {
+            page-break-inside: avoid;
+            break-inside: avoid;
+          }
+
+          .signatures-print-table {
+            page-break-inside: avoid;
+            break-inside: avoid;
+            margin-top: 15px;
           }
         }
       `}</style>

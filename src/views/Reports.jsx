@@ -210,6 +210,46 @@ const Reports = () => {
 
   const selectedMonthName = MONTHS.find(m => m.value === Number(selectedMonth))?.label || ''
 
+  // Compute Recapitulation for RSMI
+  const recapMap = {}
+  items.forEach(item => {
+    const rawSku = item.sku ? String(item.sku).trim() : ''
+    const rawName = item.itemName ? String(item.itemName).trim() : ''
+    const key = (rawSku && rawSku !== '-') ? rawSku : (rawName || 'Unlisted')
+
+    const qty = parseFloat(item.quantityIssued) || 0
+    const cost = parseFloat(item.unitCost) || 0
+
+    if (!recapMap[key]) {
+      recapMap[key] = {
+        sku: (rawSku && rawSku !== '-') ? rawSku : (rawName || '-'),
+        totalQuantity: 0,
+        highestUnitCost: 0,
+        hasCost: false
+      }
+    }
+
+    recapMap[key].totalQuantity += qty
+
+    if (!isNaN(cost) && cost > 0) {
+      if (!recapMap[key].hasCost || cost > recapMap[key].highestUnitCost) {
+        recapMap[key].highestUnitCost = cost
+        recapMap[key].hasCost = true
+      }
+    }
+  })
+
+  const recapItems = Object.values(recapMap).map(entry => {
+    const totalCost = entry.hasCost ? entry.totalQuantity * entry.highestUnitCost : 0
+    return {
+      sku: entry.sku,
+      totalQuantity: entry.totalQuantity,
+      unitCost: entry.hasCost ? entry.highestUnitCost : null,
+      totalCost: entry.hasCost ? totalCost : null,
+      uacsCode: ''
+    }
+  })
+
   return (
     <div className="reports-page">
       <div className="page-header">
@@ -426,6 +466,52 @@ const Reports = () => {
                         </td>
                       </tr>
                     ))
+                  )}
+
+                  {/* Recapitulation Section */}
+                  {items.length > 0 && (
+                    <>
+                      {/* Spacer Row */}
+                      <tr className="recap-spacer-row">
+                        <td colSpan={8} style={{ height: '16px', background: '#f8fafc', border: '1px solid #000' }}></td>
+                      </tr>
+
+                      {/* Recapitulation Header Row */}
+                      <tr className="recap-header-row">
+                        <td className="recap-blank-cell"></td>
+                        <th colSpan={2} className="text-center recap-group-header">Recapitulation:</th>
+                        <td colSpan={2} className="recap-blank-cell"></td>
+                        <th colSpan={3} className="text-center recap-group-header">Recapitulation:</th>
+                      </tr>
+
+                      {/* Recapitulation Column Header Row */}
+                      <tr className="recap-col-header-row">
+                        <td className="recap-blank-cell"></td>
+                        <th className="text-center">Stock No.</th>
+                        <th className="text-center">Quantity</th>
+                        <td colSpan={2} className="recap-blank-cell"></td>
+                        <th className="text-right">Unit Cost</th>
+                        <th className="text-right">Total Cost</th>
+                        <th className="text-center">UACS Object Code</th>
+                      </tr>
+
+                      {/* Recapitulation Data Rows */}
+                      {recapItems.map((recap, idx) => (
+                        <tr key={`recap-${idx}`}>
+                          <td className="recap-blank-cell"></td>
+                          <td className="text-center font-mono font-semibold">{recap.sku}</td>
+                          <td className="text-center font-semibold">{recap.totalQuantity}</td>
+                          <td colSpan={2} className="recap-blank-cell"></td>
+                          <td className="text-right font-medium">
+                            {recap.unitCost !== null && recap.unitCost > 0 ? recap.unitCost.toFixed(2) : '-'}
+                          </td>
+                          <td className="text-right font-semibold text-emerald-700">
+                            {recap.totalCost !== null && recap.totalCost > 0 ? recap.totalCost.toFixed(2) : '-'}
+                          </td>
+                          <td className="text-center"></td>
+                        </tr>
+                      ))}
+                    </>
                   )}
                 </tbody>
               </table>
@@ -944,6 +1030,24 @@ const Reports = () => {
           border: 1px solid #000;
           padding: 8px 10px;
           font-size: 13px;
+        }
+
+        .recap-blank-cell {
+          border: 1px solid #000;
+          background: #f8fafc;
+        }
+
+        .recap-group-header {
+          background: #e2e8f0 !important;
+          color: #0f172a !important;
+          font-weight: 700;
+          letter-spacing: 0.5px;
+        }
+
+        .recap-col-header-row th {
+          background: #f1f5f9;
+          font-weight: 700;
+          color: #1e293b;
         }
 
         .division-header-row th {
