@@ -242,6 +242,16 @@ exports.Prisma.ActivityScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.EditLogScalarFieldEnum = {
+  id: 'id',
+  itemSku: 'itemSku',
+  itemName: 'itemName',
+  editedBy: 'editedBy',
+  office: 'office',
+  changes: 'changes',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -263,7 +273,8 @@ exports.Prisma.ModelName = {
   RequisitionItem: 'RequisitionItem',
   RequisitionItemRelease: 'RequisitionItemRelease',
   RisCounter: 'RisCounter',
-  Activity: 'Activity'
+  Activity: 'Activity',
+  EditLog: 'EditLog'
 };
 
 /**

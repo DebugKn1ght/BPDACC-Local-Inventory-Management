@@ -185,3 +185,15 @@ model Activity {
 
   @@map("activities")
 }
+
+model EditLog {
+  id        Int      @id @default(autoincrement())
+  itemSku   String?  @db.VarChar(100) @map("item_sku")
+  itemName  String   @db.VarChar(255) @map("item_name")
+  editedBy  String   @db.VarChar(100) @map("edited_by")
+  office    String?  @db.VarChar(100)
+  changes   String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("edit_logs")
+}

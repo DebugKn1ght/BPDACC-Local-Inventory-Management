@@ -44,8 +44,8 @@ const Users = () => {
   
   const [offices, setOffices] = useState([])
 
-  const loadData = async () => {
-    setLoading(true)
+  const loadData = async (isSilent = false) => {
+    if (!isSilent) setLoading(true)
     try {
       const fetchedUsers = await supabaseDb.getUsers()
       setUsers(fetchedUsers)
@@ -55,12 +55,19 @@ const Users = () => {
     } catch (e) {
       console.error('Failed to load users:', e)
     } finally {
-      setLoading(false)
+      if (!isSilent) setLoading(false)
     }
   }
 
   useEffect(() => {
     loadData()
+
+    // Auto-refresh user list every 8 seconds to reflect real-time status changes
+    const interval = setInterval(() => {
+      loadData(true)
+    }, 8000)
+
+    return () => clearInterval(interval)
   }, [])
 
   const handleAddSubmit = async (e) => {
@@ -69,7 +76,7 @@ const Users = () => {
     try {
       await supabaseDb.addUser({
         ...formData,
-        status: 'Active'
+        status: 'Not In Use'
       })
       showToast('User added successfully!', 'success')
       setShowAddModal(false)
@@ -165,8 +172,8 @@ const Users = () => {
                   <td>{user.email}</td>
                   <td>{user.officeName}</td>
                   <td>
-                    <span className={`status-badge ${user.status.toLowerCase()}`}>
-                      {user.status}
+                    <span className={`status-badge ${user.isAdmin ? 'admin' : (user.status || 'Not In Use').toLowerCase().replace(/\s+/g, '-')}`}>
+                      {user.isAdmin ? 'Admin' : (user.status || 'Not In Use')}
                     </span>
                   </td>
                   <td>
@@ -303,16 +310,6 @@ const Users = () => {
                   ))}
                 </select>
               </div>
-              <div className="form-group">
-                <label>Status</label>
-                <select 
-                  value={editFormData.status}
-                  onChange={e => setEditFormData({...editFormData, status: e.target.value})}
-                >
-                  <option value="Active">Active</option>
-                  <option value="Inactive">Inactive</option>
-                </select>
-              </div>
               <div className="modal-actions">
                 <button type="button" className="btn-secondary" onClick={() => setShowEditModal(false)}>
                   Cancel
@@ -427,6 +424,9 @@ const Users = () => {
         .user-avatar-small {
           width: 40px;
           height: 40px;
+          min-width: 40px;
+          min-height: 40px;
+          aspect-ratio: 1 / 1;
           border-radius: 50%;
           background: linear-gradient(135deg, #3b82f6, #1e40af);
           display: flex;
@@ -467,9 +467,20 @@ const Users = () => {
           font-weight: 600;
         }
 
-        .status-badge.active {
+        .status-badge.admin {
+          background: #e0e7ff;
+          color: #3730a3;
+        }
+
+        .status-badge.active,
+        .status-badge.in-use {
           background: #dcfce7;
           color: #166534;
+        }
+
+        .status-badge.not-in-use {
+          background: #f3f4f6;
+          color: #4b5563;
         }
 
         .status-badge.inactive {

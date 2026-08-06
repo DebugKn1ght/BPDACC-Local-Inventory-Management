@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { supabaseDb } from '../utils/apiDb'
 import PrintableRSMI from '../components/PrintableRSMI'
+import PrintableRPCI from '../components/PrintableRPCI'
 import Icon from '../components/Icon'
 import reportsIcon from '../assets/icons/reports/file-chart-column.svg'
 
@@ -40,6 +41,20 @@ const Reports = () => {
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(false)
 
+  // ========== RPCI State ==========
+  const [rpciYear, setRpciYear] = useState(currentDate.getFullYear())
+  const [rpciItems, setRpciItems] = useState([])
+  const [rpciLoading, setRpciLoading] = useState(false)
+
+  // RPCI Header Inputs
+  const [rpciFundCluster, setRpciFundCluster] = useState('')
+  const [rpciInventoryType, setRpciInventoryType] = useState('')
+  const [rpciAsAt, setRpciAsAt] = useState('')
+  const [rpciForWhich1, setRpciForWhich1] = useState('')
+  const [rpciForWhich2, setRpciForWhich2] = useState('')
+  const [rpciForWhich3, setRpciForWhich3] = useState('')
+  const [rpciAssumedOn, setRpciAssumedOn] = useState('')
+
   // Fetch RSMI report data whenever Month or Year changes
   const fetchReportData = async () => {
     setLoading(true)
@@ -54,11 +69,40 @@ const Reports = () => {
     }
   }
 
+  // Fetch RPCI report data whenever rpciYear changes
+  const fetchRpciData = async () => {
+    setRpciLoading(true)
+    try {
+      const data = await supabaseDb.getRpciReportData(rpciYear)
+      // Add editable user-input fields to each item
+      const enriched = (data || []).map(item => ({
+        ...item,
+        article: '',
+        onHandPerCount: '',
+        shortageQty: '',
+        shortageValue: '',
+        remarks: ''
+      }))
+      setRpciItems(enriched)
+    } catch (err) {
+      console.error('Error fetching RPCI report data:', err)
+      setRpciItems([])
+    } finally {
+      setRpciLoading(false)
+    }
+  }
+
   useEffect(() => {
     if (activeTab === 'rsmi') {
       fetchReportData()
     }
   }, [selectedYear, selectedMonth, activeTab])
+
+  useEffect(() => {
+    if (activeTab === 'custom') {
+      fetchRpciData()
+    }
+  }, [rpciYear, activeTab])
 
   // Handle accounting user inputs (Unit Cost & Amount)
   const handleUnitCostChange = (idx, value) => {
@@ -77,8 +121,91 @@ const Reports = () => {
     })
   }
 
+  // RPCI editable field handler
+  const handleRpciFieldChange = (idx, field, value) => {
+    setRpciItems(prev => {
+      const updated = [...prev]
+      updated[idx] = { ...updated[idx], [field]: value }
+      return updated
+    })
+  }
+
   const handlePrint = () => {
     window.print()
+  }
+
+  // ========== XLS Export ==========
+  const handleExportXls = () => {
+    // Build the HTML table string for XLS
+    let html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">'
+    html += '<head><meta charset="utf-8"><style>td, th { border: 1px solid #000; padding: 4px 6px; font-family: Arial; font-size: 11px; } th { background: #f2f2f2; font-weight: bold; }</style></head>'
+    html += '<body>'
+
+    // Title rows
+    html += '<table>'
+    html += '<tr><td colspan="10" style="text-align:center;font-weight:bold;font-size:14px;border:none;">REPORT ON THE PHYSICAL COUNT OF INVENTORIES</td></tr>'
+    html += `<tr><td colspan="10" style="text-align:center;border:none;"><u>${rpciInventoryType || ''}</u></td></tr>`
+    html += '<tr><td colspan="10" style="text-align:center;font-style:italic;font-size:10px;border:none;">(Type of Inventory Item)</td></tr>'
+    html += `<tr><td colspan="10" style="text-align:center;border:none;">As at <u>${rpciAsAt || ''}</u></td></tr>`
+    html += '<tr><td colspan="10" style="border:none;"></td></tr>'
+
+    // Meta info
+    html += `<tr><td colspan="10" style="border:none;">Fund Cluster: <u>${rpciFundCluster || ''}</u></td></tr>`
+    html += `<tr><td colspan="10" style="border:none;">For which <u>${rpciForWhich1 || ''}</u>, <u>${rpciForWhich2 || ''}</u>, <u>${rpciForWhich3 || ''}</u>, is accountable, having assumed such accountability on <u>${rpciAssumedOn || ''}</u></td></tr>`
+    html += '<tr><td colspan="10" style="border:none;"></td></tr>'
+
+    // Table header
+    html += '<tr>'
+    html += '<th>Article</th>'
+    html += '<th>Description</th>'
+    html += '<th>Stock Number</th>'
+    html += '<th>Unit of Measure</th>'
+    html += '<th>Unit Value</th>'
+    html += '<th>Balance Per Card</th>'
+    html += '<th>On Hand Per Count</th>'
+    html += '<th>Shortage/Overage Quantity</th>'
+    html += '<th>Shortage/Overage Value</th>'
+    html += '<th>Remarks</th>'
+    html += '</tr>'
+
+    // Table body
+    for (const item of rpciItems) {
+      html += '<tr>'
+      html += `<td>${item.article || ''}</td>`
+      html += `<td>${item.itemName || ''}</td>`
+      html += `<td>${item.sku || ''}</td>`
+      html += `<td>${item.unit || ''}</td>`
+      html += `<td style="text-align:right;">${item.unitValue > 0 ? Number(item.unitValue).toFixed(2) : ''}</td>`
+      html += `<td style="text-align:right;">${item.balancePerCard != null ? item.balancePerCard : ''}</td>`
+      html += `<td style="text-align:right;">${item.onHandPerCount || ''}</td>`
+      html += `<td style="text-align:right;">${item.shortageQty || ''}</td>`
+      html += `<td style="text-align:right;">${item.shortageValue || ''}</td>`
+      html += `<td>${item.remarks || ''}</td>`
+      html += '</tr>'
+    }
+
+    // Spacer
+    html += '<tr><td colspan="10" style="border:none;"></td></tr>'
+
+    // Signatures
+    html += '<tr>'
+    html += '<td colspan="3" style="border:1px solid #000;vertical-align:top;font-weight:bold;">Certified Correct By:<br/><br/><br/><br/><center>_________________________________<br/><span style="font-size:10px;font-weight:normal;font-style:italic;">Signature Over Printed Name of Inventory Committee Chair and Members</span></center></td>'
+    html += '<td colspan="3" style="border:1px solid #000;vertical-align:top;font-weight:bold;">Approved By:<br/><br/><br/><br/><center>_________________________________<br/><span style="font-size:10px;font-weight:normal;font-style:italic;">Signature Over Printed Name of Head of Agency/Entity or Authorized Representative</span></center></td>'
+    html += '<td colspan="4" style="border:1px solid #000;vertical-align:top;font-weight:bold;">Verified By:<br/><br/><br/><br/><center>_________________________________<br/><span style="font-size:10px;font-weight:normal;font-style:italic;">Signature over Printed Name of COA Representative</span></center></td>'
+    html += '</tr>'
+
+    html += '</table></body></html>'
+
+    // Create blob and trigger download
+    const blob = new Blob([html], { type: 'application/vnd.ms-excel' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `RPCI_Report_${rpciYear}.xls`
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
   }
 
   const selectedMonthName = MONTHS.find(m => m.value === Number(selectedMonth))?.label || ''
@@ -97,6 +224,19 @@ const Reports = () => {
             </button>
             <button className="btn btn-primary" onClick={handlePrint}>
               Print RSMI Report
+            </button>
+          </div>
+        )}
+        {activeTab === 'custom' && (
+          <div className="header-actions">
+            <button className="btn btn-secondary" onClick={fetchRpciData} disabled={rpciLoading}>
+              {rpciLoading ? 'Loading...' : 'Refresh Data'}
+            </button>
+            <button className="btn btn-export" onClick={handleExportXls}>
+              Export as XLS
+            </button>
+            <button className="btn btn-primary" onClick={handlePrint}>
+              Print RPCI Report
             </button>
           </div>
         )}
@@ -305,27 +445,250 @@ const Reports = () => {
         </>
       )}
 
-      {/* SECONDARY REPORT TAB CONTENT */}
+      {/* RPCI REPORT TAB CONTENT */}
       {activeTab === 'custom' && (
-        <div className="card custom-report-card">
-          <div className="custom-report-header">
-            <div className="wip-icon">
-              <Icon src={reportsIcon} alt="Reports" size={32} />
+        <>
+          {/* Control Bar for Yearly Filter */}
+          <div className="card filter-card">
+            <div className="filter-title">
+              <Icon src={reportsIcon} alt="Report" size={20} />
+              <span>RPCI Report Configuration & Year</span>
             </div>
-            <div>
-              <h2 className="custom-report-title">Report on the Physical Count of Inventories</h2>
-              <p className="custom-report-subtitle">
-                This tab is ready for your secondary report structure.
-              </p>
+            <div className="filter-controls">
+              <div className="form-group">
+                <label>Select Year</label>
+                <input
+                  type="number"
+                  value={rpciYear}
+                  onChange={(e) => setRpciYear(Number(e.target.value))}
+                  className="text-input year-input"
+                  min="2020"
+                  max="2035"
+                />
+              </div>
             </div>
           </div>
-          <div className="placeholder-table-container">
-            <div className="placeholder-info">
-              <span className="placeholder-badge">Awaiting Table Format</span>
-              <p>To be made later after setting xampp db.</p>
+
+          {/* RPCI Form Card */}
+          <div className="ris-card">
+            {/* Header logos & agency title */}
+            <div className="ris-header">
+              <div className="header-text-block">
+                <p className="agency-line">Republic of the Philippines</p>
+                <p className="province-line">PROVINCE OF BOHOL</p>
+                <p className="city-line">City of Tagbilaran</p>
+                <p className="office-line">Provincial Health Office</p>
+                <p className="center-line">BOHOL PROVINCIAL DIAGNOSTIC &amp; AMBULATORY CARE CENTER</p>
+              </div>
+            </div>
+
+            {/* Form Main Title */}
+            <div className="rsmi-title-banner rpci-title-banner">
+              Report on the Physical Count of Inventories
+              <div className="rpci-type-input-row">
+                <input
+                  type="text"
+                  value={rpciInventoryType}
+                  onChange={(e) => setRpciInventoryType(e.target.value)}
+                  placeholder="Enter type of inventory item"
+                  className="rpci-underline-input"
+                />
+              </div>
+              <span className="rpci-type-label">(Type of Inventory Item)</span>
+              <div className="rpci-as-at-row">
+                <span className="as-at-text">As at</span>
+                <input
+                  type="text"
+                  value={rpciAsAt}
+                  onChange={(e) => setRpciAsAt(e.target.value)}
+                  placeholder="Enter date"
+                  className="rpci-underline-input rpci-as-at-input"
+                />
+              </div>
+            </div>
+
+            {/* Meta Fields: Fund Cluster & Accountability */}
+            <div className="rpci-meta-section">
+              <div className="rpci-meta-row">
+                <label>Fund Cluster:</label>
+                <input
+                  type="text"
+                  value={rpciFundCluster}
+                  onChange={(e) => setRpciFundCluster(e.target.value)}
+                  placeholder="Enter Fund Cluster"
+                  className="ris-input"
+                />
+              </div>
+              <div className="rpci-accountability-row">
+                <span>For which</span>
+                <input
+                  type="text"
+                  value={rpciForWhich1}
+                  onChange={(e) => setRpciForWhich1(e.target.value)}
+                  placeholder=""
+                  className="rpci-inline-input"
+                />
+                <span>,</span>
+                <input
+                  type="text"
+                  value={rpciForWhich2}
+                  onChange={(e) => setRpciForWhich2(e.target.value)}
+                  placeholder=""
+                  className="rpci-inline-input"
+                />
+                <span>,</span>
+                <input
+                  type="text"
+                  value={rpciForWhich3}
+                  onChange={(e) => setRpciForWhich3(e.target.value)}
+                  placeholder=""
+                  className="rpci-inline-input"
+                />
+                <span>, is accountable, having assumed such accountability on</span>
+                <input
+                  type="text"
+                  value={rpciAssumedOn}
+                  onChange={(e) => setRpciAssumedOn(e.target.value)}
+                  placeholder=""
+                  className="rpci-inline-input"
+                />
+              </div>
+            </div>
+
+            {/* Table Section */}
+            <div className="table-wrapper">
+              <table className="rsmi-items-table rpci-items-table">
+                <thead>
+                  <tr className="column-header-row">
+                    <th style={{ width: '7%' }}>Article</th>
+                    <th style={{ width: '18%' }}>Description</th>
+                    <th style={{ width: '10%' }}>Stock Number</th>
+                    <th style={{ width: '8%' }}>Unit of Measure</th>
+                    <th style={{ width: '9%' }}>Unit Value</th>
+                    <th style={{ width: '10%' }}>Balance Per Card</th>
+                    <th style={{ width: '10%' }}>On Hand Per Count</th>
+                    <th colSpan={2} style={{ width: '14%' }}>Shortage/Overage</th>
+                    <th style={{ width: '14%' }}>Remarks</th>
+                  </tr>
+                  <tr className="column-subheader-row">
+                    <th colSpan={7}></th>
+                    <th style={{ width: '7%' }}>Quantity</th>
+                    <th style={{ width: '7%' }}>Value</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rpciLoading ? (
+                    <tr>
+                      <td colSpan={10} className="text-center py-4">Loading RPCI report data...</td>
+                    </tr>
+                  ) : rpciItems.length === 0 ? (
+                    <tr>
+                      <td colSpan={10} className="text-center py-4 text-muted">
+                        No inventory items found for {rpciYear}.
+                      </td>
+                    </tr>
+                  ) : (
+                    rpciItems.map((item, idx) => (
+                      <tr key={item.id || idx}>
+                        <td>
+                          <input
+                            type="text"
+                            value={item.article || ''}
+                            onChange={(e) => handleRpciFieldChange(idx, 'article', e.target.value)}
+                            className="table-input text-center"
+                            placeholder=""
+                          />
+                        </td>
+                        <td className="font-semibold">{item.itemName}</td>
+                        <td className="text-center font-mono">{item.sku || '-'}</td>
+                        <td className="text-center">{item.unit}</td>
+                        <td className="text-right">
+                          {item.unitValue > 0 ? Number(item.unitValue).toFixed(2) : ''}
+                        </td>
+                        <td className="text-right font-semibold">
+                          {item.balancePerCard != null ? item.balancePerCard : ''}
+                        </td>
+                        <td>
+                          <input
+                            type="text"
+                            value={item.onHandPerCount || ''}
+                            onChange={(e) => handleRpciFieldChange(idx, 'onHandPerCount', e.target.value)}
+                            className="table-input text-right"
+                            placeholder=""
+                          />
+                        </td>
+                        <td>
+                          <input
+                            type="text"
+                            value={item.shortageQty || ''}
+                            onChange={(e) => handleRpciFieldChange(idx, 'shortageQty', e.target.value)}
+                            className="table-input text-right"
+                            placeholder=""
+                          />
+                        </td>
+                        <td>
+                          <input
+                            type="text"
+                            value={item.shortageValue || ''}
+                            onChange={(e) => handleRpciFieldChange(idx, 'shortageValue', e.target.value)}
+                            className="table-input text-right"
+                            placeholder=""
+                          />
+                        </td>
+                        <td>
+                          <input
+                            type="text"
+                            value={item.remarks || ''}
+                            onChange={(e) => handleRpciFieldChange(idx, 'remarks', e.target.value)}
+                            className="table-input"
+                            placeholder=""
+                          />
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Signatures Section */}
+            <div className="rpci-signatures-section">
+              <div className="rpci-sig-block">
+                <p className="rpci-sig-title">Certified Correct By:</p>
+                <div className="rpci-sig-space"></div>
+                <p className="rpci-sig-line">_______________________________________</p>
+                <p className="rpci-sig-label">Signature Over Printed Name of Inventory Committee Chair and Members</p>
+              </div>
+              <div className="rpci-sig-block">
+                <p className="rpci-sig-title">Approved By:</p>
+                <div className="rpci-sig-space"></div>
+                <p className="rpci-sig-line">_______________________________________</p>
+                <p className="rpci-sig-label">Signature Over Printed Name of Head of Agency/Entity or Authorized Representative</p>
+              </div>
+              <div className="rpci-sig-block">
+                <p className="rpci-sig-title">Verified By:</p>
+                <div className="rpci-sig-space"></div>
+                <p className="rpci-sig-line">_______________________________________</p>
+                <p className="rpci-sig-label">Signature over Printed Name of COA Representative</p>
+              </div>
             </div>
           </div>
-        </div>
+
+          {/* Hidden Printable RPCI component rendered for browser print dialog */}
+          <PrintableRPCI
+            reportData={{ items: rpciItems }}
+            headerInfo={{
+              fundCluster: rpciFundCluster,
+              inventoryType: rpciInventoryType,
+              asAt: rpciAsAt,
+              forWhich1: rpciForWhich1,
+              forWhich2: rpciForWhich2,
+              forWhich3: rpciForWhich3,
+              assumedOn: rpciAssumedOn
+            }}
+          />
+        </>
       )}
 
       <style>{`
@@ -415,6 +778,15 @@ const Reports = () => {
           background: #d1d5db;
         }
 
+        .btn-export {
+          background: #059669;
+          color: white;
+        }
+
+        .btn-export:hover {
+          background: #047857;
+        }
+
         .card {
           background: white;
           border-radius: 12px;
@@ -469,68 +841,6 @@ const Reports = () => {
 
         .year-input {
           min-width: 100px;
-        }
-
-        /* Custom Report Placeholder Card */
-        .custom-report-card {
-          padding: 30px;
-        }
-
-        .custom-report-header {
-          display: flex;
-          align-items: center;
-          gap: 16px;
-          margin-bottom: 24px;
-        }
-
-        .wip-icon {
-          width: 52px;
-          height: 52px;
-          border-radius: 12px;
-          background: #eff6ff;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-shrink: 0;
-        }
-
-        .custom-report-title {
-          font-size: 18px;
-          font-weight: 800;
-          color: #111827;
-          margin-bottom: 4px;
-        }
-
-        .custom-report-subtitle {
-          font-size: 14px;
-          color: #6b7280;
-        }
-
-        .placeholder-table-container {
-          border: 2px dashed #cbd5e1;
-          border-radius: 12px;
-          padding: 40px 20px;
-          text-align: center;
-          background: #f8fafc;
-        }
-
-        .placeholder-info {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 12px;
-          color: #64748b;
-        }
-
-        .placeholder-badge {
-          background: #e0e7ff;
-          color: #3730a3;
-          font-weight: 700;
-          font-size: 12px;
-          padding: 4px 12px;
-          border-radius: 20px;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
         }
 
         /* RIS Card Layout */
@@ -661,6 +971,15 @@ const Reports = () => {
           text-align: center;
         }
 
+        .column-subheader-row th {
+          background: #f8fafc;
+          font-weight: 600;
+          color: #475569;
+          text-align: center;
+          font-size: 12px;
+          padding: 4px 6px;
+        }
+
         .table-input {
           width: 100%;
           padding: 4px 6px;
@@ -684,6 +1003,152 @@ const Reports = () => {
         .py-4 { padding-top: 16px; padding-bottom: 16px; }
         .text-muted { color: #64748b; }
 
+        /* ========== RPCI Specific Styles ========== */
+
+        .rpci-title-banner {
+          gap: 6px;
+        }
+
+        .rpci-type-input-row {
+          display: flex;
+          justify-content: center;
+          margin-top: 4px;
+        }
+
+        .rpci-underline-input {
+          border: none;
+          border-bottom: 1px solid #000;
+          background: transparent;
+          text-align: center;
+          font-size: 14px;
+          padding: 2px 8px;
+          min-width: 250px;
+          outline: none;
+          font-weight: 600;
+        }
+
+        .rpci-underline-input:focus {
+          border-bottom-color: #2563eb;
+          border-bottom-width: 2px;
+        }
+
+        .rpci-type-label {
+          font-size: 11px;
+          font-weight: 400;
+          font-style: italic;
+          color: #64748b;
+        }
+
+        .rpci-as-at-row {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          margin-top: 2px;
+        }
+
+        .as-at-text {
+          font-size: 13px;
+          font-weight: 500;
+          color: #475569;
+        }
+
+        .rpci-as-at-input {
+          min-width: 200px;
+        }
+
+        .rpci-meta-section {
+          border: 1px solid #000;
+          padding: 14px 16px;
+          margin-bottom: 20px;
+          background: #fafafa;
+        }
+
+        .rpci-meta-row {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin-bottom: 12px;
+        }
+
+        .rpci-meta-row label {
+          font-size: 13px;
+          font-weight: 700;
+          min-width: 110px;
+          color: #1e293b;
+        }
+
+        .rpci-accountability-row {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          flex-wrap: wrap;
+          font-size: 13px;
+          color: #1e293b;
+          line-height: 2;
+        }
+
+        .rpci-inline-input {
+          border: none;
+          border-bottom: 1px solid #94a3b8;
+          background: transparent;
+          font-size: 13px;
+          padding: 2px 6px;
+          min-width: 80px;
+          max-width: 140px;
+          outline: none;
+        }
+
+        .rpci-inline-input:focus {
+          border-bottom-color: #2563eb;
+          border-bottom-width: 2px;
+        }
+
+        /* RPCI Signatures */
+        .rpci-signatures-section {
+          border: 1px solid #000;
+          border-top: none;
+          margin-top: -1px;
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        .rpci-sig-block {
+          padding: 16px 20px;
+          border-right: 1px solid #000;
+        }
+
+        .rpci-sig-block:last-child {
+          border-right: none;
+        }
+
+        .rpci-sig-title {
+          font-size: 13px;
+          font-weight: 700;
+          color: #1e293b;
+          margin: 0 0 16px 0;
+        }
+
+        .rpci-sig-space {
+          height: 30px;
+        }
+
+        .rpci-sig-line {
+          text-align: center;
+          margin: 0;
+          font-weight: 500;
+          color: #374151;
+          font-size: 13px;
+        }
+
+        .rpci-sig-label {
+          text-align: center;
+          font-size: 11px;
+          color: #6b7280;
+          margin: 4px 0 0 0;
+          font-style: italic;
+        }
+
         @media (max-width: 768px) {
           .meta-fields-grid {
             grid-template-columns: 1fr;
@@ -696,6 +1161,24 @@ const Reports = () => {
 
           .header-actions {
             justify-content: flex-start;
+          }
+
+          .rpci-accountability-row {
+            flex-direction: column;
+            align-items: flex-start;
+          }
+
+          .rpci-signatures-section {
+            grid-template-columns: 1fr;
+          }
+
+          .rpci-sig-block {
+            border-right: none;
+            border-bottom: 1px solid #000;
+          }
+
+          .rpci-sig-block:last-child {
+            border-bottom: none;
           }
         }
       `}</style>

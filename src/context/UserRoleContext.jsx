@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
+import { supabaseDb } from '../utils/apiDb'
 
 /**
  * Context for managing user role, office, and permissions throughout the application
@@ -27,11 +28,48 @@ export const UserRoleProvider = ({ children }) => {
     }
   }, [currentUser])
 
+  // Heartbeat & status tracking for non-admin users
+  useEffect(() => {
+    if (!currentUser || currentUser.isAdmin) return
+
+    // Immediately send a heartbeat on mount / log in
+    supabaseDb.heartbeat(currentUser.id).catch(() => {})
+
+    // Send heartbeat every 20 seconds to maintain 'Online' status
+    const intervalId = setInterval(() => {
+      supabaseDb.heartbeat(currentUser.id).catch(() => {})
+    }, 20000)
+
+    // Handle tab / browser window close
+    const handleUnload = () => {
+      try {
+        const data = JSON.stringify({ method: 'updateUserStatus', args: [currentUser.id, 'Offline'] })
+        const blob = new Blob([data], { type: 'application/json' })
+        navigator.sendBeacon('/api/rpc', blob)
+      } catch (e) {
+        // Fallback
+      }
+    }
+
+    window.addEventListener('beforeunload', handleUnload)
+
+    return () => {
+      clearInterval(intervalId)
+      window.removeEventListener('beforeunload', handleUnload)
+    }
+  }, [currentUser])
+
   const login = (userData) => {
     setCurrentUser(userData)
+    if (!userData.isAdmin) {
+      supabaseDb.updateUserStatus(userData.id, 'Online').catch(() => {})
+    }
   }
 
   const logout = () => {
+    if (currentUser && !currentUser.isAdmin) {
+      supabaseDb.updateUserStatus(currentUser.id, 'Offline').catch(() => {})
+    }
     setCurrentUser(null)
   }
 

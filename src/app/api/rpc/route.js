@@ -28,21 +28,45 @@ export async function POST(req) {
         if (!isMatch) {
           throw new Error('Invalid email or password');
         }
-        if (user.status !== 'Active') {
+        if (user.status === 'Inactive' || user.status === 'Disabled') {
           throw new Error('User account is inactive');
         }
+
+        let currentStatus = user.status;
+        if (!user.isAdmin) {
+          currentStatus = 'Online';
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { status: 'Online', updatedAt: new Date() }
+          });
+        }
+
         result = {
           id: user.id,
           name: user.name,
           email: user.email,
           isAdmin: user.isAdmin,
           office: user.office ? user.office.name : 'N/A',
-          officeId: user.officeId
+          officeId: user.officeId,
+          status: currentStatus
         };
         break;
       }
 
       case 'getUsers': {
+        // Auto-update non-admin users whose status is 'Online' but haven't updated/pinged in > 45 seconds
+        const cutoffTime = new Date(Date.now() - 45000);
+        await prisma.user.updateMany({
+          where: {
+            isAdmin: false,
+            status: 'Online',
+            updatedAt: { lt: cutoffTime }
+          },
+          data: {
+            status: 'Offline'
+          }
+        });
+
         const users = await prisma.user.findMany({
           include: { office: true },
           orderBy: { name: 'asc' }
@@ -54,6 +78,36 @@ export async function POST(req) {
             officeName: u.office ? u.office.name : 'N/A'
           };
         });
+        break;
+      }
+
+      case 'updateUserStatus': {
+        const [userId, newStatus] = args;
+        if (userId) {
+          const targetUser = await prisma.user.findUnique({ where: { id: userId } });
+          if (targetUser && !targetUser.isAdmin) {
+            await prisma.user.update({
+              where: { id: userId },
+              data: { status: newStatus, updatedAt: new Date() }
+            });
+          }
+        }
+        result = { success: true };
+        break;
+      }
+
+      case 'heartbeat': {
+        const [userId] = args;
+        if (userId) {
+          const targetUser = await prisma.user.findUnique({ where: { id: userId } });
+          if (targetUser && !targetUser.isAdmin) {
+            await prisma.user.update({
+              where: { id: userId },
+              data: { status: 'Online', updatedAt: new Date() }
+            });
+          }
+        }
+        result = { success: true };
         break;
       }
 
@@ -107,9 +161,11 @@ export async function POST(req) {
         const dataToUpdate = {
           name: userData.name,
           email: userData.email,
-          officeId: officeId,
-          status: userData.status
+          officeId: officeId
         };
+        if (userData.status) {
+          dataToUpdate.status = userData.status;
+        }
 
         if (userData.password && userData.password.trim() !== '') {
           const salt = await bcrypt.genSalt(10);
@@ -332,6 +388,7 @@ export async function POST(req) {
                     brand: b.brand,
                     supplier: b.supplier,
                     stockNumber: b.stockNumber,
+                    stock: Number(b.stock) || 0,
                     expiryDate: b.expiryDate ? new Date(b.expiryDate) : null,
                     officeId: officeMap[b.office] || null,
                     ptr: b.ptr,
@@ -381,7 +438,19 @@ export async function POST(req) {
 
       case 'getActivities': {
         const [role, office] = args;
-        result = await prisma.activity.findMany({ orderBy: { id: 'desc' } });
+        const isAdmin = role === true;
+        
+        let whereCondition = {};
+        if (!isAdmin) {
+          whereCondition = { office: office || '' };
+        } else if (office && office !== 'All') {
+          whereCondition = { office: office };
+        }
+
+        result = await prisma.activity.findMany({
+          where: whereCondition,
+          orderBy: { id: 'desc' }
+        });
         break;
       }
       
@@ -448,6 +517,41 @@ export async function POST(req) {
             stock: Number(g._sum.stock || 0)
           }))
           .sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      }
+
+      case 'getBatchesWithStockForItem': {
+        const [inventoryItemId] = args;
+        if (!inventoryItemId) {
+          result = [];
+          break;
+        }
+
+        const batches = await prisma.inventoryBatch.findMany({
+          where: {
+            inventoryItemId: Number(inventoryItemId),
+            stock: { gt: 0 },
+            officeId: { not: null }
+          },
+          include: {
+            office: true
+          },
+          orderBy: [
+            { office: { name: 'asc' } },
+            { id: 'asc' }
+          ]
+        });
+
+        result = batches.map(b => ({
+          id: b.id,
+          batchId: b.batchId,
+          stock: Number(b.stock),
+          officeId: b.officeId,
+          officeName: b.office?.name || 'Unknown',
+          brand: b.brand,
+          expiryDate: b.expiryDate,
+          stockNumber: b.stockNumber
+        }));
         break;
       }
 
@@ -623,6 +727,7 @@ export async function POST(req) {
             const effectiveInventoryItemId = releaseInfo?.inventoryItemId || reqItem.inventoryItemId;
             const issuanceQty = releaseInfo?.quantityReleased ?? Number(reqItem.quantity) ?? 0;
             const sourceOfficeId = releaseInfo?.sourceOfficeId || requisition.officeId || null;
+            const inventoryBatchId = releaseInfo?.inventoryBatchId || null;
             const releaseRemarks = releaseInfo?.remarks || null;
 
             if (reqItem.isUnlisted && issuanceQty > 0 && !effectiveInventoryItemId) {
@@ -649,14 +754,21 @@ export async function POST(req) {
             if (effectiveInventoryItemId && issuanceQty > 0) {
               // Try to find batch for the source office
               let batch = null;
-              if (reqItem.stockNumber && effectiveInventoryItemId === reqItem.inventoryItemId) {
-                batch = await tx.inventoryBatch.findFirst({
-                  where: {
-                    inventoryItemId: effectiveInventoryItemId,
-                    stockNumber: reqItem.stockNumber,
-                    ...(sourceOfficeId ? { officeId: sourceOfficeId } : {})
-                  }
+              if (inventoryBatchId) {
+                batch = await tx.inventoryBatch.findUnique({
+                  where: { id: inventoryBatchId }
                 });
+              }
+              if (!batch) {
+                if (reqItem.stockNumber && effectiveInventoryItemId === reqItem.inventoryItemId) {
+                  batch = await tx.inventoryBatch.findFirst({
+                    where: {
+                      inventoryItemId: effectiveInventoryItemId,
+                      stockNumber: reqItem.stockNumber,
+                      ...(sourceOfficeId ? { officeId: sourceOfficeId } : {})
+                    }
+                  });
+                }
               }
               if (!batch) {
                 batch = await tx.inventoryBatch.findFirst({
@@ -1003,6 +1115,107 @@ export async function POST(req) {
             remarks: data.remarks || null
           }
         });
+        break;
+      }
+
+      case 'getRpciReportData': {
+        const [yearArg] = args;
+        const year = parseInt(yearArg, 10) || new Date().getFullYear();
+
+        // End of selected year
+        const endOfYear = new Date(year, 11, 31, 23, 59, 59, 999);
+
+        // Get all inventory items with their batches
+        const allItems = await prisma.inventoryItem.findMany({
+          include: {
+            batches: {
+              orderBy: { id: 'asc' }
+            }
+          },
+          orderBy: { name: 'asc' }
+        });
+
+        // For each item, find the last transaction balance as of end of year
+        const rpciItems = [];
+        for (const item of allItems) {
+          const lastTx = await prisma.inventoryTransaction.findFirst({
+            where: {
+              inventoryItemId: item.id,
+              date: { lte: endOfYear }
+            },
+            orderBy: { id: 'desc' }
+          });
+
+          const balancePerCard = lastTx ? Number(lastTx.balance) : 0;
+
+          // Use costPerUnit from the first batch that has one, or 0
+          let unitValue = 0;
+          for (const batch of item.batches) {
+            if (batch.costPerUnit) {
+              unitValue = Number(batch.costPerUnit);
+              break;
+            }
+          }
+
+          rpciItems.push({
+            id: item.id,
+            itemName: item.name,
+            sku: item.sku,
+            unit: item.unit,
+            unitValue: unitValue,
+            balancePerCard: balancePerCard
+          });
+        }
+
+        result = rpciItems;
+        break;
+      }
+
+      case 'addEditLog': {
+        const [logData] = args;
+        try {
+          if (prisma.editLog) {
+            result = await prisma.editLog.create({
+              data: {
+                itemSku: logData.itemSku || null,
+                itemName: logData.itemName || 'Unknown Item',
+                editedBy: logData.editedBy || 'Admin',
+                office: logData.office || 'N/A',
+                changes: typeof logData.changes === 'string' ? logData.changes : JSON.stringify(logData.changes)
+              }
+            });
+          } else {
+            await prisma.$executeRawUnsafe(
+              `INSERT INTO edit_logs (item_sku, item_name, edited_by, office, changes, created_at) VALUES (?, ?, ?, ?, ?, NOW())`,
+              logData.itemSku || null,
+              logData.itemName || 'Unknown Item',
+              logData.editedBy || 'Admin',
+              logData.office || 'N/A',
+              typeof logData.changes === 'string' ? logData.changes : JSON.stringify(logData.changes)
+            );
+            result = { success: true };
+          }
+        } catch (err) {
+          console.error('Error adding edit log:', err);
+          throw err;
+        }
+        break;
+      }
+
+      case 'getEditLogs': {
+        try {
+          if (prisma.editLog) {
+            result = await prisma.editLog.findMany({
+              orderBy: { id: 'desc' }
+            });
+          } else {
+            const rows = await prisma.$queryRawUnsafe(`SELECT id, item_sku as itemSku, item_name as itemName, edited_by as editedBy, office, changes, created_at as createdAt FROM edit_logs ORDER BY id DESC`);
+            result = rows;
+          }
+        } catch (err) {
+          console.error('Error getting edit logs:', err);
+          result = [];
+        }
         break;
       }
 
