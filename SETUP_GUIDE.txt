@@ -65,15 +65,32 @@ This system uses Next.js, Prisma, and MySQL (via XAMPP).
    - Open XAMPP Control Panel and ensure MySQL shows "Running" (green).
 
 2. START THE DEVELOPMENT SERVER
-   - In Command Prompt/PowerShell (in this folder), run:
-     npm run dev
+   Using the Quick Batch File (Recommended):
+   - Double-click `start_system.bat` located in the project root folder.
+   - A command window will open, navigate to the project directory automatically,
+     and start the Next.js server.
+   - Keep this terminal window open (or minimized) while using the application.
+
+   - Creating a Desktop Shortcut (Optional for Easy Access):
+     1. Right-click `start_system.bat` in the project folder.
+     2. Select "Show more options" (on Windows 11) > "Send to" > "Desktop (create shortcut)".
+     3. You can now launch the application anytime directly from your Desktop!
+
+   - Auto-Starting with Windows (Optional):
+     1. Press `Win + R`, type `shell:startup`, and press Enter.
+     2. Copy and paste the desktop shortcut of `start_system.bat` into this Startup folder.
+     3. The server will now start automatically whenever Windows boots up.
+
+
 3. Wait until you see "Ready in ... ms"
 4. Open your web browser and go to:
-     http://localhost:3000
+     http://localhost:0911
 
 (Note: You can view and edit your database contents visually anytime by
  running `npm run db:studio` in a new terminal window, or by visiting
  http://localhost/phpmyadmin in your browser while XAMPP's Apache is running!)
+
+5. Users will open the program through the browser then input the IP Address (ex.192.168.<IPv4 address>:0911), replace IPv4 with actual ip address of the host computer. 
 
 --------------------------------------------------------------------------------
 [4] TROUBLESHOOTING
