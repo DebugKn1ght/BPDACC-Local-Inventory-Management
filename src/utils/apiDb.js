@@ -1,8 +1,6 @@
 /**
- * API client wrapper for the inventory system.
- * All database-style operations are routed through the Next.js API layer
- * instead of calling Supabase directly from the UI components.
- * If a screen fails after the UI renders, this file is a good place to inspect first.
+ * API client to replace Supabase direct database calls.
+ * This interacts with the Next.js backend API routes.
  */
 
 async function rpcCall(method, ...args) {

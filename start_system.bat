@@ -3,7 +3,7 @@ echo ===================================================
 echo BPDACC Local Inventory Management - Startup Script
 echo ===================================================
 echo.
-echo Starting the web server on port 0911...
+echo Starting the web server on port 911 for local and network access...
 echo (Please keep this window open or minimize it)
 echo.
 
