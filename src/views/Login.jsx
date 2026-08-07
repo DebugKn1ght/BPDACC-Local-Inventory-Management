@@ -6,6 +6,8 @@ import phoLogo from '../assets/PHO Logo.png';
 import bpdaccLogo from '../assets/bpdacc-logo.svg';
 
 const Login = () => {
+  // These form values are the core of the authentication flow.
+  // If sign-in fails, inspect the form state and the API response first.
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -13,6 +15,8 @@ const Login = () => {
   const navigate = useNavigate();
   const { login } = useUserRole();
 
+  // Submit the credentials to the backend API and redirect on success.
+  // Most login troubleshooting starts here because it ties the form UI to the auth API.
   const handleLogin = async (e) => {
     e.preventDefault();
     setError('');

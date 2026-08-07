@@ -1,5 +1,7 @@
 import '../index.css'
 
+// Global page metadata for the Next.js shell.
+// This helps define the browser tab title and icon for the app.
 export const metadata = {
   title: 'BPDACC Inventory Management',
   description: 'Manage and track medical supplies',

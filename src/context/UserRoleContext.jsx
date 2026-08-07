@@ -13,7 +13,8 @@ const UserRoleContext = createContext()
  * @param {React.ReactNode} children - Child components that will have access to the context
  */
 export const UserRoleProvider = ({ children }) => {
-  // Initialize user info from localStorage
+  // The current user is restored from localStorage on page refresh.
+  // This makes the app feel persistent, but it also means auth state can be affected by stale browser storage.
   const [currentUser, setCurrentUser] = useState(() => {
     const savedUser = localStorage.getItem('bpdacc-current-user')
     return savedUser ? JSON.parse(savedUser) : null
@@ -28,7 +29,8 @@ export const UserRoleProvider = ({ children }) => {
     }
   }, [currentUser])
 
-  // Heartbeat & status tracking for non-admin users
+  // Heartbeat and online status tracking for non-admin users.
+  // These requests help the system display whether a user is active.
   useEffect(() => {
     if (!currentUser || currentUser.isAdmin) return
 

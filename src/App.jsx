@@ -12,13 +12,12 @@ import Login from './views/Login'
 import './App.css'
 
 /**
- * Main application component for BPDACC Inventory Management System
- * Sets up:
- * - User role context for permission management
- * - React Router for page navigation
- * - Sidebar navigation + main content area
+ * Main application component for BPDACC Inventory Management System.
+ * This is the central entry point for routing and page composition.
+ * When troubleshooting UI issues, start here to confirm which screen is being rendered.
  */
 const ProtectedRoute = ({ children }) => {
+  // Guard private pages so unauthenticated users are redirected to the login screen.
   const { currentUser } = useUserRole()
   if (!currentUser) {
     return <Navigate to="/login" replace />
@@ -33,12 +32,15 @@ function App() {
         <Router>
           <div className="app">
           <Routes>
+            {/* Public route: login screen does not require an authenticated session. */}
             <Route path="/login" element={<Login />} />
+            {/* Catch-all route for all authenticated screens. */}
             <Route path="*" element={
               <ProtectedRoute>
                 <div style={{ display: 'flex', width: '100%', height: '100vh' }}>
                   <Sidebar />
                   <main className="main-content">
+                    {/* These child routes map the main inventory modules. */}
                     <Routes>
                       <Route path="/" element={<Dashboard />} />
                       <Route path="/inventory" element={<Inventory />} />

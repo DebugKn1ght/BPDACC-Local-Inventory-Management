@@ -5,6 +5,8 @@ import ConfirmModal from '../components/ConfirmModal';
 const UIContext = createContext();
 
 export const UIProvider = ({ children }) => {
+  // Shared UI state for feedback messages and confirmation dialogs.
+  // These are useful for debugging because most user actions flow through them.
   const [toasts, setToasts] = useState([]);
   const [confirmState, setConfirmState] = useState({
     isOpen: false,

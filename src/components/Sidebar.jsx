@@ -29,7 +29,8 @@ const Sidebar = () => {
   const [confirmDialog, setConfirmDialog] = useState(null)
   const { currentUser, isAdmin, logout } = useUserRole()
 
-  // Navigation menu items - role-based visibility
+  // Navigation items are filtered by role so users only see relevant modules.
+  // If a menu item is missing, check the role logic here first.
   const menuItems = [
     { path: '/', icon: dashboardIcon, label: 'Dashboard', visible: true },
     { path: '/inventory', icon: inventoryIcon, label: 'Inventory', visible: true },
@@ -50,7 +51,8 @@ const Sidebar = () => {
   ].filter(item => item.visible) // Filter out hidden items
 
   /**
-   * Toggle mobile sidebar open/closed
+   * Toggle the mobile sidebar open or closed.
+   * This only affects the small-screen navigation overlay.
    */
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen)
